@@ -1,0 +1,6 @@
+/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/obj/Debug/net8.0/api.csproj.AssemblyReference.cache
+/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/obj/Debug/net8.0/api.GeneratedMSBuildEditorConfig.editorconfig
+/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/obj/Debug/net8.0/api.AssemblyInfoInputs.cache
+/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/obj/Debug/net8.0/api.AssemblyInfo.cs
+/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/obj/Debug/net8.0/api.csproj.CoreCompileInputs.cache
+/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/obj/Debug/net8.0/api.MvcApplicationPartsAssemblyInfo.cache
