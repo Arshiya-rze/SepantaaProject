@@ -1,8 +1,10 @@
-using api.Controllers.Helpers;
-
 namespace api.Controllers;
 
-public class AccountController : BaseApiController
+[Authorize]
+public class AccountController(IAccountRepository _accountRepository) : BaseApiController
 {
+    [AllowAnonymous]
+    [HttpPost("register")]
+    public async Task<ActionResult<>>
     
 }
