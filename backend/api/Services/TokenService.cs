@@ -1,15 +1,11 @@
-using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
 
 namespace api.Services;
 public class TokenService : ITokenService
 {
     private readonly IMongoCollection<AppUser> _collection;
-    // private readonly SymmetricSecurityKey? _key;
-    // private readonly UserManager<AppUser> _userManager;
+    private readonly SymmetricSecurityKey? _key;
+    private readonly UserManager<AppUser> _userManager;
 
     public TokenService(IConfiguration config, IMongoClient client, IMyMongoDbSettings dbSettings, UserManager<AppUser> userManager)
     {

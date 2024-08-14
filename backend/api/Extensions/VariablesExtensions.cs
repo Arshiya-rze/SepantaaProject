@@ -9,6 +9,7 @@ public static class AppVariablesExtensions
     // public const string collectionExceptionLogs = "exception-logs";
 
     public readonly static string[] AppVersions = ["1", "1.0.0"];
+    internal static string collectionUsers;
 
     // public readonly static AppRole[] roles = [
     //         new() {Name = Roles.admin.ToString()},
