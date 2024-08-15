@@ -1,10 +1,5 @@
-using System.Text;
-using api.Settings;
 using AspNetCore.Identity.MongoDbCore.Extensions;
 using AspNetCore.Identity.MongoDbCore.Infrastructure;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 
 namespace api.Extensions;
 
@@ -60,18 +55,18 @@ public static class IdentityServiceExtensions
                 }
             };
 
-            // services.ConfigureMongoDbIdentity<AppUser, AppRole, ObjectId>(mongoDbIdentityConfig)
-            // .AddUserManager<UserManager<AppUser>>()
-            // .AddSignInManager<SignInManager<AppUser>>()
-            // .AddRoleManager<RoleManager<AppRole>>()
-            // .AddDefaultTokenProviders();
+            services.ConfigureMongoDbIdentity<AppUser, AppRole, ObjectId>(mongoDbIdentityConfig)
+            .AddUserManager<UserManager<AppUser>>()
+            .AddSignInManager<SignInManager<AppUser>>()
+            .AddRoleManager<RoleManager<AppRole>>()
+            .AddDefaultTokenProviders();
         }
         #endregion
 
         #region Policy
-        // services.AddAuthorizationBuilder()
-        //     .AddPolicy("RequiredAdminRole", policy => policy.RequireRole("admin"))
-        //     .AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("admin", "moderator"));
+        services.AddAuthorizationBuilder()
+            .AddPolicy("RequiredAdminRole", policy => policy.RequireRole("admin"))
+            .AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("admin", "moderator"));
         #endregion
 
         return services;

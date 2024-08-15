@@ -1,5 +1,3 @@
-using api.DTOs;
-
 namespace api.Controllers;
 
 [Authorize]

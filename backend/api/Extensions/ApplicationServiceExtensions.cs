@@ -1,7 +1,3 @@
-using api.Settings;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
-
 namespace api.Extensions;
 
 public static class ApplicationServiceExtensions
