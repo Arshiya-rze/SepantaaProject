@@ -9,12 +9,12 @@ public class AppUser : MongoIdentityUser<ObjectId>
     public int Schema { get; init; } = 2;
     public string? IdentifierHash { get; init; }
     // public string? JtiValue { get; init; }
-    public DateOnly DateOfBirth { get; init; }
     public string Name { get; init; } = string.Empty;
     public string LastName { get; init; } = string.Empty;
-    // public DateTime LastActive { get; init; }
     public string Gender { get; init; } = string.Empty;
+    public DateOnly DateOfBirth { get; init; }
     public string Role { get; init; } = string.Empty;
+    public List<Time> times { get; init; } = [];
 
     // public string? Introduction { get; init; }
     // public string? LookingFor { get; init; }
