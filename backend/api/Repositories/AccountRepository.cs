@@ -50,4 +50,35 @@ public class AccountRepository : IAccountRepository
 
     }
 
+    public async Task<LoggedInDto> LoginAsync(LoginDto userInput, CancellationToken cancellationToken)
+    {
+        LoggedInDto loggedInDto = new();
+
+        AppUser? appUser;
+
+        appUser = await _userManager.FindByEmailAsync(userInput.Email);
+
+        if (appUser is null)
+        {
+            loggedInDto.IsWrongCreds = true;
+            return loggedInDto;
+        }
+
+        bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, userInput.Password);
+
+        if (!isPassCorrect)
+        {
+            loggedInDto.IsWrongCreds = true;
+            return loggedInDto;
+        }
+
+        string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+        }
+
+        return loggedInDto;
+    }
 }
