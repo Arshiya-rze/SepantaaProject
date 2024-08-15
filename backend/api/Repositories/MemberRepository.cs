@@ -2,12 +2,12 @@ using api.Helpers;
 
 namespace api.Repositories;
 
-public class StudentRepository : IStudentRepository
+public class MemberRepository : IMemberRepository
 {
     #region Constructor
     IMongoCollection<AppUser>? _collection;
 
-    public StudentRepository(IMongoClient client, IMyMongoDbSettings dbSettings)
+    public MemberRepository(IMongoClient client, IMyMongoDbSettings dbSettings)
     {
         var database = client.GetDatabase(dbSettings.DatabaseName);
         _collection = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);

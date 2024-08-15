@@ -11,7 +11,8 @@ public static class Mappers
             DateOfBirth = userInput.DateOfBirth,
             Name = userInput.Name.Trim(),
             LastName = userInput.LastName.Trim(),
-            Gender = userInput.Gender.ToLower()
+            Gender = userInput.Gender.ToLower(),
+            Role = userInput.Role.ToLower(),
             // Photos = []
         };
     }
@@ -23,20 +24,22 @@ public static class Mappers
             Token = tokenValue,
             UserName = appUser.NormalizedUserName,
             Name = appUser.Name,
-            Gender = appUser.Gender
+            Gender = appUser.Gender,
+            Role = appUser.Role,
             // ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
         };
     }
 
-    public static StudentDto ConvertAppUserToStudentDto(AppUser appUser)
+    public static MemberDto ConvertAppUserToMemberDto(AppUser appUser)
     {
-        return new StudentDto(
+        return new MemberDto(
             Id: appUser.Id.ToString(),
             UserName: appUser.NormalizedUserName!,
             Name: appUser.Name,
             LastName: appUser.LastName,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-            Gender: appUser.Gender
+            Gender: appUser.Gender,
+            Role: appUser.Role
         );
     }
 

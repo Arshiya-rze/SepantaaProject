@@ -14,6 +14,8 @@ public class AppUser : MongoIdentityUser<ObjectId>
     public string LastName { get; init; } = string.Empty;
     // public DateTime LastActive { get; init; }
     public string Gender { get; init; } = string.Empty;
+    public string Role { get; init; } = string.Empty;
+
     // public string? Introduction { get; init; }
     // public string? LookingFor { get; init; }
     // public string? Interests { get; init; }

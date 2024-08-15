@@ -13,7 +13,8 @@ public record RegisterDto(
     [Length(1, 30)] string LastName,
     // DateOnly DateOfBirth, //"1-1-1"
     [Range(typeof(DateOnly), "1900-01-01", "2050-01-01")] DateOnly DateOfBirth, // Prevent from 1/1/1
-    [Length(3, 20)] string Gender
+    [Length(3, 20)] string Gender,
+    [Length(6, 10)] string Role
     // [Length(2, 30)] string City,
     // [Length(3, 30)] string Country
 );
@@ -33,6 +34,7 @@ public class LoggedInDto
     public string? Name { get; init; }
     // public string? LastName { get; init; }
     public string? Gender { get; init; }
+    public string? Role { get; init; }
     // public string? ProfilePhotoUrl { get; init; }
     public bool IsWrongCreds { get; set; }
     public List<string> Errors { get; init; } = [];

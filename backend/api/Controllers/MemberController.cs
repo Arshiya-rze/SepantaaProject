@@ -4,14 +4,14 @@ using api.Models.Helpers;
 namespace api.Controllers;
 
 [Authorize]
-public class StudentController
-    (IStudentRepository _studentRepository, ITokenService _tokenService) : BaseApiController
+public class MemberController
+    (IMemberRepository _memberRepository, ITokenService _tokenService) : BaseApiController
 {
     [AllowAnonymous]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<StudentDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
     {
-        PagedList<AppUser> pagedAppUsers = await _studentRepository.GetAllAsync(paginationParams, cancellationToken);
+        PagedList<AppUser> pagedAppUsers = await _memberRepository.GetAllAsync(paginationParams, cancellationToken);
 
         if (pagedAppUsers.Count == 0)
             return NoContent();
@@ -35,11 +35,11 @@ public class StudentController
 
         if (userId is null) return Unauthorized("You are unauthorized. Login again.");
 
-        List<StudentDto> studentDtos = [];
+        List<MemberDto> studentDtos = [];
 
         foreach (AppUser appUser in pagedAppUsers)
         {
-            studentDtos.Add(Mappers.ConvertAppUserToStudentDto(appUser));
+            studentDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
         }
 
         return studentDtos;
