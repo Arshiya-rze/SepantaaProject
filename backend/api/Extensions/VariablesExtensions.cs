@@ -14,7 +14,7 @@ public static class AppVariablesExtensions
             new() {Name = Roles.admin.ToString()},
             new() {Name = Roles.moderator.ToString()},
             new() {Name = Roles.teacher.ToString()},
-            new() {Name = Roles.member.ToString()}
+            new() {Name = Roles.student.ToString()}
         ]; 
 }
 
@@ -23,7 +23,7 @@ public enum Roles
     admin,
     moderator,
     teacher,
-    member
+    student
 }
 
 // public enum FollowPredicate
