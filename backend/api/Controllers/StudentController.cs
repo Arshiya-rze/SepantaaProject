@@ -5,7 +5,7 @@ namespace api.Controllers;
 
 [Authorize]
 public class StudentController
-(IStudentRepository _studentRepository, ITokenService _tokenService) : BaseApiController
+    (IStudentRepository _studentRepository, ITokenService _tokenService) : BaseApiController
 {
     [AllowAnonymous]
     [HttpGet]
@@ -36,6 +36,11 @@ public class StudentController
         if (userId is null) return Unauthorized("You are unauthorized. Login again.");
 
         List<StudentDto> studentDtos = [];
+
+        foreach (AppUser appUser in pagedAppUsers)
+        {
+            studentDtos.Add(Mappers.ConvertAppUserToStudentDto(appUser));
+        }
 
         return studentDtos;
     }

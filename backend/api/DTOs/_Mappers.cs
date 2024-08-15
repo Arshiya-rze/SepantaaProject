@@ -28,25 +28,17 @@ public static class Mappers
         };
     }
 
-    // public static MemberDto ConvertAppUserToMemberDto(AppUser appUser)
-    // public static MemberDto ConvertAppUserToMemberDto(AppUser appUser, bool isFollowing = false)
-    // {
-    //     return new MemberDto(
-    //         UserName: appUser.NormalizedUserName!,
-    //         Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-    //         KnownAs: appUser.KnownAs,
-    //         LastActive: appUser.LastActive,
-    //         Created: appUser.CreatedOn,
-    //         Gender: appUser.Gender,
-    //         Introduction: appUser.Introduction,
-    //         LookingFor: appUser.LookingFor,
-    //         Interests: appUser.Interests,
-    //         City: appUser.City,
-    //         Country: appUser.Country,
-    //         Photos: appUser.Photos,
-    //         IsFollowing: isFollowing
-    //     );
-    // }
+    public static StudentDto ConvertAppUserToStudentDto(AppUser appUser)
+    {
+        return new StudentDto(
+            Id: appUser.Id.ToString(),
+            UserName: appUser.NormalizedUserName!,
+            Name: appUser.Name,
+            LastName: appUser.LastName,
+            Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
+            Gender: appUser.Gender
+        );
+    }
 
     // public static Photo ConvertPhotoUrlsToPhoto(string[] photoUrls, bool isMain)
     // {
