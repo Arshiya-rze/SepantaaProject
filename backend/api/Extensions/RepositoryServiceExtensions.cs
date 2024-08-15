@@ -8,6 +8,7 @@ public static class RepositoryServiceExtensions
         services.AddScoped<ITokenService, TokenService>();
 
         services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IStudentRepository, StudentRepository>();
 
         #endregion Dependency Injections
 
