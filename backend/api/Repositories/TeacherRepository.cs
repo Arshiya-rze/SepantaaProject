@@ -56,9 +56,6 @@ public class TeacherRepository : ITeacherRepository
         }
         return null;
 
-        // if (studentId is null) return null;
-
-        // if (studentId is null) return null;
 
         // LoggedInDto loggedInDto = new();
 
