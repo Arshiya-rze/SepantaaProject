@@ -17,6 +17,16 @@ public static class Mappers
         };
     }
 
+    public static Time ConvertAddStudentStatusDtoToTime(AddStudentStatusDto studentInput)
+    {
+        return new Time
+        (
+            Date: studentInput.Date,
+            TimeDay: studentInput.TimeDay,
+            AbsentOrPresent: studentInput.AbsentOrPresent
+        );
+    }
+
     public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
     {
         return new LoggedInDto
@@ -28,6 +38,16 @@ public static class Mappers
             Role = appUser.Role,
             // ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
         };
+    }
+
+    public static ShowStudentStatusDto ConvertTimeToShowStudentStatusDto(Time time)
+    {
+        return new ShowStudentStatusDto
+        {
+            Date = time.Date,
+            TimeDay = time.TimeDay,
+            AbsentOrPresent = time.AbsentOrPresent
+        };            
     }
 
     public static MemberDto ConvertAppUserToMemberDto(AppUser appUser)
