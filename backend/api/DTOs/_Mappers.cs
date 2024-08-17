@@ -13,6 +13,7 @@ public static class Mappers
             LastName = userInput.LastName.Trim(),
             Gender = userInput.Gender.ToLower(),
             Role = userInput.Role.ToLower(),
+            Times = []
             // Photos = []
         };
     }
@@ -35,8 +36,7 @@ public static class Mappers
             UserName = appUser.NormalizedUserName,
             Name = appUser.Name,
             Gender = appUser.Gender,
-            Role = appUser.Role,
-            Times = appUser.Times
+            Role = appUser.Role
             // ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
         };
     }
