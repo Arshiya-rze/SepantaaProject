@@ -15,6 +15,15 @@ public class TeacherRepository : ITeacherRepository
         _tokenService = tokenService;
     }
     #endregion Vars and Constructor
+    public async Task<AppUser?> GetByIdAsync(ObjectId studentId, CancellationToken cancellationToken)
+    {
+        AppUser? appUser = await _collection.Find<AppUser>(doc
+            => doc.Id == studentId).SingleOrDefaultAsync(cancellationToken);
+
+        if (appUser is null) return null;
+
+        return appUser;
+    }
     public async Task<ObjectId?> GetObjectIdByUserNameAsync(string studentUserName, CancellationToken cancellationToken)
     {
         ObjectId? studentId = await _collection.AsQueryable<AppUser>()
@@ -25,23 +34,43 @@ public class TeacherRepository : ITeacherRepository
         return ValidationsExtensions.ValidateObjectId(studentId);
     }
 
-    public async Task<ShowStudentStatusDto> AddAsync(string targetStudentUserName, AddStudentStatusDto addStudentStatusDto, CancellationToken cancellationToken)
+    public async Task<Time?> AddAsync(string targetStudentUserName, AddStudentStatusDto addStudentStatusDto, CancellationToken cancellationToken)
     {
+        // if (string.IsNullOrEmpty(timesString)) return null;
         //inja ma bayad dar studentId id on student ke mikhaym ro dashte bashim
         ObjectId? studentId = await GetObjectIdByUserNameAsync(targetStudentUserName, cancellationToken);
 
-        // if (studentId is null) return null;
-
-        ShowStudentStatusDto showStudentStatusDto = new();
-        // LoggedInDto loggedInDto = new();
-
-        if (studentId is not null)
+        AppUser? appUser = await GetByIdAsync(studentId.Value, cancellationToken);
+        if (appUser is not null)
         {
             Time time = Mappers.ConvertAddStudentStatusDtoToTime(addStudentStatusDto);
 
-            return Mappers.ConvertTimeToShowStudentStatusDto(time);
-        }
+            appUser.Times.Add(time);
+            
+            var updatedStudent = Builders<AppUser>.Update
+                .Set(doc => doc.Times, appUser.Times);
 
-        return showStudentStatusDto;
+            UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
+
+            return time;
+        }
+        return null;
+
+        // if (studentId is null) return null;
+
+        // if (studentId is null) return null;
+
+        // LoggedInDto loggedInDto = new();
+
+        // AddStudentStatusDto addStudentStatusDto = Mappers.ConvertAddStudentStatusDtoToTime(timesString);
+
+
+        // appUser.Photos.Add(photo);
+
+
+
+        // var updatedUser = Builders<AppUser>.Update
+        //     .Set(doc => doc.Photos, appUser.Photos);
+
     }
 }

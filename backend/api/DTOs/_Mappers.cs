@@ -18,13 +18,12 @@ public static class Mappers
         };
     }
 
-    public static Time ConvertAddStudentStatusDtoToTime(AddStudentStatusDto studentInput)
+    public static Time ConvertAddStudentStatusDtoToTime(AddStudentStatusDto addStudentStatusDto)
     {
-        return new Time
-        (
-            Date: studentInput.Date,
-            TimeDay: studentInput.TimeDay,
-            AbsentOrPresent: studentInput.AbsentOrPresent
+        return new Time(
+            Date: addStudentStatusDto.Date,
+            TimeDay: addStudentStatusDto.TimeDay,
+            AbsentOrPresent: addStudentStatusDto.AbsentOrPresent
         );
     }
 
@@ -41,15 +40,15 @@ public static class Mappers
         };
     }
 
-    public static ShowStudentStatusDto ConvertTimeToShowStudentStatusDto(Time time)
-    {
-        return new ShowStudentStatusDto
-        {
-            Date = time.Date,
-            TimeDay = time.TimeDay,
-            AbsentOrPresent = time.AbsentOrPresent
-        };            
-    }
+    // public static ShowStudentStatusDto ConvertTimeToShowStudentStatusDto(Time time)
+    // {
+    //     return new ShowStudentStatusDto
+    //     {
+    //         Date = time.Date,
+    //         TimeDay = time.TimeDay,
+    //         AbsentOrPresent = time.AbsentOrPresent
+    //     };            
+    // }
 
     public static MemberDto ConvertAppUserToMemberDto(AppUser appUser)
     {

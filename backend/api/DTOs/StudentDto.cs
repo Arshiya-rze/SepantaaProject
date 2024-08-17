@@ -5,12 +5,11 @@ public record AddStudentStatusDto(
     string AbsentOrPresent
 );
 
-public class ShowStudentStatusDto
-{
-    public string Date { get; init; }
-    public DateOnly TimeDay { get; init; }
-    public string AbsentOrPresent { get; init; }
-
-}
+// public class ShowStudentStatusDto
+// {
+//     public string Date { get; init; }
+//     public DateOnly TimeDay { get; init; }
+//     public string AbsentOrPresent { get; init; }
+// }
     // string LastName,
     // string Name,
