@@ -5,5 +5,6 @@ public record MemberDto(
     string LastName,
     int Age,
     string Gender,
-    string Role
+    string Role,
+    List<Time> Times
 );

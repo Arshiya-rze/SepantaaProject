@@ -25,6 +25,8 @@ public class TeacherRepository : ITeacherRepository
         ValidationsExtensions.ValidateObjectId(studentId);
 
         ShowStudentStatusDto showStudentStatusDto = new();
+        // LoggedInDto loggedInDto = new();
+
 
         if (studentId is not null)
         {

@@ -36,6 +36,7 @@ public static class Mappers
             Name = appUser.Name,
             Gender = appUser.Gender,
             Role = appUser.Role,
+            Times = appUser.Times
             // ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
         };
     }
@@ -59,7 +60,8 @@ public static class Mappers
             LastName: appUser.LastName,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
             Gender: appUser.Gender,
-            Role: appUser.Role
+            Role: appUser.Role,
+            Times: appUser.Times 
         );
     }
 
