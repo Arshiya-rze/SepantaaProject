@@ -36,7 +36,7 @@ public class LoggedInDto
     public string? Gender { get; init; }
     public string? Role { get; init; }
     // public string? ProfilePhotoUrl { get; init; }
-    public List<Time> Times { get; init; }
+    public List<Attendence> Attendences { get; init; }
     public bool IsWrongCreds { get; set; }
     public List<string> Errors { get; init; } = [];
 }

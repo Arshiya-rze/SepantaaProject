@@ -6,5 +6,5 @@ public record MemberDto(
     int Age,
     string Gender,
     string Role,
-    List<Time> Times
+    List<Attendence> Attendences
 );

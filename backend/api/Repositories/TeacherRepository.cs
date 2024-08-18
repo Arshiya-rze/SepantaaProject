@@ -34,7 +34,7 @@ public class TeacherRepository : ITeacherRepository
         return ValidationsExtensions.ValidateObjectId(studentId);
     }
 
-    public async Task<Time?> AddAsync(string targetStudentUserName, AddStudentStatusDto addStudentStatusDto, CancellationToken cancellationToken)
+    public async Task<Attendence?> AddAsync(string targetStudentUserName, AddStudentStatusDto addStudentStatusDto, CancellationToken cancellationToken)
     {
         // if (string.IsNullOrEmpty(timesString)) return null;
         //inja ma bayad dar studentId id on student ke mikhaym ro dashte bashim
@@ -43,16 +43,16 @@ public class TeacherRepository : ITeacherRepository
         AppUser? appUser = await GetByIdAsync(studentId.Value, cancellationToken);
         if (appUser is not null)
         {
-            Time time = Mappers.ConvertAddStudentStatusDtoToTime(addStudentStatusDto);
+            Attendence attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(addStudentStatusDto);
 
-            appUser.Times.Add(time);
+            appUser.Attendences.Add(attendence);
             
             var updatedStudent = Builders<AppUser>.Update
-                .Set(doc => doc.Times, appUser.Times);
+                .Set(doc => doc.Attendences, appUser.Attendences);
 
             UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
 
-            return time;
+            return attendence;
         }
         return null;
 
