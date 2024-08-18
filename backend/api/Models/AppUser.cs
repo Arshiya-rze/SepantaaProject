@@ -14,7 +14,7 @@ public class AppUser : MongoIdentityUser<ObjectId>
     public string Gender { get; init; } = string.Empty;
     public DateOnly DateOfBirth { get; init; }
     public string Role { get; init; } = string.Empty;
-    public List<Attendence> Attendences { get; init; } = [];
+    // public List<Attendence> Attendences { get; init; } = [];
 
     // public string? Introduction { get; init; }
     // public string? LookingFor { get; init; }

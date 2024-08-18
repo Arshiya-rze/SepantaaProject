@@ -23,7 +23,8 @@ public static class Mappers
         return new Attendence(
             DaysOfWeek: addStudentStatusDto.DaysOfWeek,
             Date: addStudentStatusDto.Date,
-            isPresent: addStudentStatusDto.isPresent
+            // isPresent: addStudentStatusDto.isPresent
+            AbsentOrPresent: addStudentStatusDto.AbsentOrPresent
         );
     }
 

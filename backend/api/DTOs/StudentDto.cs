@@ -2,7 +2,8 @@ namespace api.DTOs;
 public record AddStudentStatusDto(
     string DaysOfWeek,
     DateOnly Date,
-    bool isPresent
+    string AbsentOrPresent
+    // bool isPresent
 );
 
 // public class ShowStudentStatusDto
