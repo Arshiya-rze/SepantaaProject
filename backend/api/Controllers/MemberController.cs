@@ -29,11 +29,11 @@ public class MemberController
 
         //after setup now we can covert appUser to studentDto
 
-        string? userIdHashed = User.GetHashedUserId();
+        // string? userIdHashed = User.GetHashedUserId();
 
-        ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
+        // ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
 
-        if (userId is null) return Unauthorized("You are unauthorized. Login again.");
+        // if (userId is null) rpeturn Unauthorized("You are unauthorized. Login again.");
 
         List<MemberDto> studentDtos = [];
 

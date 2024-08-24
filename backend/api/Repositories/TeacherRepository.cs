@@ -49,11 +49,11 @@ public class TeacherRepository : ITeacherRepository
         // if (appUser is null)
         //     return null;
 
-        bool doeseDateExist = await _collectionAttendence.Find<Attendence>(doc =>
-        doc.Date == studentInput.Date).AnyAsync(cancellationToken);
+        // bool doeseDateExist = await _collectionAttendence.Find<Attendence>(doc =>
+        // doc.Date == studentInput.Date).AnyAsync(cancellationToken);
 
-        if (doeseDateExist)
-            return null;
+        // if (doeseDateExist)
+        //     return null;
             
         Attendence attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(studentInput, studentId.Value);
 
