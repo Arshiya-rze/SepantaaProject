@@ -40,17 +40,19 @@ public class TeacherRepository : ITeacherRepository
         //inja ma bayad dar studentId id on student ke mikhaym ro dashte bashim
         ObjectId? studentId = await GetObjectIdByUserNameAsync(targetStudentUserName, cancellationToken);
 
+        if (studentId is null) return null;
+
         AppUser? appUser = await GetByIdAsync(studentId.Value, cancellationToken);
         if (appUser is not null)
         {
-            Attendence attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(addStudentStatusDto);
+            Attendence attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(addStudentStatusDto, studentId.Value);
 
-            appUser.Attendences.Add(attendence);
+            // appUser.Attendences.Add(attendence);
             
-            var updatedStudent = Builders<AppUser>.Update
-                .Set(doc => doc.Attendences, appUser.Attendences);
+            // var updatedStudent = Builders<AppUser>.Update
+            //     .Set(doc => doc.Attendences, appUser.Attendences);
 
-            UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
+            // UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
 
             return attendence;
         }

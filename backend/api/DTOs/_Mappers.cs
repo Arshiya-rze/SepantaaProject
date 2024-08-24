@@ -12,15 +12,16 @@ public static class Mappers
             Name = userInput.Name.Trim(),
             LastName = userInput.LastName.Trim(),
             Gender = userInput.Gender.ToLower(),
-            Role = userInput.Role.ToLower(),
-            Attendences = []
+            Role = userInput.Role.ToLower()
+            // Attendences = []
             // Photos = []
         };
     }
 
-    public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto addStudentStatusDto)
+    public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto addStudentStatusDto, ObjectId studentId)
     {
         return new Attendence(
+            StudentId:  studentId,
             DaysOfWeek: addStudentStatusDto.DaysOfWeek,
             Date: addStudentStatusDto.Date,
             // isPresent: addStudentStatusDto.isPresent
@@ -60,8 +61,8 @@ public static class Mappers
             LastName: appUser.LastName,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
             Gender: appUser.Gender,
-            Role: appUser.Role,
-            Attendences: appUser.Attendences 
+            Role: appUser.Role
+            // Attendences: Attendences 
         );
     }
 

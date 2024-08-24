@@ -5,6 +5,6 @@ public record MemberDto(
     string LastName,
     int Age,
     string Gender,
-    string Role,
-    List<Attendence> Attendences
+    string Role
+    // List<Attendence> Attendences
 );
