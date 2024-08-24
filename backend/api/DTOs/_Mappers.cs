@@ -18,14 +18,14 @@ public static class Mappers
         };
     }
 
-    public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto addStudentStatusDto, ObjectId studentId)
+    public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto studentInput, ObjectId studentId)
     {
         return new Attendence(
             StudentId:  studentId,
-            DaysOfWeek: addStudentStatusDto.DaysOfWeek,
-            Date: addStudentStatusDto.Date,
+            DaysOfWeek: studentInput.DaysOfWeek,
+            Date: studentInput.Date,
             // isPresent: addStudentStatusDto.isPresent
-            AbsentOrPresent: addStudentStatusDto.AbsentOrPresent
+            AbsentOrPresent: studentInput.AbsentOrPresent
         );
     }
 
@@ -39,6 +39,17 @@ public static class Mappers
             Gender = appUser.Gender,
             Role = appUser.Role
             // ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
+        };
+    }
+
+    public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
+    {
+        return new ShowStudentStatusDto
+        {
+            // StudentId = studentId,
+            DaysOfWeek = attendence.DaysOfWeek,
+            Date = attendence.Date,
+            AbsentOrPresent = attendence.AbsentOrPresent
         };
     }
 

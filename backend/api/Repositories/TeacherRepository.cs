@@ -6,13 +6,13 @@ public class TeacherRepository : ITeacherRepository
     private readonly IMongoCollection<AppUser>? _collectionAppUser;
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
-    private readonly IMongoCollection<Attendence> _collectionAttendence;
+    private readonly IMongoCollection<Attendence>? _collectionAttendence;
 
     public TeacherRepository(IMongoClient client, ITokenService tokenService, IMyMongoDbSettings dbSettings, UserManager<AppUser> userManager)
     {
         var database = client.GetDatabase(dbSettings.DatabaseName);
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
-        _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.);
+        _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.collectionAttendences);
 
         _userManager = userManager;
         _tokenService = tokenService;
@@ -27,6 +27,7 @@ public class TeacherRepository : ITeacherRepository
 
         return appUser;
     }
+    
     public async Task<ObjectId?> GetObjectIdByUserNameAsync(string studentUserName, CancellationToken cancellationToken)
     {
         ObjectId? studentId = await _collectionAppUser.AsQueryable<AppUser>()
@@ -37,18 +38,38 @@ public class TeacherRepository : ITeacherRepository
         return ValidationsExtensions.ValidateObjectId(studentId);
     }
 
-    public async Task<Attendence?> AddAsync(string targetStudentUserName, AddStudentStatusDto addStudentStatusDto, CancellationToken cancellationToken)
+    public async Task<ShowStudentStatusDto> AddAsync(string targetStudentUserName, AddStudentStatusDto studentInput, CancellationToken cancellationToken)
     {
-        // if (string.IsNullOrEmpty(timesString)) return null;
         //inja ma bayad dar studentId id on student ke mikhaym ro dashte bashim
         ObjectId? studentId = await GetObjectIdByUserNameAsync(targetStudentUserName, cancellationToken);
 
         if (studentId is null) return null;
 
-        AppUser? appUser = await GetByIdAsync(studentId.Value, cancellationToken);
-        if (appUser is not null)
+        // AppUser? appUser = await GetByIdAsync(studentId.Value, cancellationToken);
+        // if (appUser is null)
+        //     return null;
+
+        bool doeseDateExist = await _collectionAttendence.Find<Attendence>(doc =>
+        doc.Date == studentInput.Date).AnyAsync(cancellationToken);
+
+        if (doeseDateExist)
+            return null;
+            
+        Attendence attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(studentInput, studentId.Value);
+
+        if (_collectionAttendence is not null)
         {
-            Attendence attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(addStudentStatusDto, studentId.Value);
+            await _collectionAttendence.InsertOneAsync(attendence, null, cancellationToken);
+        }
+
+        if (ObjectId.Equals != null)
+        {
+            ShowStudentStatusDto showStudentStatusDto = Mappers.ConvertAttendenceToShowStudentStatusDto(attendence);
+
+            return showStudentStatusDto;
+        }
+
+        return null;
 
             // appUser.Attendences.Add(attendence);
             
@@ -56,23 +77,6 @@ public class TeacherRepository : ITeacherRepository
             //     .Set(doc => doc.Attendences, appUser.Attendences);
 
             // UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
-
-            return attendence;
-        }
-        return null;
-
-
-        // LoggedInDto loggedInDto = new();
-
-        // AddStudentStatusDto addStudentStatusDto = Mappers.ConvertAddStudentStatusDtoToTime(timesString);
-
-
-        // appUser.Photos.Add(photo);
-
-
-
-        // var updatedUser = Builders<AppUser>.Update
-        //     .Set(doc => doc.Photos, appUser.Photos);
 
     }
 }
