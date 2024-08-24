@@ -3,21 +3,24 @@ namespace api.Repositories;
 public class TeacherRepository : ITeacherRepository
 {
     #region Vars and Constructor
-    private readonly IMongoCollection<AppUser>? _collection;
+    private readonly IMongoCollection<AppUser>? _collectionAppUser;
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly IMongoCollection<Attendence> _collectionAttendence;
 
     public TeacherRepository(IMongoClient client, ITokenService tokenService, IMyMongoDbSettings dbSettings, UserManager<AppUser> userManager)
     {
         var database = client.GetDatabase(dbSettings.DatabaseName);
-        _collection = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
+        _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
+        _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.);
+
         _userManager = userManager;
         _tokenService = tokenService;
     }
     #endregion Vars and Constructor
     public async Task<AppUser?> GetByIdAsync(ObjectId studentId, CancellationToken cancellationToken)
     {
-        AppUser? appUser = await _collection.Find<AppUser>(doc
+        AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
             => doc.Id == studentId).SingleOrDefaultAsync(cancellationToken);
 
         if (appUser is null) return null;
@@ -26,7 +29,7 @@ public class TeacherRepository : ITeacherRepository
     }
     public async Task<ObjectId?> GetObjectIdByUserNameAsync(string studentUserName, CancellationToken cancellationToken)
     {
-        ObjectId? studentId = await _collection.AsQueryable<AppUser>()
+        ObjectId? studentId = await _collectionAppUser.AsQueryable<AppUser>()
             .Where(appUser => appUser.NormalizedUserName == studentUserName.ToUpper())
             .Select(item => item.Id)
             .SingleOrDefaultAsync(cancellationToken);
