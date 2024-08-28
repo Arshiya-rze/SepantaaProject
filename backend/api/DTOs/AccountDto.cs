@@ -11,23 +11,30 @@ public record RegisterDto(
     [DataType(DataType.Password), Length(7, 20)] string? ConfirmPassword,
     [Length(1, 30)] string Name,
     [Length(1, 30)] string LastName,
-    [Length(10, 10)]string NationalCode,
+    [Length(10, 10)] int NationalCode,
     string Class,
     // DateOnly DateOfBirth, //"1-1-1"
     [Range(typeof(DateOnly), "1900-01-01", "2050-01-01")] DateOnly? DateOfBirth, // Prevent from 1/1/1
     [Length(3, 20)] string? Gender
-    // [Length(6, 10)] string Role
-    // [Length(2, 30)] string City,
-    // [Length(3, 30)] string Country
+// [Length(6, 10)] string Role
+// [Length(2, 30)] string City,
+// [Length(3, 30)] string Country
 );
 
-public record LoginDto(
+public record LoginMemberDto(
     // [MaxLength(50), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,5})+)$", ErrorMessage ="Bad Email Format.")]
     // string Email,
     // [DataType(DataType.Password), MinLength(7), MaxLength(20)]
     // string Password
-    [Length(10, 10)]string NationalCode,
+    [Length(10, 10)] int NationalCode,
     string Class
+);
+
+public record LoginAdminDto(
+    [MaxLength(50), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,5})+)$", ErrorMessage ="Bad Email Format.")]
+    string Email,
+    [DataType(DataType.Password), MinLength(7), MaxLength(20)]
+    string Password
 );
 
 public class LoggedInDto
@@ -38,7 +45,7 @@ public class LoggedInDto
     public string? Name { get; init; }
     // public string? LastName { get; init; }
     public string? Gender { get; init; }
-    public string? NationalCode { get; init; }
+    public int? NationalCode { get; init; }
     public string? Class { get; init; }
 
     // public string? Role { get; init; }

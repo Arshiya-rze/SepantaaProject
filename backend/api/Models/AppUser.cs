@@ -12,9 +12,8 @@ public class AppUser : MongoIdentityUser<ObjectId>
     public string LastName { get; init; } = string.Empty;
     public string Gender { get; init; } = string.Empty;
     public DateOnly DateOfBirth { get; init; }
-    public string NationalCode { get; init; }
+    public int NationalCode { get; init; }
     public string Class { get; init; }
-    
     // public string Role { get; init; } = string.Empty;
     // public List<Attendence> Attendences { get; init; } = [];
 

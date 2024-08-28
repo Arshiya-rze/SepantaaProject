@@ -2,16 +2,18 @@ namespace api.DTOs;
 
 public static class Mappers
 {
-    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto userInput)
+    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto adminInput)
     {
         return new AppUser
         {
-            Email = userInput.Email,
-            UserName = userInput.UserName,
-            DateOfBirth = userInput.DateOfBirth,
-            Name = userInput.Name.Trim(),
-            LastName = userInput.LastName.Trim(),
-            Gender = userInput.Gender.ToLower()
+            // Email = userInput.Email,
+            // UserName = userInput.UserName,
+            // DateOfBirth = userInput.DateOfBirth,
+            Name = adminInput.Name.Trim(),
+            LastName = adminInput.LastName.Trim(),
+            NationalCode = adminInput.NationalCode,
+            Class = adminInput.Class.Trim()
+            // Gender = userInput.Gender.ToLower()
             // Role = userInput.Role.ToLower()
             // Attendences = []
             // Photos = []
@@ -34,9 +36,11 @@ public static class Mappers
         return new LoggedInDto
         {
             Token = tokenValue,
-            UserName = appUser.NormalizedUserName,
+            // UserName = appUser.NormalizedUserName,
             Name = appUser.Name,
-            Gender = appUser.Gender
+            Gender = appUser.Gender,
+            NationalCode = appUser.NationalCode,
+            Class = appUser.Class
             // Role = appUser.Role
             // ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
         };
@@ -71,7 +75,9 @@ public static class Mappers
             Name: appUser.Name,
             LastName: appUser.LastName,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-            Gender: appUser.Gender
+            Gender: appUser.Gender,
+            NationalCode: appUser.NationalCode,
+            Class: appUser.Class
             // Role: appUser.Role
             // Attendences: Attendences 
         );

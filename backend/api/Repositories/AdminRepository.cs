@@ -26,39 +26,16 @@ public class AdminRepository : IAdminRepository
 
         if (userCreatedResult.Succeeded)
         {
-            if (appUser.Role == "teacher")
+            IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "student");
+
+            if (!roleResult.Succeeded) // failed
+                return loggedInDto;
+
+            string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+
+            if (!string.IsNullOrEmpty(token))
             {
-                IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "teacher");
-
-                if (!roleResult.Succeeded) // failed
-                    return loggedInDto;
-
-                string? token = await _tokenService.CreateToken(appUser, cancellationToken);
-
-                if (!string.IsNullOrEmpty(token))
-                {
-                    return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-                }
-            }
-
-            if (appUser.Role == "student")
-            {
-                IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "student");
-
-                if (!roleResult.Succeeded) // failed
-                    return loggedInDto;
-
-                string? token = await _tokenService.CreateToken(appUser, cancellationToken);
-
-                if (!string.IsNullOrEmpty(token))
-                {
-                    return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-                }
-            }
-
-            else
-            {
-                return null;
+                return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
             }
         }
         else // Store and return userCreatedResult errors if failed.
@@ -71,5 +48,37 @@ public class AdminRepository : IAdminRepository
 
         return loggedInDto; // failed
 
+    }
+
+    public async Task<LoggedInDto> LoginAsync(LoginAdminDto adminInput, CancellationToken cancellationToken)
+    {
+        LoggedInDto loggedInDto = new();
+
+        AppUser? appUser;
+
+        appUser = await _userManager.FindByEmailAsync(adminInput.Email);
+
+        if (appUser is null)
+        {
+            loggedInDto.IsWrongCreds = true;
+            return loggedInDto;
+        }
+
+        bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, adminInput.Password);
+
+        if (!isPassCorrect)
+        {
+            loggedInDto.IsWrongCreds = true;
+            return loggedInDto;
+        }
+
+        string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+        }
+
+        return loggedInDto;
     }
 }
