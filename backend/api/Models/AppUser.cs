@@ -8,11 +8,12 @@ public class AppUser : MongoIdentityUser<ObjectId>
 {
     public int Schema { get; init; } = 2;
     public string? IdentifierHash { get; init; }
-    // public string? JtiValue { get; init; }
     public string Name { get; init; } = string.Empty;
     public string LastName { get; init; } = string.Empty;
     public string Gender { get; init; } = string.Empty;
     public DateOnly DateOfBirth { get; init; }
+    public string NationalCode { get; init; }
+    public string Class { get; init; }
     
     // public string Role { get; init; } = string.Empty;
     // public List<Attendence> Attendences { get; init; } = [];
