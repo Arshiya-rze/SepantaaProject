@@ -10,7 +10,7 @@ public class AppUser : MongoIdentityUser<ObjectId>
     public string? IdentifierHash { get; init; }
     public string Name { get; init; } = string.Empty;
     public string LastName { get; init; } = string.Empty;
-    public string Gender { get; init; } = string.Empty;
+    public string? Gender { get; init; } = string.Empty;
     public DateOnly DateOfBirth { get; init; }
     public int NationalCode { get; init; }
     public string Class { get; init; }

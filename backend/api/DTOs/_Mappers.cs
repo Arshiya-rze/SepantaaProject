@@ -6,13 +6,13 @@ public static class Mappers
     {
         return new AppUser
         {
-            // Email = userInput.Email,
-            // UserName = userInput.UserName,
-            // DateOfBirth = userInput.DateOfBirth,
+            Email = adminInput.Email,
+            UserName = adminInput.UserName,
             Name = adminInput.Name.Trim(),
             LastName = adminInput.LastName.Trim(),
             NationalCode = adminInput.NationalCode,
             Class = adminInput.Class.Trim()
+            // DateOfBirth = userInput.DateOfBirth,
             // Gender = userInput.Gender.ToLower()
             // Role = userInput.Role.ToLower()
             // Attendences = []
@@ -38,7 +38,7 @@ public static class Mappers
             Token = tokenValue,
             // UserName = appUser.NormalizedUserName,
             Name = appUser.Name,
-            Gender = appUser.Gender,
+            // Gender = appUser.Gender,
             NationalCode = appUser.NationalCode,
             Class = appUser.Class
             // Role = appUser.Role
