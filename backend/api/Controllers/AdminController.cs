@@ -1,0 +1,23 @@
+namespace api.Controllers;
+
+[Authorize(Policy = "RequiredAdminRole")]
+public class AdminController : BaseApiController
+{
+    [HttpPost("add-member")]
+    public async Task<ActionResult<LoggedInDto>> Register(RegisterDto userInput, CancellationToken cancellationToken)
+    {
+        if (userInput.Password != userInput.ConfirmPassword)
+            return BadRequest("Passwords don't match!");
+
+        LoggedInDto? loggedInDto = await _accountRepository.CreateAsync(userInput, cancellationToken);
+
+        return !string.IsNullOrEmpty(loggedInDto.Token)
+            ? Ok(loggedInDto)
+            : loggedInDto.Errors.Count != 0
+            ? BadRequest(loggedInDto.Errors)
+            : BadRequest("Registration has failed. Try again or contact the support.");
+    }
+
+
+    
+}
