@@ -3,14 +3,14 @@ namespace api.Repositories;
 public class AdminRepository : IAdminRepository
 {
     #region Vars and Constructor
-    private readonly IMongoCollection<AppUser>? _collection;
+    private readonly IMongoCollection<AppUser>? _collectionAppUser;
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
 
     public AdminRepository(IMongoClient client, ITokenService tokenService, IMyMongoDbSettings dbSettings, UserManager<AppUser> userManager)
     {
         var database = client.GetDatabase(dbSettings.DatabaseName);
-        _collection = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
+        _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
         _userManager = userManager;
         _tokenService = tokenService;
     }
@@ -81,4 +81,33 @@ public class AdminRepository : IAdminRepository
 
         return loggedInDto;
     }
+
+    public async Task<ObjectId?> GetObjectIdByUserNameAsync(string studentUserName, CancellationToken cancellationToken)
+    {
+        ObjectId? studentId = await _collectionAppUser.AsQueryable<AppUser>()
+            .Where(appUser => appUser.NormalizedUserName == studentUserName.ToUpper())
+            .Select(item => item.Id)
+            .SingleOrDefaultAsync(cancellationToken);
+
+        return ValidationsExtensions.ValidateObjectId(studentId);
+    }
+
+    // public async Task<UpdateResult?> SetTeacherRoleAsync(string targetStudentUserName, CancellationToken cancellationToken)
+    // {
+    //     ObjectId? studentId = await GetObjectIdByUserNameAsync(targetStudentUserName, cancellationToken);
+
+    //     if (studentId is null)
+    //         return null;
+
+    //     FilterDefinition<AppUser>? filterOld = Builders<AppUser>.Filter
+    //         .Where(appUser =>
+    //             appUser.Id == studentId && appUser.Roles.Any<AppRole>(role => role.Name == "student"));
+
+    //     UpdateDefinition<AppUser>? updateOld = Builders<AppUser>.Update
+    //         .Set(appUser => appUser.Roles.FirstMatchingElement().Name, "teacher");
+
+    //     return await _collectionAppUser.UpdateOneAsync(filterOld, updateOld, null, cancellationToken);
+
+    // }
+
 }

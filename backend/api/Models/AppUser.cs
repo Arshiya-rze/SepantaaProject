@@ -14,6 +14,7 @@ public class AppUser : MongoIdentityUser<ObjectId>
     public DateOnly DateOfBirth { get; init; }
     public int NationalCode { get; init; }
     public string Class { get; init; }
+    // public List<AppRole> Roles { get; init; } = [];
     // public string Role { get; init; } = string.Empty;
     // public List<Attendence> Attendences { get; init; } = [];
 
