@@ -26,7 +26,7 @@ public record LoginMemberDto(
     // string Email,
     // [DataType(DataType.Password), MinLength(7), MaxLength(20)]
     // string Password
-    [Length(10, 10)] int NationalCode,
+    int NationalCode,
     string Class
 );
 
