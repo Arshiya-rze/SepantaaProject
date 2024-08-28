@@ -11,8 +11,8 @@ public static class Mappers
             DateOfBirth = userInput.DateOfBirth,
             Name = userInput.Name.Trim(),
             LastName = userInput.LastName.Trim(),
-            Gender = userInput.Gender.ToLower(),
-            Role = userInput.Role.ToLower()
+            Gender = userInput.Gender.ToLower()
+            // Role = userInput.Role.ToLower()
             // Attendences = []
             // Photos = []
         };
@@ -36,8 +36,8 @@ public static class Mappers
             Token = tokenValue,
             UserName = appUser.NormalizedUserName,
             Name = appUser.Name,
-            Gender = appUser.Gender,
-            Role = appUser.Role
+            Gender = appUser.Gender
+            // Role = appUser.Role
             // ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
         };
     }
@@ -71,8 +71,8 @@ public static class Mappers
             Name: appUser.Name,
             LastName: appUser.LastName,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-            Gender: appUser.Gender,
-            Role: appUser.Role
+            Gender: appUser.Gender
+            // Role: appUser.Role
             // Attendences: Attendences 
         );
     }

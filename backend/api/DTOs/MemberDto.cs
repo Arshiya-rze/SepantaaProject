@@ -4,7 +4,7 @@ public record MemberDto(
     string Name,
     string LastName,
     int Age,
-    string Gender,
-    string Role
+    string Gender
+    // string Role
     // List<Attendence> Attendences
 );
