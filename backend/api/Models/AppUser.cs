@@ -13,7 +13,8 @@ public class AppUser : MongoIdentityUser<ObjectId>
     public string LastName { get; init; } = string.Empty;
     public string Gender { get; init; } = string.Empty;
     public DateOnly DateOfBirth { get; init; }
-    public string Role { get; init; } = string.Empty;
+    
+    // public string Role { get; init; } = string.Empty;
     // public List<Attendence> Attendences { get; init; } = [];
 
     // public string? Introduction { get; init; }
