@@ -3,7 +3,7 @@ namespace api.Controllers;
 [Authorize(Policy = "RequiredAdminRole")]
 public class AdminController(IAdminRepository _adminRepository) : BaseApiController
 {
-    [HttpPost("add-member")]
+    [HttpPost("add-student")]
     public async Task<ActionResult<LoggedInDto>> Register(RegisterDto adminInput, CancellationToken cancellationToken)
     {
         // if (userInput.Password != userInput.ConfirmPassword)
