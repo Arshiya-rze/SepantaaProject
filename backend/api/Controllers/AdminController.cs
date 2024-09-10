@@ -18,6 +18,21 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
+    [HttpPost("add-teacher")]
+    public async Task<ActionResult<LoggedInDto>> RegisterTeacher(RegisterDto adminInput, CancellationToken cancellationToken)
+    {
+        if (adminInput.PhoneNumber is null)
+            return BadRequest("PhoneNumber is Empty please set Value.");
+
+        LoggedInDto? loggedInDto = await _adminRepository.CreateTeacherAsync(adminInput, cancellationToken);
+
+        return !string.IsNullOrEmpty(loggedInDto.Token)
+            ? Ok(loggedInDto)
+            : loggedInDto.Errors.Count != 0
+            ? BadRequest(loggedInDto.Errors)
+            : BadRequest("Registration has failed. Try again or contact the support.");
+    }
+
     [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<LoggedInDto>> Login(LoginAdminDto adminInput, CancellationToken cancellationToken)
