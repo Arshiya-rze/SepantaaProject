@@ -12,7 +12,7 @@ public class AppUser : MongoIdentityUser<ObjectId>
     public int PhoneNumber { get; init; }
     public string? LastName { get; init; } = string.Empty;
     public string? Gender { get; init; } = string.Empty;
-    public DateOnly? DateOfBirth { get; init; }
+    public DateOnly DateOfBirth { get; init; }
     // public int NationalCode { get; init; }
     // public string Class { get; init; }
     // public List<AppRole> Roles { get; init; } = [];

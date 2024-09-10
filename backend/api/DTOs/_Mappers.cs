@@ -2,16 +2,17 @@ namespace api.DTOs;
 
 public static class Mappers
 {
-    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto adminInput)
+    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto studentInput)
     {
         return new AppUser
         {
-            Email = adminInput.Email,
-            UserName = adminInput.UserName,
-            Name = adminInput.Name.Trim(),
-            LastName = adminInput.LastName.Trim(),
-            NationalCode = adminInput.NationalCode,
-            Class = adminInput.Class.Trim()
+            PhoneNumber = studentInput.PhoneNumber
+            // Email = adminInput.Email,
+            // UserName = adminInput.UserName,
+            // Name = adminInput.Name.Trim(),
+            // LastName = adminInput.LastName.Trim(),
+            // NationalCode = adminInput.NationalCode,
+            // Class = adminInput.Class.Trim()
             // DateOfBirth = userInput.DateOfBirth,
             // Gender = userInput.Gender.ToLower()
             // Role = userInput.Role.ToLower()
@@ -38,9 +39,8 @@ public static class Mappers
             Token = tokenValue,
             // UserName = appUser.NormalizedUserName,
             Name = appUser.Name,
+            PhoneNumber = appUser.PhoneNumber
             // Gender = appUser.Gender,
-            NationalCode = appUser.NationalCode,
-            Class = appUser.Class
             // Role = appUser.Role
             // ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
         };
@@ -75,9 +75,9 @@ public static class Mappers
             Name: appUser.Name,
             LastName: appUser.LastName,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-            Gender: appUser.Gender,
-            NationalCode: appUser.NationalCode,
-            Class: appUser.Class
+            Gender: appUser.Gender
+            // NationalCode: appUser.NationalCode,
+            // Class: appUser.Class
             // Role: appUser.Role
             // Attendences: Attendences 
         );

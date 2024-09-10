@@ -4,7 +4,7 @@ namespace api.Controllers;
 public class AccountController(IAccountRepository _accountRepository) : BaseApiController
 {
     [AllowAnonymous]
-    [HttpPost("login")]
+    [HttpPost("login-student")]
     public async Task<ActionResult<LoggedInDto>> Login(LoginMemberDto userInput, CancellationToken cancellationToken)
     {
         LoggedInDto loggedInDto = await _accountRepository.LoginAsync(userInput, cancellationToken);
