@@ -7,7 +7,7 @@ public record RegisterDto(
     // [Length(1, 30)] string UserName,
     // Password
     //Phone Number
-    int PhoneNumber,
+    int? PhoneNumber,
     [DataType(DataType.Password), Length(10, 10, ErrorMessage = "Min of 10 and max of 10 chars are requried")] string? Password,
     // ConfirmPassword
     [DataType(DataType.Password), Length(10, 10)] string? ConfirmPassword
@@ -38,7 +38,7 @@ public class LoggedInDto
     public string? Token { get; init; }
     // public string? UserName { get; init; }
     public string? Name { get; init; }
-    public int PhoneNumber { get; init; }
+    public int? PhoneNumber { get; init; }
     // public string? LastName { get; init; }
     // public string? Gender { get; init; }
     // public int? NationalCode { get; init; }

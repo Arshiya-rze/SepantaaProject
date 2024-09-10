@@ -16,7 +16,7 @@ public class AdminRepository : IAdminRepository
     }
     #endregion Vars and Constructor
 
-    public async Task<LoggedInDto> CreateAsync(RegisterDto registerDto, CancellationToken cancellationToken)
+    public async Task<LoggedInDto> CreateStudentAsync(RegisterDto registerDto, CancellationToken cancellationToken)
     {
         LoggedInDto loggedInDto = new();
 

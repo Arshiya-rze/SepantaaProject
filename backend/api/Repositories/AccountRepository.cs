@@ -23,7 +23,7 @@ public class AccountRepository : IAccountRepository
         AppUser? appUser;
 
         appUser = await _collectionAppUser.Find<AppUser>(doc =>
-        doc.PhoneNumber == userInput.PhoneNumber).FirstOrDefaultAsync(cancellationToken);
+        doc.PhoneNumber == studentInput.PhoneNumber).FirstOrDefaultAsync(cancellationToken);
 
         if (appUser is null)
         {
@@ -31,7 +31,7 @@ public class AccountRepository : IAccountRepository
             return loggedInDto;
         }
 
-        bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, userInput.Password);
+        bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, studentInput.Password);
 
         if (!isPassCorrect) //CheckPasswordAsync returns boolean
         {

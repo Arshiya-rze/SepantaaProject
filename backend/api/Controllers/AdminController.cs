@@ -4,17 +4,12 @@ namespace api.Controllers;
 public class AdminController(IAdminRepository _adminRepository) : BaseApiController
 {
     [HttpPost("add-student")]
-    public async Task<ActionResult<LoggedInDto>> Register(RegisterDto adminInput, CancellationToken cancellationToken)
+    public async Task<ActionResult<LoggedInDto>> RegisterStudent(RegisterDto adminInput, CancellationToken cancellationToken)
     {
-        // if (userInput.Password != userInput.ConfirmPassword)
-        //     return BadRequest("Passwords don't match!");
-        // if (adminInput.NationalCode.)
-        //     return BadRequest("NationalCode is Empty please set Value.");
+        if (adminInput.PhoneNumber is null)
+            return BadRequest("PhoneNumber is Empty please set Value.");
 
-        if (adminInput.Class is null)
-            return BadRequest("Class is Empty please set Value.");
-
-        LoggedInDto? loggedInDto = await _adminRepository.CreateAsync(adminInput, cancellationToken);
+        LoggedInDto? loggedInDto = await _adminRepository.CreateStudentAsync(adminInput, cancellationToken);
 
         return !string.IsNullOrEmpty(loggedInDto.Token)
             ? Ok(loggedInDto)
