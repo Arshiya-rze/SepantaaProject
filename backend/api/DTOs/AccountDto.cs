@@ -1,52 +1,40 @@
 namespace api.DTOs;
 
+//RegisterDto in Dto ro admin mifresate baraye sabtenam student va teacher
 public record RegisterDto(
-    // Email
-    // [MaxLength(50), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,5})+)$", ErrorMessage = "Bad Email Format.")] string Email,
-    // UserName
-    // [Length(1, 30)] string UserName,
-    // Password
     //Phone Number
     int? PhoneNumber,
-    [DataType(DataType.Password), Length(10, 10, ErrorMessage = "Min of 10 and max of 10 chars are requried")] string? Password,
+    //Password
+    [DataType(DataType.Password)] string? Password,
     // ConfirmPassword
-    [DataType(DataType.Password), Length(10, 10)] string? ConfirmPassword
-    // [Length(1, 30)] string Name,
-    // [Length(1, 30)] string LastName,
-    // int NationalCode, 
-    // string Class
+    [DataType(DataType.Password)] string? ConfirmPassword
 );
 
+//LoginDto in ro student ha va teacher ha vared mikonand ta vared site beshavand
 public record LoginMemberDto(
-    // [MaxLength(50), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,5})+)$", ErrorMessage ="Bad Email Format.")]
-    // string Email,
+    //PhoneNumber
     int PhoneNumber,
-    [DataType(DataType.Password), MinLength(7), MaxLength(20)]
+    //Password
+    [DataType(DataType.Password)]
     string Password
 );
 
+//LoginAdminDto in Dto ro admin vared mikone ta betone vared site beshe
 public record LoginAdminDto(
+    //Email
     [MaxLength(50), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,5})+)$", ErrorMessage ="Bad Email Format.")]
     string Email,
+    //Password
     [DataType(DataType.Password), MinLength(7), MaxLength(20)]
     string Password
 );
 
+//LoggedInDto ro ma neshon midim bad az sabte nam baraye inke begim movafaghiyart amiz bodesh
 public class LoggedInDto
 {
-    // required public string? Token { get; init; } // this one is REQUIRED
     public string? Token { get; init; }
-    // public string? UserName { get; init; }
     public string? Name { get; init; }
     public int? PhoneNumber { get; init; }
-    // public string? LastName { get; init; }
-    // public string? Gender { get; init; }
-    // public int? NationalCode { get; init; }
-    // public string? Class { get; init; }
-
-    // public string? Role { get; init; }
-    // public string? ProfilePhotoUrl { get; init; }
+    public string? LastName { get; init; }
     public List<Attendence> Attendences { get; init; }
-    public bool IsWrongCreds { get; set; }
-    public List<string> Errors { get; init; } = [];
 }

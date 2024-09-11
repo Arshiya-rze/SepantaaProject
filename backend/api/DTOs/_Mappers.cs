@@ -38,8 +38,8 @@ public static class Mappers
         {
             Token = tokenValue,
             // UserName = appUser.NormalizedUserName,
-            Name = appUser.Name,
-            PhoneNumber = appUser.PhoneNumber
+            Name = appUser.Name
+            // PhoneNumber = appUser.PhoneNumber
             // Gender = appUser.Gender,
             // Role = appUser.Role
             // ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
