@@ -1,8 +1,10 @@
-namespace api.Controllers.Helpers;
+using Microsoft.AspNetCore.Identity;
+
+namespace api.Controllers;
 
 public class SeedController : BaseApiController
 {
-     #region Db Settings
+    #region Db Settings
     private readonly IMongoDatabase _database;
     private readonly IMongoClient _client;
     private readonly UserManager<AppUser> _userManager;
@@ -18,6 +20,7 @@ public class SeedController : BaseApiController
     }
     #endregion
 
+    // Add Roles, Admin, and Moderator to DB
     [HttpPost]
     public async Task<ActionResult> CreateDummyMembers()
     {
@@ -52,15 +55,12 @@ public class SeedController : BaseApiController
         await _roleManager.CreateAsync(new AppRole { Name = "student" });
         #endregion
 
-        #region Create Admin and Moderator and Teacher
-
+        #region Create Admin and Moderator
         // Admin
         AppUser admin = new()
         {
             UserName = "admin",
-            Email = "admin@a.com",
-            Name = "arshia",
-            LastName = "rezaiee"
+            Email = "admin@a.com"
         };
 
         await _userManager.CreateAsync(admin, "Aaaaaaaa/"); // Create admin
@@ -70,25 +70,13 @@ public class SeedController : BaseApiController
         AppUser moderator = new()
         {
             Email = "moderator@a.com",
-            UserName = "moderator",
-            Name = "prham",
-            LastName = "aghaie"
+            UserName = "moderator"
         };
 
         await _userManager.CreateAsync(moderator, "Aaaaaaaa/"); // Create moderator
         await _userManager.AddToRoleAsync(moderator, "moderator"); // Add moderator to a role of "moderator"
-        
-        // Teacher
-        AppUser teacher = new()
-        {
-            Email = "teacher@a.com",
-            UserName = "teacher"
-        };
 
-        await _userManager.CreateAsync(teacher, "Aaaaaaaa/"); // Create teacher
-        await _userManager.AddToRoleAsync(teacher, "teacher"); 
-
-        #endregion Create Admin and Moderator and Teacher
+        #endregion Create Admin and Moderator
 
         return Ok("Operation is completed. DO NOT FORGET TO CHANGE ADMIn'S PASSWORD!!!");
     }

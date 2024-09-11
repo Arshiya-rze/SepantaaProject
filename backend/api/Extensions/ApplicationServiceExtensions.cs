@@ -4,7 +4,7 @@ public static class ApplicationServiceExtensions
 {
     public static IServiceCollection AddApplicationService(this IServiceCollection services, IConfiguration configuration)
     {
-        #region MongoDbSettings
+        #region MongoDbSettings 
         // get section
         services.Configure<MyMongoDbSettings>(configuration.GetSection(nameof(MyMongoDbSettings)));
 

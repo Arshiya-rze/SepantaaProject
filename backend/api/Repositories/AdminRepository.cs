@@ -50,39 +50,39 @@ public class AdminRepository : IAdminRepository
 
     }
 
-    public async Task<LoggedInDto> CreateTeacherAsync(RegisterDto registerDto, CancellationToken cancellationToken)
-    {
-        LoggedInDto loggedInDto = new();
+    // public async Task<LoggedInDto> CreateTeacherAsync(RegisterDto registerDto, CancellationToken cancellationToken)
+    // {
+    //     LoggedInDto loggedInDto = new();
 
-        AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
+    //     AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
 
-        IdentityResult result = await _userManager.CreateAsync(appUser);
+    //     IdentityResult result = await _userManager.CreateAsync(appUser);
 
-        if (result.Succeeded)
-        {
-            IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "teacher");
+    //     if (result.Succeeded)
+    //     {
+    //         IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "teacher");
 
-            if (!roleResult.Succeeded)
-                return loggedInDto;
+    //         if (!roleResult.Succeeded)
+    //             return loggedInDto;
 
-            string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+    //         string? token = await _tokenService.CreateToken(appUser, cancellationToken);
 
-            if (!string.IsNullOrEmpty(token))
-            {
-                return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-            }
-        }
-        else
-        {
-            foreach (IdentityError error in result.Errors)
-            {
-                loggedInDto.Errors.Add(error.Description);
-            }
-        }
+    //         if (!string.IsNullOrEmpty(token))
+    //         {
+    //             return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         foreach (IdentityError error in result.Errors)
+    //         {
+    //             loggedInDto.Errors.Add(error.Description);
+    //         }
+    //     }
 
-        return loggedInDto;
+    //     return loggedInDto;
 
-    }
+    // }
 
     public async Task<LoggedInDto> LoginAsync(LoginAdminDto adminInput, CancellationToken cancellationToken)
     {

@@ -14,11 +14,11 @@ public class MemberRepository : IMemberRepository
     }
     #endregion Constructor
 
-    public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
-    {
-        IMongoQueryable<AppUser> query = _collection.AsQueryable();
+    // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
+    // {
+    //     IMongoQueryable<AppUser> query = _collection.AsQueryable();
 
-        return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
-    }
+    //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    // }
     
 }

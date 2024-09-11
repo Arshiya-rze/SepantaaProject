@@ -16,69 +16,69 @@ public class AccountRepository : IAccountRepository
     }
     #endregion Vars and Constructor
 
-    public async Task<LoggedInDto> LoginStudentAsync(LoginMemberDto studentInput, CancellationToken cancellationToken)
-    {
-        LoggedInDto loggedInDto = new();
+    // public async Task<LoggedInDto> LoginStudentAsync(LoginMemberDto studentInput, CancellationToken cancellationToken)
+    // {
+    //     LoggedInDto loggedInDto = new();
 
-        AppUser? appUser;
+    //     AppUser? appUser;
 
-        appUser = await _collectionAppUser.Find<AppUser>(doc =>
-        doc.PhoneNumber == studentInput.PhoneNumber).FirstOrDefaultAsync(cancellationToken);
+    //     appUser = await _collectionAppUser.Find<AppUser>(doc =>
+    //     doc.PhoneNumber == studentInput.PhoneNumber).FirstOrDefaultAsync(cancellationToken);
 
-        if (appUser is null)
-        {
-            loggedInDto.IsWrongCreds = true;
-            return loggedInDto;
-        }
+    //     if (appUser is null)
+    //     {
+    //         loggedInDto.IsWrongCreds = true;
+    //         return loggedInDto;
+    //     }
 
-        bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, studentInput.Password);
+    //     bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, studentInput.Password);
 
-        if (!isPassCorrect) //CheckPasswordAsync returns boolean
-        {
-            loggedInDto.IsWrongCreds = true;
-            return loggedInDto;
-        }
+    //     if (!isPassCorrect) //CheckPasswordAsync returns boolean
+    //     {
+    //         loggedInDto.IsWrongCreds = true;
+    //         return loggedInDto;
+    //     }
 
-        string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+    //     string? token = await _tokenService.CreateToken(appUser, cancellationToken);
 
-        if (!string.IsNullOrEmpty(token))
-        {
-            return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-        }
+    //     if (!string.IsNullOrEmpty(token))
+    //     {
+    //         return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+    //     }
 
-        return loggedInDto;
-    }
+    //     return loggedInDto;
+    // }
 
-    public async Task<LoggedInDto> LoginTeacherAsync(LoginMemberDto teacherInput, CancellationToken cancellationToken)
-    {
-        LoggedInDto loggedInDto = new();
+    // public async Task<LoggedInDto> LoginTeacherAsync(LoginMemberDto teacherInput, CancellationToken cancellationToken)
+    // {
+    //     LoggedInDto loggedInDto = new();
 
-        AppUser? appUser;
+    //     AppUser? appUser;
 
-        appUser = await _collectionAppUser.Find<AppUser>(doc =>
-        doc.PhoneNumber == teacherInput.PhoneNumber).FirstOrDefaultAsync(cancellationToken);
+    //     appUser = await _collectionAppUser.Find<AppUser>(doc =>
+    //     doc.PhoneNumber == teacherInput.PhoneNumber).FirstOrDefaultAsync(cancellationToken);
 
-        if (appUser is null)
-        {
-            loggedInDto.IsWrongCreds = true;
-            return loggedInDto;
-        }
+    //     if (appUser is null)
+    //     {
+    //         loggedInDto.IsWrongCreds = true;
+    //         return loggedInDto;
+    //     }
 
-        bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, teacherInput.Password);
+    //     bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, teacherInput.Password);
 
-        if (!isPassCorrect) //CheckPasswordAsync returns boolean
-        {
-            loggedInDto.IsWrongCreds = true;
-            return loggedInDto;
-        }
+    //     if (!isPassCorrect) //CheckPasswordAsync returns boolean
+    //     {
+    //         loggedInDto.IsWrongCreds = true;
+    //         return loggedInDto;
+    //     }
 
-        string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+    //     string? token = await _tokenService.CreateToken(appUser, cancellationToken);
 
-        if (!string.IsNullOrEmpty(token))
-        {
-            return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-        }
+    //     if (!string.IsNullOrEmpty(token))
+    //     {
+    //         return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+    //     }
 
-        return loggedInDto;
-    }
+    //     return loggedInDto;
+    // }
 }

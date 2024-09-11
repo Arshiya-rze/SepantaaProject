@@ -2,22 +2,14 @@ namespace api.DTOs;
 
 public static class Mappers
 {
-    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto studentInput)
+    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto adminInput)
     {
         return new AppUser
         {
-            PhoneNumber = studentInput.PhoneNumber
-            // Email = adminInput.Email,
-            // UserName = adminInput.UserName,
-            // Name = adminInput.Name.Trim(),
-            // LastName = adminInput.LastName.Trim(),
-            // NationalCode = adminInput.NationalCode,
-            // Class = adminInput.Class.Trim()
-            // DateOfBirth = userInput.DateOfBirth,
-            // Gender = userInput.Gender.ToLower()
-            // Role = userInput.Role.ToLower()
-            // Attendences = []
-            // Photos = []
+            Email = adminInput.Email, // required by AspNet Identity
+            UserName = adminInput.UserName, // required by AspNet Identity
+            PhoneNum = adminInput.PhoneNum
+            //password dar Identity vojod dare mesle email va UserName
         };
     }
 
@@ -37,12 +29,9 @@ public static class Mappers
         return new LoggedInDto
         {
             Token = tokenValue,
-            // UserName = appUser.NormalizedUserName,
-            Name = appUser.Name
-            // PhoneNumber = appUser.PhoneNumber
-            // Gender = appUser.Gender,
-            // Role = appUser.Role
-            // ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
+            UserName = appUser.NormalizedUserName,
+            PhoneNum = appUser.PhoneNum,
+            LastName = appUser.LastName
         };
     }
 
@@ -82,14 +71,4 @@ public static class Mappers
             // Attendences: Attendences 
         );
     }
-
-    // public static Photo ConvertPhotoUrlsToPhoto(string[] photoUrls, bool isMain)
-    // {
-    //     return new Photo(
-    //         Url_165: photoUrls[0],
-    //         Url_256: photoUrls[1],
-    //         Url_enlarged: photoUrls[2],
-    //         IsMain: isMain
-    //     );
-    // }
 }

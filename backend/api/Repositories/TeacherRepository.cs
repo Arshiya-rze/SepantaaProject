@@ -38,45 +38,45 @@ public class TeacherRepository : ITeacherRepository
         return ValidationsExtensions.ValidateObjectId(studentId);
     }
 
-    public async Task<ShowStudentStatusDto> AddAsync(string targetStudentUserName, AddStudentStatusDto studentInput, CancellationToken cancellationToken)
-    {
-        //inja ma bayad dar studentId id on student ke mikhaym ro dashte bashim
-        ObjectId? studentId = await GetObjectIdByUserNameAsync(targetStudentUserName, cancellationToken);
+    // public async Task<ShowStudentStatusDto> AddAsync(string targetStudentUserName, AddStudentStatusDto studentInput, CancellationToken cancellationToken)
+    // {
+    //     //inja ma bayad dar studentId id on student ke mikhaym ro dashte bashim
+    //     ObjectId? studentId = await GetObjectIdByUserNameAsync(targetStudentUserName, cancellationToken);
 
-        if (studentId is null) return null;
+    //     if (studentId is null) return null;
 
-        // AppUser? appUser = await GetByIdAsync(studentId.Value, cancellationToken);
-        // if (appUser is null)
-        //     return null;
+    //     // AppUser? appUser = await GetByIdAsync(studentId.Value, cancellationToken);
+    //     // if (appUser is null)
+    //     //     return null;
 
-        // bool doeseDateExist = await _collectionAttendence.Find<Attendence>(doc =>
-        // doc.Date == studentInput.Date).AnyAsync(cancellationToken);
+    //     // bool doeseDateExist = await _collectionAttendence.Find<Attendence>(doc =>
+    //     // doc.Date == studentInput.Date).AnyAsync(cancellationToken);
 
-        // if (doeseDateExist)
-        //     return null;
+    //     // if (doeseDateExist)
+    //     //     return null;
             
-        Attendence attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(studentInput, studentId.Value);
+    //     Attendence attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(studentInput, studentId.Value);
 
-        if (_collectionAttendence is not null)
-        {
-            await _collectionAttendence.InsertOneAsync(attendence, null, cancellationToken);
-        }
+    //     if (_collectionAttendence is not null)
+    //     {
+    //         await _collectionAttendence.InsertOneAsync(attendence, null, cancellationToken);
+    //     }
 
-        if (ObjectId.Equals != null)
-        {
-            ShowStudentStatusDto showStudentStatusDto = Mappers.ConvertAttendenceToShowStudentStatusDto(attendence);
+    //     if (ObjectId.Equals != null)
+    //     {
+    //         ShowStudentStatusDto showStudentStatusDto = Mappers.ConvertAttendenceToShowStudentStatusDto(attendence);
 
-            return showStudentStatusDto;
-        }
+    //         return showStudentStatusDto;
+    //     }
 
-        return null;
+    //     return null;
 
-            // appUser.Attendences.Add(attendence);
+    //         // appUser.Attendences.Add(attendence);
             
-            // var updatedStudent = Builders<AppUser>.Update
-            //     .Set(doc => doc.Attendences, appUser.Attendences);
+    //         // var updatedStudent = Builders<AppUser>.Update
+    //         //     .Set(doc => doc.Attendences, appUser.Attendences);
 
-            // UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
+    //         // UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
 
-    }
+    // }
 }

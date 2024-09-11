@@ -2,20 +2,24 @@ namespace api.DTOs;
 
 //RegisterDto in Dto ro admin mifresate baraye sabtenam student va teacher
 public record RegisterDto(
+    // Email
+    [MaxLength(50), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,5})+)$", ErrorMessage = "Bad Email Format.")] string Email,
+    // UserName
+    [Length(1, 30)] string UserName,
     //Phone Number
-    int? PhoneNumber,
+    string PhoneNum,
     //Password
-    [DataType(DataType.Password)] string? Password,
+    string Password,
     // ConfirmPassword
-    [DataType(DataType.Password)] string? ConfirmPassword
+    string ConfirmPassword
 );
 
 //LoginDto in ro student ha va teacher ha vared mikonand ta vared site beshavand
 public record LoginMemberDto(
     //PhoneNumber
-    int PhoneNumber,
+    string PhoneNum,
     //Password
-    [DataType(DataType.Password)]
+    // [DataType(DataType.Password)]
     string Password
 );
 
@@ -33,8 +37,10 @@ public record LoginAdminDto(
 public class LoggedInDto
 {
     public string? Token { get; init; }
-    public string? Name { get; init; }
-    public int? PhoneNumber { get; init; }
+    public string? UserName { get; init; }
+    public string? PhoneNum { get; init; }
     public string? LastName { get; init; }
+    public bool IsWrongCreds { get; set; }
+    public List<string> Errors { get; init; } = [];
     public List<Attendence> Attendences { get; init; }
 }

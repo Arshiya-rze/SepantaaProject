@@ -3,7 +3,7 @@ using MongoDbGenericRepository.Attributes;
 
 namespace api.Models;
 
-[CollectionName("role")]
+[CollectionName("roles")]
 public class AppRole : MongoIdentityRole<ObjectId>
 {   
 }
