@@ -2,48 +2,16 @@ namespace api.DTOs;
 
 public static class Mappers
 {
-    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto userInput)
+    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto adminInput)
     {
         return new AppUser
         {
-            Email = userInput.Email, // required by AspNet Identity
-            UserName = userInput.UserName, // required by AspNet Identity
-            DateOfBirth = userInput.DateOfBirth,
-            KnownAs = userInput.KnownAs.Trim(),
-            LastActive = DateTime.UtcNow,
-            Gender = userInput.Gender.ToLower(),
-            City = userInput.City.Trim(),
-            Country = userInput.Country.Trim()
+            Email = adminInput.Email, // required by AspNet Identity
+            UserName = adminInput.UserName, // required by AspNet Identity
+            PhoneNum = adminInput.PhoneNum
+            //password dar Identity vojod dare mesle email va UserName
         };
     }
-
-    public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
-    {
-        return new LoggedInDto
-        {
-            Token = tokenValue,
-            UserName = appUser.NormalizedUserName,
-            KnownAs = appUser.KnownAs,
-            Gender = appUser.Gender
-        };
-    }
-}
-
-
-// namespace api.DTOs;
-
-// public static class Mappers
-// {
-//     public static AppUser ConvertRegisterDtoToAppUser(RegisterDto adminInput)
-//     {
-//         return new AppUser
-//         {
-//             Email = adminInput.Email, // required by AspNet Identity
-//             UserName = adminInput.UserName, // required by AspNet Identity
-//             PhoneNum = adminInput.PhoneNum
-//             //password dar Identity vojod dare mesle email va UserName
-//         };
-//     }
 
 //     public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto studentInput, ObjectId studentId)
 //     {
@@ -56,16 +24,16 @@ public static class Mappers
 //         );
 //     }
 
-//     public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
-//     {
-//         return new LoggedInDto
-//         {
-//             Token = tokenValue,
-//             UserName = appUser.NormalizedUserName,
-//             PhoneNum = appUser.PhoneNum,
-//             LastName = appUser.LastName
-//         };
-//     }
+    public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
+    {
+        return new LoggedInDto
+        {
+            Token = tokenValue,
+            UserName = appUser.NormalizedUserName,
+            PhoneNum = appUser.PhoneNum,
+            LastName = appUser.LastName
+        };
+    }
 
 //     public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
 //     {
@@ -88,19 +56,4 @@ public static class Mappers
 //     //     };            
 //     // }
 
-//     public static MemberDto ConvertAppUserToMemberDto(AppUser appUser)
-//     {
-//         return new MemberDto(
-//             Id: appUser.Id.ToString(),
-//             UserName: appUser.NormalizedUserName!,
-//             Name: appUser.Name,
-//             LastName: appUser.LastName,
-//             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-//             Gender: appUser.Gender
-//             // NationalCode: appUser.NationalCode,
-//             // Class: appUser.Class
-//             // Role: appUser.Role
-//             // Attendences: Attendences 
-//         );
-//     }
-// }
+}
