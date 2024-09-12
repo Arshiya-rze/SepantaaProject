@@ -13,8 +13,7 @@ public static class Mappers
             LastActive = DateTime.UtcNow,
             Gender = userInput.Gender.ToLower(),
             City = userInput.City.Trim(),
-            Country = userInput.Country.Trim(),
-            Photos = []
+            Country = userInput.Country.Trim()
         };
     }
 
@@ -25,8 +24,7 @@ public static class Mappers
             Token = tokenValue,
             UserName = appUser.NormalizedUserName,
             KnownAs = appUser.KnownAs,
-            Gender = appUser.Gender,
-            ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
+            Gender = appUser.Gender
         };
     }
 }

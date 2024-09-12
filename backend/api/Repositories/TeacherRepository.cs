@@ -12,7 +12,7 @@ public class TeacherRepository : ITeacherRepository
     {
         var database = client.GetDatabase(dbSettings.DatabaseName);
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
-        _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.collectionAttendences);
+        // _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.collectionAttendences);
 
         _userManager = userManager;
         _tokenService = tokenService;
