@@ -27,26 +27,6 @@ public class AccountController(IAccountRepository _accountRepository) : BaseApiC
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    /// <summary>
-    /// Login accounts
-    /// </summary>
-    /// <param name="userInput"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>LoggedInDto</returns>
-    [AllowAnonymous]
-    [HttpPost("login")]
-    public async Task<ActionResult<LoggedInDto>> Login(LoginDto userInput, CancellationToken cancellationToken)
-    {
-        LoggedInDto? loggedInDto = await _accountRepository.LoginAsync(userInput, cancellationToken);
-
-        return
-            !string.IsNullOrEmpty(loggedInDto.Token) // success
-            ? Ok(loggedInDto)
-            : loggedInDto.IsWrongCreds
-            ? Unauthorized("Wrong email or password.")
-            : BadRequest("Registration has failed. Try again or contact the support.");
-    }
-
 
 
     // [AllowAnonymous]

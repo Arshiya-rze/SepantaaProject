@@ -7,7 +7,7 @@ public record RegisterDto(
     // UserName
     [Length(1, 30)] string UserName,
     //Phone Number
-    int PhoneNum,
+    string PhoneNum,
     //Password
     string Password,
     // ConfirmPassword
@@ -17,7 +17,7 @@ public record RegisterDto(
 //LoginDto in ro student ha va teacher ha vared mikonand ta vared site beshavand
 public record LoginMemberDto(
     //PhoneNumber
-    int PhoneNum,
+    string PhoneNum,
     //Password
     // [DataType(DataType.Password)]
     string Password
@@ -38,7 +38,7 @@ public class LoggedInDto
 {
     public string? Token { get; init; }
     public string? UserName { get; init; }
-    public int? PhoneNum { get; init; }
+    public string? PhoneNum { get; init; }
     public string? LastName { get; init; }
     public bool IsWrongCreds { get; set; }
     public List<string> Errors { get; init; } = [];

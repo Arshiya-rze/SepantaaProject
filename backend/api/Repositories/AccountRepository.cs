@@ -49,39 +49,6 @@ public class AccountRepository : IAccountRepository
         return loggedInDto; // failed
     }
 
-    public async Task<LoggedInDto> LoginAsync(LoginDto userInput, CancellationToken cancellationToken)
-    {
-        LoggedInDto loggedInDto = new();
-
-        AppUser? appUser;
-
-        // Find appUser by Email or UserName
-        appUser = await _userManager.FindByEmailAsync(userInput.Email);
-
-        if (appUser is null)
-        {
-            loggedInDto.IsWrongCreds = true;
-            return loggedInDto;
-        }
-
-        bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, userInput.Password);
-
-        if (!isPassCorrect) //CheckPasswordAsync returns boolean
-        {
-            loggedInDto.IsWrongCreds = true;
-            return loggedInDto;
-        }
-
-        string? token = await _tokenService.CreateToken(appUser, cancellationToken);
-
-        if (!string.IsNullOrEmpty(token))
-        {
-            return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-        }
-
-        return loggedInDto;
-    }
-
     // public async Task<LoggedInDto> LoginStudentAsync(LoginMemberDto studentInput, CancellationToken cancellationToken)
     // {
     //     LoggedInDto loggedInDto = new();
