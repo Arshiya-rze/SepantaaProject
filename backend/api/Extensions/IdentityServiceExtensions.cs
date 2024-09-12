@@ -1,5 +1,6 @@
 using AspNetCore.Identity.MongoDbCore.Extensions;
 using AspNetCore.Identity.MongoDbCore.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 
 namespace api.Extensions;
 
@@ -42,10 +43,10 @@ public static class IdentityServiceExtensions
                 },
                 IdentityOptionsAction = options =>
                 {
-                    // options.Password.RequireDigit = false;
-                    // options.Password.RequiredLength = 8;
-                    // options.Password.RequireNonAlphanumeric = true;
-                    // options.Password.RequireLowercase = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 8;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequireLowercase = false;
 
                     // lockout
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
@@ -72,4 +73,3 @@ public static class IdentityServiceExtensions
         return services;
     }
 }
-

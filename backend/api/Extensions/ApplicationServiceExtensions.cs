@@ -4,7 +4,8 @@ public static class ApplicationServiceExtensions
 {
     public static IServiceCollection AddApplicationService(this IServiceCollection services, IConfiguration configuration)
     {
-        #region MongoDbSettings 
+        #region MongoDbSettings
+        ///// get values from this file: appsettings.Development.json /////
         // get section
         services.Configure<MyMongoDbSettings>(configuration.GetSection(nameof(MyMongoDbSettings)));
 
@@ -31,7 +32,7 @@ public static class ApplicationServiceExtensions
 
         #region Other
 
-        // services.AddScoped<LogUserActivity>();
+        // services.AddScoped<LogUserActivity>(); // monitor/log userActivity
 
         #endregion Other
 

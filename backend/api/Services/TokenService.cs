@@ -1,10 +1,12 @@
+using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Identity;
 
 namespace api.Services;
 public class TokenService : ITokenService
 {
     private readonly IMongoCollection<AppUser> _collection;
-    private readonly SymmetricSecurityKey? _key;
+    private readonly SymmetricSecurityKey? _key; // set it as nullable by ? mark
     private readonly UserManager<AppUser> _userManager;
 
     public TokenService(IConfiguration config, IMongoClient client, IMyMongoDbSettings dbSettings, UserManager<AppUser> userManager)
@@ -59,6 +61,14 @@ public class TokenService : ITokenService
         return tokenHandler.WriteToken(securityToken);
     }
 
+    /// <summary>
+    /// Creates a new ObjectId, hashes it, and stores its value 
+    /// into the appUser's doc using the userId param.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <param name="jtiValue"></param>
+    /// <returns>string: identifierHash</returns>
     private async Task<string?> GenerateAndStoreHashedId(ObjectId userId, CancellationToken cancellationToken, string? jtiValue = null)
     {
         string newObjectId = ObjectId.GenerateNewId().ToString();
@@ -78,6 +88,13 @@ public class TokenService : ITokenService
         return null;
     }
 
+    // /// <summary>
+    // /// Gets a string hashedUserId of the token and returns the user's actual ObjectId from DB
+    // /// OR returns null if conversion failes.
+    // /// </summary>
+    // /// <param name="userIdHashed"></param>
+    // /// <param name="cancellationToken"></param>
+    // /// <returns>Decrypted AppUser valid ObjedId OR null</returns>
     public async Task<ObjectId?> GetActualUserIdAsync(string? hashedUserId, CancellationToken cancellationToken)
     {
         if (hashedUserId is null) return null;

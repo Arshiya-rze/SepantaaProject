@@ -16,6 +16,72 @@ public class AccountRepository : IAccountRepository
     }
     #endregion Vars and Constructor
 
+    public async Task<LoggedInDto> CreateAsync(RegisterDto registerDto, CancellationToken cancellationToken)
+    {
+        LoggedInDto loggedInDto = new();
+
+        AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
+
+        IdentityResult? userCreatedResult = await _userManager.CreateAsync(appUser, registerDto.Password);
+
+        if (userCreatedResult.Succeeded)
+        {
+            IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "member");
+
+            if (!roleResult.Succeeded) // failed
+                return loggedInDto;
+
+            string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+            }
+        }
+        else // Store and return userCreatedResult errors if failed.
+        {
+            foreach (IdentityError error in userCreatedResult.Errors)
+            {
+                loggedInDto.Errors.Add(error.Description);
+            }
+        }
+
+        return loggedInDto; // failed
+    }
+
+    public async Task<LoggedInDto> LoginAsync(LoginDto userInput, CancellationToken cancellationToken)
+    {
+        LoggedInDto loggedInDto = new();
+
+        AppUser? appUser;
+
+        // Find appUser by Email or UserName
+        appUser = await _userManager.FindByEmailAsync(userInput.Email);
+
+        if (appUser is null)
+        {
+            loggedInDto.IsWrongCreds = true;
+            return loggedInDto;
+        }
+
+        bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, userInput.Password);
+
+        if (!isPassCorrect) //CheckPasswordAsync returns boolean
+        {
+            loggedInDto.IsWrongCreds = true;
+            return loggedInDto;
+        }
+
+        string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+        }
+
+        return loggedInDto;
+    }
+
     // public async Task<LoggedInDto> LoginStudentAsync(LoginMemberDto studentInput, CancellationToken cancellationToken)
     // {
     //     LoggedInDto loggedInDto = new();
