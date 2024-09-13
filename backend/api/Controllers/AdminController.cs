@@ -3,7 +3,6 @@ namespace api.Controllers;
 [Authorize(Policy = "RequiredAdminRole")]
 public class AdminController(IAdminRepository _adminRepository) : BaseApiController
 {
-    [AllowAnonymous]
     [HttpPost("add-student")]
     public async Task<ActionResult<LoggedInDto>> RegisterStudent(RegisterDto adminInput, CancellationToken cancellationToken)
     {
@@ -18,8 +17,7 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
             ? BadRequest(loggedInDto.Errors)
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
-    
-    [AllowAnonymous]
+
     [HttpPost("add-teacher")]
     public async Task<ActionResult<LoggedInDto>> RegisterTeacher(RegisterDto adminInput, CancellationToken cancellationToken)
     {
