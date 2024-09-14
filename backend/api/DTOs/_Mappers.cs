@@ -13,16 +13,16 @@ public static class Mappers
         };
     }
 
-//     public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto studentInput, ObjectId studentId)
-//     {
-//         return new Attendence(
-//             StudentId:  studentId,
-//             DaysOfWeek: studentInput.DaysOfWeek,
-//             Date: studentInput.Date,
-//             // isPresent: addStudentStatusDto.isPresent
-//             AbsentOrPresent: studentInput.AbsentOrPresent
-//         );
-//     }
+    public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto studentInput, ObjectId studentId)
+    {
+        return new Attendence(
+            StudentId:  studentId,
+            DaysOfWeek: studentInput.DaysOfWeek,
+            Date: studentInput.Date,
+            // isPresent: addStudentStatusDto.isPresent
+            AbsentOrPresent: studentInput.AbsentOrPresent
+        );
+    }
 
     public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
     {
@@ -35,16 +35,16 @@ public static class Mappers
         };
     }
 
-//     public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
-//     {
-//         return new ShowStudentStatusDto
-//         {
-//             // StudentId = studentId,
-//             DaysOfWeek = attendence.DaysOfWeek,
-//             Date = attendence.Date,
-//             AbsentOrPresent = attendence.AbsentOrPresent
-//         };
-//     }
+    public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
+    {
+        return new ShowStudentStatusDto
+        {
+            // StudentId = studentId,
+            DaysOfWeek = attendence.DaysOfWeek,
+            Date = attendence.Date,
+            AbsentOrPresent = attendence.AbsentOrPresent
+        };
+    }
 
 //     // public static ShowStudentStatusDto ConvertTimeToShowStudentStatusDto(Time time)
 //     // {
