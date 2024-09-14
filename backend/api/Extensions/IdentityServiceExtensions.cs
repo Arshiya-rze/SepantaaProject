@@ -43,9 +43,10 @@ public static class IdentityServiceExtensions
                 },
                 IdentityOptionsAction = options =>
                 {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequiredLength = 8;
-                    options.Password.RequireNonAlphanumeric = true;
+                    //New
+                    options.Password.RequireDigit = true;
+                    options.Password.RequiredLength = 10;
+                    options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireLowercase = false;
 
                     // lockout
