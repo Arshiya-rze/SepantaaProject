@@ -15,11 +15,12 @@ public record RegisterDto(
 );
 
 //LoginDto in ro student ha va teacher ha vared mikonand ta vared site beshavand
-public record LoginMemberDto(
+public record LoginDto(
+    //Email
+    [MaxLength(50), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,5})+)$", ErrorMessage = "Bad Email Format.")] string Email,
     //PhoneNumber
-    string PhoneNum,
+    // string PhoneNum,
     //Password
-    // [DataType(DataType.Password)]
     string Password
 );
 

@@ -37,7 +37,7 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
     [HttpPost("login")]
     public async Task<ActionResult<LoggedInDto>> Login(LoginAdminDto adminInput, CancellationToken cancellationToken)
     {
-        LoggedInDto loggedInDto = await _adminRepository.LoginAsync(adminInput, cancellationToken);
+        LoggedInDto? loggedInDto = await _adminRepository.LoginAsync(adminInput, cancellationToken);
 
         return
             !string.IsNullOrEmpty(loggedInDto.Token)
