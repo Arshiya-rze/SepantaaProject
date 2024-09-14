@@ -55,9 +55,9 @@ public class AdminRepository : IAdminRepository
 
         AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
 
-        IdentityResult result = await _userManager.CreateAsync(appUser);
+        IdentityResult? userCreatedResult = await _userManager.CreateAsync(appUser, registerDto.Password);
 
-        if (result.Succeeded)
+        if (userCreatedResult.Succeeded)
         {
             IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "teacher");
 
@@ -73,7 +73,7 @@ public class AdminRepository : IAdminRepository
         }
         else
         {
-            foreach (IdentityError error in result.Errors)
+            foreach (IdentityError error in userCreatedResult.Errors)
             {
                 loggedInDto.Errors.Add(error.Description);
             }

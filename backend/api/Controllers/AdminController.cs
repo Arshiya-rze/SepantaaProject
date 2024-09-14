@@ -21,8 +21,8 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
     [HttpPost("add-teacher")]
     public async Task<ActionResult<LoggedInDto>> RegisterTeacher(RegisterDto adminInput, CancellationToken cancellationToken)
     {
-        if (adminInput.PhoneNum is null)
-            return BadRequest("PhoneNumber is Empty please set Value.");
+        if (adminInput.Password != adminInput.ConfirmPassword) 
+            return BadRequest("Passwords don't match!");
 
         LoggedInDto? loggedInDto = await _adminRepository.CreateTeacherAsync(adminInput, cancellationToken);
 
