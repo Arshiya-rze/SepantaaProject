@@ -9,7 +9,6 @@ public static class Mappers
             Email = adminInput.Email, // required by AspNet Identity
             UserName = adminInput.UserName, // required by AspNet Identity
             PhoneNum = adminInput.PhoneNum
-            //password dar Identity vojod dare mesle email va UserName
         };
     }
 

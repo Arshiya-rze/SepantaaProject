@@ -1,8 +1,9 @@
 namespace api.Controllers;
 
-[Authorize(Policy = "RequiredAdminRole")]
+// [Authorize(Policy = "RequiredAdminRole")]
 public class AdminController(IAdminRepository _adminRepository) : BaseApiController
 {
+    [AllowAnonymous]
     [HttpPost("add-student")]
     public async Task<ActionResult<LoggedInDto>> RegisterStudent(RegisterDto adminInput, CancellationToken cancellationToken)
     {

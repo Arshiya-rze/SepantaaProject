@@ -48,6 +48,7 @@ public static class IdentityServiceExtensions
                     options.Password.RequiredLength = 10;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
 
                     // lockout
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
