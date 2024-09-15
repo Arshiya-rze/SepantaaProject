@@ -44,7 +44,7 @@ public class SeedController : BaseApiController
 
         if (databaseExists == true)
             // return BadRequest("Database already exists");
-        await _client.DropDatabaseAsync("sepanta-project");
+            await _client.DropDatabaseAsync("sepanta-project");
         // await _database.DropCollectionAsync(_collectionName);
         #endregion If databaseExists
 
@@ -57,20 +57,12 @@ public class SeedController : BaseApiController
 
         #region Create Admin and Moderator
         // Admin
-        AppUser admin = new(
-            Id: ,
-            Name: "admin",
-            Email: "admin@a.com",
-            LastName: "",
-            PhoneNumber: "",
-            Password: "",
-            ConfirmPassword: "",
-            Gender: "",
-            DateOfBirth: ""
-        );
-        
-        
-      
+        AppUser admin = new()
+        {
+            UserName = "admin",
+            Email = "admin@a.com"
+        };
+
 
         await _userManager.CreateAsync(admin, "Aaaaaaaa/"); // Create admin
         await _userManager.AddToRolesAsync(admin, ["admin", "moderator"]); // Add admin to two roles of "admin" and "moderator"
