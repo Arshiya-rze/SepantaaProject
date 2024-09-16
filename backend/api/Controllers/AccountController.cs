@@ -32,13 +32,17 @@ public class AccountController(IAccountRepository _accountRepository) : BaseApiC
     public async Task<ActionResult<LoggedInDto>> Login(LoginDto userInput, CancellationToken cancellationToken)
     {
         LoggedInDto? loggedInDto = await _accountRepository.LoginAsync(userInput, cancellationToken);
+        //old cod
+        // if (loggedInDto.IsWrongCreds) return Unauthorized("Invalid userName or Password");
 
-        return
-            !string.IsNullOrEmpty(loggedInDto.Token) // success
+        // return loggedInDto.Token is null ? BadRequest("Login has failed. Try again.") : loggedInDto;
+        //new code
+
+        return !string.IsNullOrEmpty(loggedInDto.Token)
             ? Ok(loggedInDto)
-            : loggedInDto.IsWrongCreds
-            ? Unauthorized("Wrong email or password.")
-            : BadRequest("Registration has failed. Try again or contact the support.");
+            : loggedInDto.IsWrongCreds //inja shart BadRequest ro minevisim
+            ? BadRequest("Wrong email or password")
+            : BadRequest("Registration has failed try again.");
     }
 
     // [AllowAnonymous]

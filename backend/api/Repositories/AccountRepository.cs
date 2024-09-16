@@ -16,7 +16,7 @@ public class AccountRepository : IAccountRepository
     }
     #endregion Vars and Constructor
 
-     public async Task<LoggedInDto> CreateAsync(RegisterDto registerDto, CancellationToken cancellationToken)
+    public async Task<LoggedInDto> CreateAsync(RegisterDto registerDto, CancellationToken cancellationToken)
     {
         LoggedInDto loggedInDto = new();
 
@@ -49,27 +49,23 @@ public class AccountRepository : IAccountRepository
         return loggedInDto; // failed
     }
 
-    public async Task<LoggedInDto> LoginAsync(LoginDto userInput, CancellationToken cancellationToken)
+     public async Task<LoggedInDto> LoginAsync(LoginDto userInput, CancellationToken cancellationToken)
     {
         LoggedInDto loggedInDto = new();
 
         AppUser? appUser;
 
-        // Find appUser by Email or UserName
         appUser = await _userManager.FindByEmailAsync(userInput.Email);
-        // AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc => 
-        // doc.PhoneNum == userInput.PhoneNum).FirstOrDefaultAsync(cancellationToken); 
 
         if (appUser is null)
         {
-            return null;
-            // loggedInDto.IsWrongCreds = true;
-            // return loggedInDto;
+            loggedInDto.IsWrongCreds = true;
+            return loggedInDto;
         }
 
         bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, userInput.Password);
 
-        if (!isPassCorrect) //CheckPasswordAsync returns boolean
+        if (!isPassCorrect)
         {
             loggedInDto.IsWrongCreds = true;
             return loggedInDto;
