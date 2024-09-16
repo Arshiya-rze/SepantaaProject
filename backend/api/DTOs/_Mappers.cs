@@ -17,23 +17,6 @@ public static class Mappers
         };
     }
 
-    public static AppMember ConvertAddMemberDtoToAppMember(AddMemberDto adminInput)
-    {
-        return new AppMember
-        (
-            Id: ObjectId.Empty,
-            Email: adminInput.Email,
-            Name: adminInput.Name,
-            LastName: adminInput.LastName,
-            PhoneNumber: adminInput.PhoneNumber,
-            Password: adminInput.Password,
-            ConfirmPassword: adminInput.ConfirmPassword,
-            Gender: adminInput.Gender,
-            DateOfBirth: adminInput.DateOfBirth,
-            Role: adminInput.Role
-        );
-    }
-
     public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
     {
         return new LoggedInDto
@@ -44,18 +27,6 @@ public static class Mappers
             Gender = appUser.Gender
         };
     }
-
-    public static ShowMemberDto ConvertAppMemberToShowMemberDto(AppMember appMember)
-    {
-        return new ShowMemberDto
-        (
-            Id: appMember.Id,
-            Name: appMember.Name,
-            PhoneNumber: appMember.PhoneNumber,
-            Role: appMember.Role
-        );
-    }
-
 
 
 }

@@ -4,7 +4,6 @@ public class AdminRepository : IAdminRepository
 {
     #region Vars and Constructor
     private readonly IMongoCollection<AppUser>? _collectionAppUser;
-    private readonly IMongoCollection<AppMember>? _collectionAppMember;
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
 
@@ -12,37 +11,36 @@ public class AdminRepository : IAdminRepository
     {
         var database = client.GetDatabase(dbSettings.DatabaseName);
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
-        _collectionAppMember = database.GetCollection<AppMember>(AppVariablesExtensions.collectionMembers);
 
         _userManager = userManager;
         _tokenService = tokenService;
     }
     #endregion Vars and Constructor
 
-    public async Task<ShowMemberDto> CreateStudentAsync(AddMemberDto memberDto, CancellationToken cancellationToken)
-    {
-        bool doeasPhoneNumberExist = await _collectionAppMember.Find<AppMember>(doc =>
-            doc.PhoneNumber == memberDto.PhoneNumber).AnyAsync(cancellationToken);
+    // public async Task<ShowMemberDto> CreateStudentAsync(AddMemberDto memberDto, CancellationToken cancellationToken)
+    // {
+    //     bool doeasPhoneNumberExist = await _collectionAppMember.Find<AppMember>(doc =>
+    //         doc.PhoneNumber == memberDto.PhoneNumber).AnyAsync(cancellationToken);
 
-        if (doeasPhoneNumberExist)
-            return null;
+    //     if (doeasPhoneNumberExist)
+    //         return null;
 
-        AppMember appMember = Mappers.ConvertAddMemberDtoToAppMember(memberDto);
+    //     AppMember appMember = Mappers.ConvertAddMemberDtoToAppMember(memberDto);
 
-        if (_collectionAppMember is not null)
-        {
-            await _collectionAppMember.InsertOneAsync(appMember, null, cancellationToken);
-        }
+    //     if (_collectionAppMember is not null)
+    //     {
+    //         await _collectionAppMember.InsertOneAsync(appMember, null, cancellationToken);
+    //     }
 
-        if (ObjectId.Equals != null)
-        {
-            ShowMemberDto showMemberDto = Mappers.ConvertAppMemberToShowMemberDto(appMember);
+    //     if (ObjectId.Equals != null)
+    //     {
+    //         ShowMemberDto showMemberDto = Mappers.ConvertAppMemberToShowMemberDto(appMember);
 
-            return showMemberDto;
-        }
+    //         return showMemberDto;
+    //     }
 
-        return null;
-    }
+    //     return null;
+    // }
 
     public async Task<LoggedInDto> CreateTeacherAsync(RegisterDto registerDto, CancellationToken cancellationToken)
     {
