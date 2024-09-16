@@ -44,15 +44,14 @@ public class SeedController : BaseApiController
 
         if (databaseExists == true)
             // return BadRequest("Database already exists");
-            await _client.DropDatabaseAsync("sepanta-project");
+        await _client.DropDatabaseAsync("match-finder-plus");
         // await _database.DropCollectionAsync(_collectionName);
         #endregion If databaseExists
 
         #region Create Roles
         await _roleManager.CreateAsync(new AppRole { Name = "admin" });
         await _roleManager.CreateAsync(new AppRole { Name = "moderator" });
-        await _roleManager.CreateAsync(new AppRole { Name = "teacher" });
-        await _roleManager.CreateAsync(new AppRole { Name = "student" });
+        await _roleManager.CreateAsync(new AppRole { Name = "member" });
         #endregion
 
         #region Create Admin and Moderator
@@ -62,7 +61,6 @@ public class SeedController : BaseApiController
             UserName = "admin",
             Email = "admin@a.com"
         };
-
 
         await _userManager.CreateAsync(admin, "Aaaaaaaa/"); // Create admin
         await _userManager.AddToRolesAsync(admin, ["admin", "moderator"]); // Add admin to two roles of "admin" and "moderator"

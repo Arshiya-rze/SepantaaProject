@@ -2,25 +2,19 @@ namespace api.DTOs;
 
 public static class Mappers
 {
-    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto adminInput)
+    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto userInput)
     {
         return new AppUser
         {
-            Email = adminInput.Email, // required by AspNet Identity
-            UserName = adminInput.UserName, // required by AspNet Identity
-            PhoneNum = adminInput.PhoneNum
+            Email = userInput.Email, // required by AspNet Identity
+            UserName = userInput.UserName, // required by AspNet Identity
+            DateOfBirth = userInput.DateOfBirth,
+            KnownAs = userInput.KnownAs.Trim(),
+            LastActive = DateTime.UtcNow,
+            Gender = userInput.Gender.ToLower(),
+            City = userInput.City.Trim(),
+            Country = userInput.Country.Trim()
         };
-    }
-
-    public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto studentInput, ObjectId studentId)
-    {
-        return new Attendence(
-            StudentId:  studentId,
-            DaysOfWeek: studentInput.DaysOfWeek,
-            Date: studentInput.Date,
-            // isPresent: addStudentStatusDto.isPresent
-            AbsentOrPresent: studentInput.AbsentOrPresent
-        );
     }
 
     public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
@@ -29,30 +23,53 @@ public static class Mappers
         {
             Token = tokenValue,
             UserName = appUser.NormalizedUserName,
-            PhoneNum = appUser.PhoneNum,
-            LastName = appUser.LastName
+            KnownAs = appUser.KnownAs,
+            Gender = appUser.Gender
         };
     }
 
-    public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
+    // public static MemberDto ConvertAppUserToMemberDto(AppUser appUser)
+    public static MemberDto ConvertAppUserToMemberDto(AppUser appUser, bool isFollowing = false)
     {
-        return new ShowStudentStatusDto
-        {
-            // StudentId = studentId,
-            DaysOfWeek = attendence.DaysOfWeek,
-            Date = attendence.Date,
-            AbsentOrPresent = attendence.AbsentOrPresent
-        };
+        return new MemberDto(
+            UserName: appUser.NormalizedUserName!,
+            Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
+            KnownAs: appUser.KnownAs,
+            LastActive: appUser.LastActive,
+            Created: appUser.CreatedOn,
+            Gender: appUser.Gender,
+            Introduction: appUser.Introduction,
+            LookingFor: appUser.LookingFor,
+            Interests: appUser.Interests,
+            City: appUser.City,
+            Country: appUser.Country,
+            IsFollowing: isFollowing
+        );
     }
 
-//     // public static ShowStudentStatusDto ConvertTimeToShowStudentStatusDto(Time time)
-//     // {
-//     //     return new ShowStudentStatusDto
-//     //     {
-//     //         Date = time.Date,
-//     //         TimeDay = time.TimeDay,
-//     //         AbsentOrPresent = time.AbsentOrPresent
-//     //     };            
-//     // }
+
 
 }
+
+
+
+    // public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto studentInput, ObjectId studentId)
+    // {
+    //     return new Attendence(
+    //         StudentId:  studentId,
+    //         DaysOfWeek: studentInput.DaysOfWeek,
+    //         Date: studentInput.Date,
+    //         // isPresent: addStudentStatusDto.isPresent
+    //         AbsentOrPresent: studentInput.AbsentOrPresent
+    //     );
+    // }
+    // public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
+    // {
+    //     return new ShowStudentStatusDto
+    //     {
+    //         // StudentId = studentId,
+    //         DaysOfWeek = attendence.DaysOfWeek,
+    //         Date = attendence.Date,
+    //         AbsentOrPresent = attendence.AbsentOrPresent
+    //     };
+    // }

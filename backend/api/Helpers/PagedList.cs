@@ -2,6 +2,8 @@ namespace api.Helpers;
 
 public class PagedList<T> : List<T> // Generic (Type Agnostic)
 {
+    public PagedList() { }
+    
     // set props values
     private PagedList(IEnumerable<T> items, int itemsCount, int pageNumber, int pageSize)
     {
@@ -10,7 +12,7 @@ public class PagedList<T> : List<T> // Generic (Type Agnostic)
         PageSize = pageSize;
         TotalItems = itemsCount;
         AddRange(items);
-    } 
+    }
 
     public int CurrentPage { get; set; }
     public int TotalPages { get; set; }
@@ -31,6 +33,8 @@ public class PagedList<T> : List<T> // Generic (Type Agnostic)
 
         IEnumerable<T> items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
 
-        return new(items, count, pageNumber, pageSize);
+        new PagedList<T>();
+
+        return new PagedList<T>(items, count, pageNumber, pageSize);
     }
 }

@@ -43,12 +43,10 @@ public static class IdentityServiceExtensions
                 },
                 IdentityOptionsAction = options =>
                 {
-                    //New
-                    options.Password.RequireDigit = true;
-                    options.Password.RequiredLength = 10;
-                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 8;
+                    options.Password.RequireNonAlphanumeric = true;
                     options.Password.RequireLowercase = false;
-                    options.Password.RequireUppercase = false;
 
                     // lockout
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
@@ -69,8 +67,7 @@ public static class IdentityServiceExtensions
         #region Policy
         services.AddAuthorizationBuilder()
             .AddPolicy("RequiredAdminRole", policy => policy.RequireRole("admin"))
-            .AddPolicy("RequiredModeratorRole", policy => policy.RequireRole("admin", "moderator"))
-            .AddPolicy("RequiredTeacherRole", policy => policy.RequireRole("teacher"));
+            .AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("admin", "moderator"));
         #endregion
 
         return services;
