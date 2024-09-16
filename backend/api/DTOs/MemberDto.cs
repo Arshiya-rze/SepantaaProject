@@ -1,15 +1,14 @@
-public record MemberDto(
-    // string Schema,
-    int Age,
-    string UserName,
-    string KnownAs,
-    DateTime LastActive,
-    DateTime Created,
-    string Gender,
-    string? Introduction,
-    string? LookingFor,
-    string? Interests,
-    string City,
-    string Country,
-    bool IsFollowing
+namespace api.DTOs;
+
+public record AddMemberDto (
+    int PhoneNumber,
+    string Password,
+    string ConfirmPassword
+);
+
+public record ShowMemberDto (
+    ObjectId Id,
+    string Token,
+    string Name,
+    int PhoneNumber
 );
