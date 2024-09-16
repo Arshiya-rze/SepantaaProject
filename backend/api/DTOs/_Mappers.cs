@@ -12,9 +12,23 @@ public static class Mappers
             KnownAs = userInput.KnownAs.Trim(),
             LastActive = DateTime.UtcNow,
             Gender = userInput.Gender.ToLower(),
-            City = userInput.City.Trim(),
-            Country = userInput.Country.Trim()
         };
+    }
+
+    public static AppMember ConvertAddMemberDtoToAppMember(AddMemberDto adminInput)
+    {
+        return new AppMember
+        (
+            Id: ObjectId.Empty,
+            Email: adminInput.Email,
+            Name: adminInput.Name,
+            LastName: adminInput.LastName,
+            PhoneNumber: adminInput.PhoneNumber,
+            Password: adminInput.Password,
+            ConfirmPassword: adminInput.ConfirmPassword,
+            Gender: adminInput.Gender,
+            DateOfBirth: adminInput.DateOfBirth
+        );
     }
 
     public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
@@ -28,22 +42,14 @@ public static class Mappers
         };
     }
 
-    // public static MemberDto ConvertAppUserToMemberDto(AppUser appUser)
-    public static MemberDto ConvertAppUserToMemberDto(AppUser appUser, bool isFollowing = false)
+    public static ShowMemberDto ConvertAppMemberToShowMemberDto(AppMember appMember, string tokenValue)
     {
-        return new MemberDto(
-            UserName: appUser.NormalizedUserName!,
-            Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-            KnownAs: appUser.KnownAs,
-            LastActive: appUser.LastActive,
-            Created: appUser.CreatedOn,
-            Gender: appUser.Gender,
-            Introduction: appUser.Introduction,
-            LookingFor: appUser.LookingFor,
-            Interests: appUser.Interests,
-            City: appUser.City,
-            Country: appUser.Country,
-            IsFollowing: isFollowing
+        return new ShowMemberDto
+        (
+            Id: appMember.Id,
+            Token: tokenValue,
+            Name: appMember.Name,
+            PhoneNumber: appMember.PhoneNumber
         );
     }
 

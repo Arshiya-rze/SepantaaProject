@@ -1,145 +1,148 @@
-// namespace api.Repositories;
+namespace api.Repositories;
 
-// public class AdminRepository : IAdminRepository
-// {
-//     #region Vars and Constructor
-//     private readonly IMongoCollection<AppUser>? _collectionAppUser;
-//     private readonly UserManager<AppUser> _userManager;
-//     private readonly ITokenService _tokenService;
+public class AdminRepository : IAdminRepository
+{
+    #region Vars and Constructor
+    private readonly IMongoCollection<AppUser>? _collectionAppUser;
+    private readonly IMongoCollection<AppMember>? _collectionAppMember;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly ITokenService _tokenService;
 
-//     public AdminRepository(IMongoClient client, ITokenService tokenService, IMyMongoDbSettings dbSettings, UserManager<AppUser> userManager)
-//     {
-//         var database = client.GetDatabase(dbSettings.DatabaseName);
-//         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
-//         _userManager = userManager;
-//         _tokenService = tokenService;
-//     }
-//     #endregion Vars and Constructor
+    public AdminRepository(IMongoClient client, ITokenService tokenService, IMyMongoDbSettings dbSettings, UserManager<AppUser> userManager)
+    {
+        var database = client.GetDatabase(dbSettings.DatabaseName);
+        _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
+        _collectionAppMember = database.GetCollection<AppMember>(AppVariablesExtensions.collectionMembers);
 
-//     public async Task<LoggedInDto> CreateStudentAsync(RegisterDto registerDto, CancellationToken cancellationToken)
-//     {
-//         LoggedInDto loggedInDto = new();
+        _userManager = userManager;
+        _tokenService = tokenService;
+    }
+    #endregion Vars and Constructor
 
-//         AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
+    public async Task<ShowMemberDto> CreateStudentAsync(AddMemberDto memberDto, CancellationToken cancellationToken)
+    {
+        ShowMemberDto showMemberDto = new();
 
-//         IdentityResult? userCreatedResult = await _userManager.CreateAsync(appUser, registerDto.Password);
+        AppMember appMember = Mappers.ConvertRegisterDtoToAppUser(registerDto);
 
-//         if (userCreatedResult.Succeeded)
-//         {
-//             IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "member");
+        IdentityResult? userCreatedResult = await _userManager.CreateAsync(appUser, registerDto.Password);
 
-//             if (!roleResult.Succeeded) // failed
-//                 return loggedInDto;
+        if (userCreatedResult.Succeeded)
+        {
+            IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "member");
 
-//             string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+            if (!roleResult.Succeeded) // failed
+                return loggedInDto;
 
-//             if (!string.IsNullOrEmpty(token))
-//             {
-//                 return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-//             }
-//         }
-//         else // Store and return userCreatedResult errors if failed.
-//         {
-//             foreach (IdentityError error in userCreatedResult.Errors)
-//             {
-//                 loggedInDto.Errors.Add(error.Description);
-//             }
-//         }
+            string? token = await _tokenService.CreateToken(appUser, cancellationToken);
 
-//         return loggedInDto; // failed
-//     }
+            if (!string.IsNullOrEmpty(token))
+            {
+                return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+            }
+        }
+        else // Store and return userCreatedResult errors if failed.
+        {
+            foreach (IdentityError error in userCreatedResult.Errors)
+            {
+                loggedInDto.Errors.Add(error.Description);
+            }
+        }
 
-//     public async Task<LoggedInDto> CreateTeacherAsync(RegisterDto registerDto, CancellationToken cancellationToken)
-//     {
-//         LoggedInDto loggedInDto = new();
+        return loggedInDto; // failed
+    }
 
-//         AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
+    public async Task<LoggedInDto> CreateTeacherAsync(RegisterDto registerDto, CancellationToken cancellationToken)
+    {
+        LoggedInDto loggedInDto = new();
 
-//         IdentityResult? userCreatedResult = await _userManager.CreateAsync(appUser, registerDto.Password);
+        AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
 
-//         if (userCreatedResult.Succeeded)
-//         {
-//             IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "teacher");
+        IdentityResult? userCreatedResult = await _userManager.CreateAsync(appUser, registerDto.Password);
 
-//             if (!roleResult.Succeeded)
-//                 return loggedInDto;
+        if (userCreatedResult.Succeeded)
+        {
+            IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "teacher");
 
-//             string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+            if (!roleResult.Succeeded)
+                return loggedInDto;
 
-//             if (!string.IsNullOrEmpty(token))
-//             {
-//                 return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-//             }
-//         }
-//         else
-//         {
-//             foreach (IdentityError error in userCreatedResult.Errors)
-//             {
-//                 loggedInDto.Errors.Add(error.Description);
-//             }
-//         }
+            string? token = await _tokenService.CreateToken(appUser, cancellationToken);
 
-//         return loggedInDto;
-//     }
+            if (!string.IsNullOrEmpty(token))
+            {
+                return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+            }
+        }
+        else
+        {
+            foreach (IdentityError error in userCreatedResult.Errors)
+            {
+                loggedInDto.Errors.Add(error.Description);
+            }
+        }
 
-//     public async Task<LoggedInDto> LoginAsync(LoginAdminDto adminInput, CancellationToken cancellationToken)
-//     {
-//         LoggedInDto loggedInDto = new();
+        return loggedInDto;
+    }
 
-//         AppUser? appUser;
+    public async Task<LoggedInDto> LoginAsync(LoginAdminDto adminInput, CancellationToken cancellationToken)
+    {
+        LoggedInDto loggedInDto = new();
 
-//         appUser = await _userManager.FindByEmailAsync(adminInput.Email);
+        AppUser? appUser;
 
-//         if (appUser is null)
-//         {
-//             loggedInDto.IsWrongCreds = true;
-//             return loggedInDto;
-//         }
+        appUser = await _userManager.FindByEmailAsync(adminInput.Email);
 
-//         bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, adminInput.Password);
+        if (appUser is null)
+        {
+            loggedInDto.IsWrongCreds = true;
+            return loggedInDto;
+        }
 
-//         if (!isPassCorrect)
-//         {
-//             loggedInDto.IsWrongCreds = true;
-//             return loggedInDto;
-//         }
+        bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, adminInput.Password);
 
-//         string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+        if (!isPassCorrect)
+        {
+            loggedInDto.IsWrongCreds = true;
+            return loggedInDto;
+        }
 
-//         if (!string.IsNullOrEmpty(token))
-//         {
-//             return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-//         }
+        string? token = await _tokenService.CreateToken(appUser, cancellationToken);
 
-//         return loggedInDto;
-//     }
+        if (!string.IsNullOrEmpty(token))
+        {
+            return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+        }
 
-//     public async Task<ObjectId?> GetObjectIdByUserNameAsync(string studentUserName, CancellationToken cancellationToken)
-//     {
-//         ObjectId? studentId = await _collectionAppUser.AsQueryable<AppUser>()
-//             .Where(appUser => appUser.NormalizedUserName == studentUserName.ToUpper())
-//             .Select(item => item.Id)
-//             .SingleOrDefaultAsync(cancellationToken);
+        return loggedInDto;
+    }
 
-//         return ValidationsExtensions.ValidateObjectId(studentId);
-//     }
+    public async Task<ObjectId?> GetObjectIdByUserNameAsync(string studentUserName, CancellationToken cancellationToken)
+    {
+        ObjectId? studentId = await _collectionAppUser.AsQueryable<AppUser>()
+            .Where(appUser => appUser.NormalizedUserName == studentUserName.ToUpper())
+            .Select(item => item.Id)
+            .SingleOrDefaultAsync(cancellationToken);
 
-//     // public async Task<UpdateResult?> SetTeacherRoleAsync(string targetStudentUserName, CancellationToken cancellationToken)
-//     // {
-//     //     ObjectId? studentId = await GetObjectIdByUserNameAsync(targetStudentUserName, cancellationToken);
+        return ValidationsExtensions.ValidateObjectId(studentId);
+    }
 
-//     //     if (studentId is null)
-//     //         return null;
+    // public async Task<UpdateResult?> SetTeacherRoleAsync(string targetStudentUserName, CancellationToken cancellationToken)
+    // {
+    //     ObjectId? studentId = await GetObjectIdByUserNameAsync(targetStudentUserName, cancellationToken);
 
-//     //     FilterDefinition<AppUser>? filterOld = Builders<AppUser>.Filter
-//     //         .Where(appUser =>
-//     //             appUser.Id == studentId && appUser.Roles.Any<AppRole>(role => role.Name == "student"));
+    //     if (studentId is null)
+    //         return null;
 
-//     //     UpdateDefinition<AppUser>? updateOld = Builders<AppUser>.Update
-//     //         .Set(appUser => appUser.Roles.FirstMatchingElement().Name, "teacher");
+    //     FilterDefinition<AppUser>? filterOld = Builders<AppUser>.Filter
+    //         .Where(appUser =>
+    //             appUser.Id == studentId && appUser.Roles.Any<AppRole>(role => role.Name == "student"));
 
-//     //     return await _collectionAppUser.UpdateOneAsync(filterOld, updateOld, null, cancellationToken);
+    //     UpdateDefinition<AppUser>? updateOld = Builders<AppUser>.Update
+    //         .Set(appUser => appUser.Roles.FirstMatchingElement().Name, "teacher");
 
-//     // }
+    //     return await _collectionAppUser.UpdateOneAsync(filterOld, updateOld, null, cancellationToken);
 
-// }
+    // }
+
+}

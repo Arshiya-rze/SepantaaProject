@@ -1,9 +1,14 @@
 namespace api.DTOs;
 
 public record AddMemberDto (
+    string? Email,
+    string? Name,
+    string? LastName,
     int PhoneNumber,
     string Password,
-    string ConfirmPassword
+    string ConfirmPassword,
+    string? Gender,
+    DateOnly? DateOfBirth
 );
 
 public record ShowMemberDto (
