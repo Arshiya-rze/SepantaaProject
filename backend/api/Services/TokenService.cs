@@ -61,6 +61,7 @@ public class TokenService : ITokenService
         return tokenHandler.WriteToken(securityToken);
     }
 
+
     /// <summary>
     /// Creates a new ObjectId, hashes it, and stores its value 
     /// into the appUser's doc using the userId param.

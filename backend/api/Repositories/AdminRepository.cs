@@ -21,35 +21,27 @@ public class AdminRepository : IAdminRepository
 
     public async Task<ShowMemberDto> CreateStudentAsync(AddMemberDto memberDto, CancellationToken cancellationToken)
     {
-        ShowMemberDto showMemberDto = new();
+        bool doeasPhoneNumberExist = await _collectionAppMember.Find<AppMember>(doc =>
+            doc.PhoneNumber == memberDto.PhoneNumber).AnyAsync(cancellationToken);
 
-        AppMember appMember = Mappers.ConvertRegisterDtoToAppUser(registerDto);
+        if (doeasPhoneNumberExist)
+            return null;
 
-        IdentityResult? userCreatedResult = await _userManager.CreateAsync(appUser, registerDto.Password);
+        AppMember appMember = Mappers.ConvertAddMemberDtoToAppMember(memberDto);
 
-        if (userCreatedResult.Succeeded)
+        if (_collectionAppMember is not null)
         {
-            IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "member");
-
-            if (!roleResult.Succeeded) // failed
-                return loggedInDto;
-
-            string? token = await _tokenService.CreateToken(appUser, cancellationToken);
-
-            if (!string.IsNullOrEmpty(token))
-            {
-                return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-            }
-        }
-        else // Store and return userCreatedResult errors if failed.
-        {
-            foreach (IdentityError error in userCreatedResult.Errors)
-            {
-                loggedInDto.Errors.Add(error.Description);
-            }
+            await _collectionAppMember.InsertOneAsync(appMember, null, cancellationToken);
         }
 
-        return loggedInDto; // failed
+        if (ObjectId.Equals != null)
+        {
+            ShowMemberDto showMemberDto = Mappers.ConvertAppMemberToShowMemberDto(appMember);
+
+            return showMemberDto;
+        }
+
+        return null;
     }
 
     public async Task<LoggedInDto> CreateTeacherAsync(RegisterDto registerDto, CancellationToken cancellationToken)
@@ -85,7 +77,7 @@ public class AdminRepository : IAdminRepository
         return loggedInDto;
     }
 
-    public async Task<LoggedInDto> LoginAsync(LoginAdminDto adminInput, CancellationToken cancellationToken)
+    public async Task<LoggedInDto> LoginAsync(LoginDto adminInput, CancellationToken cancellationToken)
     {
         LoggedInDto loggedInDto = new();
 

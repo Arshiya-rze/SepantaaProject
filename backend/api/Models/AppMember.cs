@@ -8,9 +8,10 @@ public record AppMember(
     string? Email,
     string? Name,
     string? LastName,
-    int PhoneNumber,
+    int? PhoneNumber,
     string Password,
     string ConfirmPassword,
     string? Gender,
-    DateOnly? DateOfBirth
+    DateOnly? DateOfBirth,
+    AppRole Role
 );

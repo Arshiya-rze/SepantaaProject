@@ -1,19 +1,22 @@
+using AspNetCore.Identity.MongoDbCore.Models;
+
 namespace api.DTOs;
 
 public record AddMemberDto (
     string? Email,
     string? Name,
     string? LastName,
-    int PhoneNumber,
+    int? PhoneNumber,
     string Password,
     string ConfirmPassword,
     string? Gender,
-    DateOnly? DateOfBirth
+    DateOnly? DateOfBirth,
+    AppRole Role
 );
 
 public record ShowMemberDto (
     ObjectId Id,
-    string Token,
     string Name,
-    int PhoneNumber
+    int? PhoneNumber,
+    AppRole Role
 );

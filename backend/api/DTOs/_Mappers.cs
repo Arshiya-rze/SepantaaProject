@@ -1,3 +1,5 @@
+using AspNetCore.Identity.MongoDbCore.Models;
+
 namespace api.DTOs;
 
 public static class Mappers
@@ -27,7 +29,8 @@ public static class Mappers
             Password: adminInput.Password,
             ConfirmPassword: adminInput.ConfirmPassword,
             Gender: adminInput.Gender,
-            DateOfBirth: adminInput.DateOfBirth
+            DateOfBirth: adminInput.DateOfBirth,
+            Role: adminInput.Role
         );
     }
 
@@ -42,14 +45,14 @@ public static class Mappers
         };
     }
 
-    public static ShowMemberDto ConvertAppMemberToShowMemberDto(AppMember appMember, string tokenValue)
+    public static ShowMemberDto ConvertAppMemberToShowMemberDto(AppMember appMember)
     {
         return new ShowMemberDto
         (
             Id: appMember.Id,
-            Token: tokenValue,
             Name: appMember.Name,
-            PhoneNumber: appMember.PhoneNumber
+            PhoneNumber: appMember.PhoneNumber,
+            Role: appMember.Role
         );
     }
 

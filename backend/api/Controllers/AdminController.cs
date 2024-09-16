@@ -11,9 +11,12 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
 
         ShowMemberDto? showMemberDto = await _adminRepository.CreateStudentAsync(adminInput, cancellationToken);
 
-        return !string.IsNullOrEmpty(showMemberDto.Token)
-            ? Ok(showMemberDto)
-            : BadRequest("Create-Student has failed check again.");
+        if (showMemberDto.PhoneNumber is not null)
+            return Ok(showMemberDto);
+
+        else 
+            return BadRequest("Create-Student has failed check again.");
+        
     }
 
     // [HttpPost("add-teacher")]
