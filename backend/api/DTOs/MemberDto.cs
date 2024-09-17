@@ -1,8 +1,8 @@
 public record MemberDto(
     int Age,
     string UserName,
-    string Name,
-    string LastName,
+    string? Name,
+    string? LastName,
     string PhoneNum,
-    string Gender
+    string? Gender
 );

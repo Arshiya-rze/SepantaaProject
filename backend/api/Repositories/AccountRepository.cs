@@ -26,7 +26,7 @@ public class AccountRepository : IAccountRepository
 
         if (userCreatedResult.Succeeded)
         {
-            IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "member");
+            IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "student");
 
             if (!roleResult.Succeeded) // failed
                 return loggedInDto;
