@@ -33,6 +33,7 @@ public static class Mappers
     public static MemberDto ConvertAppUserToMemberDto(AppUser appUser, bool isFollowing = false)
     {
         return new MemberDto(
+            Email: appUser.Email,
             UserName: appUser.NormalizedUserName!,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
             Name: appUser.Name,
