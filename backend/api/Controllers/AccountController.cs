@@ -4,39 +4,10 @@ namespace api.Controllers;
 public class AccountController(IAccountRepository _accountRepository) : BaseApiController
 {
     [AllowAnonymous]
-    [HttpPost("register")]
-    public async Task<ActionResult<LoggedInDto>> Register(RegisterDto userInput, CancellationToken cancellationToken) // parameter
-    {
-        if (userInput.Password != userInput.ConfirmPassword) // check if passwords match
-            return BadRequest("Passwords don't match!"); // is it correct? What does it do?
-
-        LoggedInDto? loggedInDto = await _accountRepository.CreateAsync(userInput, cancellationToken); // argument
-
-        // if (!string.IsNullOrEmpty(loggedInDto.Token)) // success
-        //     return Ok(loggedInDto);
-        // else if (loggedInDto.Errors.Count != 0)
-        //     return BadRequest(loggedInDto.Errors);
-        // else
-        //     return BadRequest("Registration has failed. . Try again or contact the support.");
-
-        // BETTER CODE
-        return !string.IsNullOrEmpty(loggedInDto.Token) // success
-            ? Ok(loggedInDto)
-            : loggedInDto.Errors.Count != 0
-            ? BadRequest(loggedInDto.Errors)
-            : BadRequest("Registration has failed. Try again or contact the support.");
-    }
-
-    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<LoggedInDto>> Login(LoginDto userInput, CancellationToken cancellationToken)
     {
         LoggedInDto? loggedInDto = await _accountRepository.LoginAsync(userInput, cancellationToken);
-        //old cod
-        // if (loggedInDto.IsWrongCreds) return Unauthorized("Invalid userName or Password");
-
-        // return loggedInDto.Token is null ? BadRequest("Login has failed. Try again.") : loggedInDto;
-        //new code
 
         return !string.IsNullOrEmpty(loggedInDto.Token)
             ? Ok(loggedInDto)
@@ -44,19 +15,4 @@ public class AccountController(IAccountRepository _accountRepository) : BaseApiC
             ? BadRequest("Wrong email or password")
             : BadRequest("Registration has failed try again.");
     }
-
-    // [AllowAnonymous]
-    // [HttpPost("login-teacher")]
-    // public async Task<ActionResult<LoggedInDto>> LoginTeacher(LoginMemberDto teacherInput, CancellationToken cancellationToken)
-    // {
-    //     LoggedInDto loggedInDto = await _accountRepository.LoginTeacherAsync(teacherInput, cancellationToken);
-
-    //     return
-    //         !string.IsNullOrEmpty(loggedInDto.Token)
-    //         ? Ok(loggedInDto)
-    //         : loggedInDto.IsWrongCreds
-    //         ? Unauthorized("Wrong email or Password")
-    //         : BadRequest("Registration has failed. Try again or contact the support.");
-    // }
-
 }
