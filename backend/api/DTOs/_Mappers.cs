@@ -11,12 +11,10 @@ public static class Mappers
             Email = userInput.Email, // required by AspNet Identity
             UserName = userInput.UserName, // required by AspNet Identity
             DateOfBirth = userInput.DateOfBirth,
-            KnownAs = userInput.KnownAs.Trim(),
-            LastActive = DateTime.UtcNow,
+            Name = userInput.Name.Trim(),
+            LastName = userInput.LastName.Trim(),
+            PhoneNum = userInput.PhoneNum,
             Gender = userInput.Gender.ToLower(),
-            City = userInput.City.Trim(),
-            Country = userInput.Country.Trim(),
-            Photos = []
         };
     }
 
@@ -26,9 +24,9 @@ public static class Mappers
         {
             Token = tokenValue,
             UserName = appUser.NormalizedUserName,
-            KnownAs = appUser.KnownAs,
-            Gender = appUser.Gender,
-            ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
+            Name = appUser.Name,
+            PhoneNum = appUser.PhoneNum,
+            Gender = appUser.Gender
         };
     }
 
@@ -37,30 +35,12 @@ public static class Mappers
         return new MemberDto(
             UserName: appUser.NormalizedUserName!,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-            KnownAs: appUser.KnownAs,
-            LastActive: appUser.LastActive,
-            Created: appUser.CreatedOn,
-            Gender: appUser.Gender,
-            Introduction: appUser.Introduction,
-            LookingFor: appUser.LookingFor,
-            Interests: appUser.Interests,
-            City: appUser.City,
-            Country: appUser.Country,
-            Photos: appUser.Photos,
-            IsFollowing: isFollowing
+            Name: appUser.Name,
+            LastName: appUser.LastName,
+            PhoneNum: appUser.PhoneNum,
+            Gender: appUser.Gender
         );
     }
-
-    public static Photo ConvertPhotoUrlsToPhoto(string[] photoUrls, bool isMain)
-    {
-        return new Photo(
-            Url_165: photoUrls[0],
-            Url_256: photoUrls[1],
-            Url_enlarged: photoUrls[2],
-            IsMain: isMain
-        );
-    }
-
 
 }
 
