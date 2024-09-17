@@ -13,8 +13,7 @@ public static class AppVariablesExtensions
     public readonly static AppRole[] roles = [
             new() {Name = Roles.admin.ToString()},
             new() {Name = Roles.moderator.ToString()},
-            new() {Name = Roles.teacher.ToString()},
-            new() {Name = Roles.student.ToString()}
+            new() {Name = Roles.member.ToString()}
         ];
 }
 
@@ -22,6 +21,17 @@ public enum Roles
 {
     admin,
     moderator,
-    teacher,
-    student
+    member
+}
+
+public enum FollowPredicate
+{
+    Followings,
+    Followers
+}
+
+public enum FollowAddOrRemove
+{
+    IsAdded,
+    IsRemoved
 }

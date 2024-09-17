@@ -14,18 +14,51 @@ public static class Mappers
             KnownAs = userInput.KnownAs.Trim(),
             LastActive = DateTime.UtcNow,
             Gender = userInput.Gender.ToLower(),
+            City = userInput.City.Trim(),
+            Country = userInput.Country.Trim(),
+            Photos = []
         };
     }
 
-    public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
+   public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
     {
         return new LoggedInDto
         {
             Token = tokenValue,
             UserName = appUser.NormalizedUserName,
             KnownAs = appUser.KnownAs,
-            Gender = appUser.Gender
+            Gender = appUser.Gender,
+            ProfilePhotoUrl = appUser.Photos.FirstOrDefault(photo => photo.IsMain)?.Url_256,
         };
+    }
+
+    public static MemberDto ConvertAppUserToMemberDto(AppUser appUser, bool isFollowing = false)
+    {
+        return new MemberDto(
+            UserName: appUser.NormalizedUserName!,
+            Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
+            KnownAs: appUser.KnownAs,
+            LastActive: appUser.LastActive,
+            Created: appUser.CreatedOn,
+            Gender: appUser.Gender,
+            Introduction: appUser.Introduction,
+            LookingFor: appUser.LookingFor,
+            Interests: appUser.Interests,
+            City: appUser.City,
+            Country: appUser.Country,
+            Photos: appUser.Photos,
+            IsFollowing: isFollowing
+        );
+    }
+
+    public static Photo ConvertPhotoUrlsToPhoto(string[] photoUrls, bool isMain)
+    {
+        return new Photo(
+            Url_165: photoUrls[0],
+            Url_256: photoUrls[1],
+            Url_enlarged: photoUrls[2],
+            IsMain: isMain
+        );
     }
 
 
