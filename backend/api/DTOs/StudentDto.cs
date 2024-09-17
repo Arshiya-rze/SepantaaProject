@@ -4,12 +4,11 @@ public record AddStudentStatusDto(
     string DaysOfWeek,
     DateOnly Date,
     string AbsentOrPresent
-    // bool isPresent
 );
 
 public class ShowStudentStatusDto
 {
-    // public ObjectId StudentId { get; init; }
+    public ObjectId StudentId { get; init; }
     public string DaysOfWeek { get; init; }
     public DateOnly Date { get; init; }
     public string AbsentOrPresent { get; init; }

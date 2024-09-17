@@ -42,27 +42,23 @@ public static class Mappers
         );
     }
 
+    public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto teacherInput, ObjectId studentId)
+    {
+        return new Attendence(
+            StudentId:  studentId,
+            DaysOfWeek: teacherInput.DaysOfWeek,
+            Date: teacherInput.Date,
+            AbsentOrPresent: teacherInput.AbsentOrPresent
+        );
+    }
+    public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
+    {
+        return new ShowStudentStatusDto
+        {
+            StudentId = attendence.Id,
+            DaysOfWeek = attendence.DaysOfWeek,
+            Date = attendence.Date,
+            AbsentOrPresent = attendence.AbsentOrPresent
+        };
+    }
 }
-
-
-
-    // public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto studentInput, ObjectId studentId)
-    // {
-    //     return new Attendence(
-    //         StudentId:  studentId,
-    //         DaysOfWeek: studentInput.DaysOfWeek,
-    //         Date: studentInput.Date,
-    //         // isPresent: addStudentStatusDto.isPresent
-    //         AbsentOrPresent: studentInput.AbsentOrPresent
-    //     );
-    // }
-    // public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
-    // {
-    //     return new ShowStudentStatusDto
-    //     {
-    //         // StudentId = studentId,
-    //         DaysOfWeek = attendence.DaysOfWeek,
-    //         Date = attendence.Date,
-    //         AbsentOrPresent = attendence.AbsentOrPresent
-    //     };
-    // }
