@@ -17,34 +17,14 @@ public class AdminRepository : IAdminRepository
     }
     #endregion Vars and Constructor
 
-    // public async Task<ShowMemberDto> CreateStudentAsync(AddMemberDto memberDto, CancellationToken cancellationToken)
-    // {
-    //     bool doeasPhoneNumberExist = await _collectionAppMember.Find<AppMember>(doc =>
-    //         doc.PhoneNumber == memberDto.PhoneNumber).AnyAsync(cancellationToken);
-
-    //     if (doeasPhoneNumberExist)
-    //         return null;
-
-    //     AppMember appMember = Mappers.ConvertAddMemberDtoToAppMember(memberDto);
-
-    //     if (_collectionAppMember is not null)
-    //     {
-    //         await _collectionAppMember.InsertOneAsync(appMember, null, cancellationToken);
-    //     }
-
-    //     if (ObjectId.Equals != null)
-    //     {
-    //         ShowMemberDto showMemberDto = Mappers.ConvertAppMemberToShowMemberDto(appMember);
-
-    //         return showMemberDto;
-    //     }
-
-    //     return null;
-    // }
-
-    public async Task<LoggedInDto> CreateTeacherAsync(RegisterDto registerDto, CancellationToken cancellationToken)
+    public async Task<LoggedInDto> CreateStudentAsync(RegisterDto registerDto, CancellationToken cancellationToken)
     {
         LoggedInDto loggedInDto = new();
+
+        bool doasePhoneNumEixst = await _collectionAppUser.Find<AppUser>(doc =>
+            doc.PhoneNum == registerDto.PhoneNum).AnyAsync(cancellationToken);
+
+        if (doasePhoneNumEixst) return null;
 
         AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
 
@@ -52,9 +32,9 @@ public class AdminRepository : IAdminRepository
 
         if (userCreatedResult.Succeeded)
         {
-            IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "teacher");
+            IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "student");
 
-            if (!roleResult.Succeeded)
+            if (!roleResult.Succeeded) // failed
                 return loggedInDto;
 
             string? token = await _tokenService.CreateToken(appUser, cancellationToken);
@@ -64,7 +44,7 @@ public class AdminRepository : IAdminRepository
                 return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
             }
         }
-        else
+        else // Store and return userCreatedResult errors if failed.
         {
             foreach (IdentityError error in userCreatedResult.Errors)
             {
@@ -72,8 +52,41 @@ public class AdminRepository : IAdminRepository
             }
         }
 
-        return loggedInDto;
+        return loggedInDto; // failed
     }
+
+    // public async Task<LoggedInDto> CreateTeacherAsync(RegisterDto registerDto, CancellationToken cancellationToken)
+    // {
+    //     LoggedInDto loggedInDto = new();
+
+    //     AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
+
+    //     IdentityResult? userCreatedResult = await _userManager.CreateAsync(appUser, registerDto.Password);
+
+    //     if (userCreatedResult.Succeeded)
+    //     {
+    //         IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "teacher");
+
+    //         if (!roleResult.Succeeded)
+    //             return loggedInDto;
+
+    //         string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+
+    //         if (!string.IsNullOrEmpty(token))
+    //         {
+    //             return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         foreach (IdentityError error in userCreatedResult.Errors)
+    //         {
+    //             loggedInDto.Errors.Add(error.Description);
+    //         }
+    //     }
+
+    //     return loggedInDto;
+    // }
 
     public async Task<LoggedInDto> LoginAsync(LoginDto adminInput, CancellationToken cancellationToken)
     {

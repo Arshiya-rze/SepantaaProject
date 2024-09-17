@@ -3,21 +3,20 @@ namespace api.Controllers;
 [Authorize(Policy = "RequiredAdminRole")]
 public class AdminController(IAdminRepository _adminRepository) : BaseApiController
 {
-    // [HttpPost("add-student")]
-    // public async Task<ActionResult<ShowMemberDto>> CreateStudent(AddMemberDto adminInput, CancellationToken cancellationToken)
-    // {
-    //     if (adminInput.Password != adminInput.ConfirmPassword)
-    //         return BadRequest("Passwords don't match!");
+    [HttpPost("add-student")]
+    public async Task<ActionResult<LoggedInDto>> CreateStudent(RegisterDto adminInput, CancellationToken cancellationToken)
+    {
+        if (adminInput.Password != adminInput.ConfirmPassword)
+            return BadRequest("Passwords don't match!");
 
-    //     ShowMemberDto? showMemberDto = await _adminRepository.CreateStudentAsync(adminInput, cancellationToken);
+        LoggedInDto? loggedInDto = await _adminRepository.CreateStudentAsync(adminInput, cancellationToken);
 
-    //     if (showMemberDto.PhoneNumber is not null)
-    //         return Ok(showMemberDto);
-
-    //     else 
-    //         return BadRequest("Create-Student has failed check again.");
-        
-    // }
+        return !string.IsNullOrEmpty(loggedInDto.Token)
+            ? Ok(loggedInDto)
+            : loggedInDto.Errors.Count != 0
+            ? BadRequest(loggedInDto.Errors)
+            : BadRequest("Registration has failed. Try again or contact the support.");
+    }
 
     // [HttpPost("add-teacher")]
     // public async Task<ActionResult<LoggedInDto>> RegisterTeacher(RegisterDto adminInput, CancellationToken cancellationToken)
