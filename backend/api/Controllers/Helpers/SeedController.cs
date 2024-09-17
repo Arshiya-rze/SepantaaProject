@@ -51,7 +51,8 @@ public class SeedController : BaseApiController
         #region Create Roles
         await _roleManager.CreateAsync(new AppRole { Name = "admin" });
         await _roleManager.CreateAsync(new AppRole { Name = "moderator" });
-        await _roleManager.CreateAsync(new AppRole { Name = "member" });
+        await _roleManager.CreateAsync(new AppRole { Name = "teacher" });
+        await _roleManager.CreateAsync(new AppRole { Name = "student" });
         #endregion
 
         #region Create Admin and Moderator
