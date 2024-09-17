@@ -18,20 +18,20 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    // [HttpPost("add-teacher")]
-    // public async Task<ActionResult<LoggedInDto>> RegisterTeacher(RegisterDto adminInput, CancellationToken cancellationToken)
-    // {
-    //     if (adminInput.Password != adminInput.ConfirmPassword)
-    //         return BadRequest("Passwords don't match!");
+    [HttpPost("add-teacher")]
+    public async Task<ActionResult<LoggedInDto>> CreateTeacher(RegisterDto adminInput, CancellationToken cancellationToken)
+    {
+        if (adminInput.Password != adminInput.ConfirmPassword)
+            return BadRequest("Passwords don't match!");
 
-    //     LoggedInDto? loggedInDto = await _adminRepository.CreateTeacherAsync(adminInput, cancellationToken);
+        LoggedInDto? loggedInDto = await _adminRepository.CreateTeacherAsync(adminInput, cancellationToken);
 
-    //     return !string.IsNullOrEmpty(loggedInDto.Token)
-    //         ? Ok(loggedInDto)
-    //         : loggedInDto.Errors.Count != 0
-    //         ? BadRequest(loggedInDto.Errors)
-    //         : BadRequest("Registration has failed. Try again or contact the support.");
-    // }
+        return !string.IsNullOrEmpty(loggedInDto.Token)
+            ? Ok(loggedInDto)
+            : loggedInDto.Errors.Count != 0
+            ? BadRequest(loggedInDto.Errors)
+            : BadRequest("Registration has failed. Try again or contact the support.");
+    }
 
     [AllowAnonymous]
     [HttpPost("login")]
