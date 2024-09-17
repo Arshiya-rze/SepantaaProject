@@ -44,4 +44,43 @@ public class MemberController
 
         return memberDtos;
     }
+
+    [AllowAnonymous]
+    [HttpGet("get-attendences")]
+    public async Task<ActionResult<IEnumerable<ShowStudentStatusDto>>> GetAllAttendence([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
+    {
+        PagedList<Attendence> pagedAttendences = await _memberRepository.GetAllAttendenceAsync(paginationParams, cancellationToken);
+
+        if (pagedAttendences.Count == 0)
+            return NoContent();
+
+        // After that we shure to exist on Controller we must set PaginaionHeader here before Converting AppUseer to studentDto
+
+        PaginationHeader paginationHeader = new(
+            CurrentPage: pagedAttendences.CurrentPage,
+            ItemsPerPage: pagedAttendences.PageSize,
+            TotalItems: pagedAttendences.TotalItems,
+            TotalPages: pagedAttendences.TotalPages
+        );
+
+        Response.AddPaginationHeader(paginationHeader);
+
+        //after setup now we can covert appUser to studentDto
+
+        string? userIdHashed = User.GetHashedUserId();
+
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
+
+        if (userId is null) return Unauthorized("You are unauthorized. Login again.");
+
+        List<ShowStudentStatusDto> showStudentStatusDtos = [];
+
+        foreach (Attendence attendence in pagedAttendences)
+        {
+            showStudentStatusDtos.Add(Mappers.ConvertAttendenceToShowStudentStatusDto(attendence));
+        }
+
+        return showStudentStatusDtos;
+    }
+    
 }
