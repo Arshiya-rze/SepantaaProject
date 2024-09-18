@@ -56,6 +56,7 @@ public static class Mappers
     {
         return new ShowStudentStatusDto
         {
+            // UserName = attendence.UserName,
             StudentId = attendence.Id,
             DaysOfWeek = attendence.DaysOfWeek,
             Date = attendence.Date,

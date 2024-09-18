@@ -47,9 +47,16 @@ public class MemberController
 
     [AllowAnonymous]
     [HttpGet("get-attendences")]
-    public async Task<ActionResult<IEnumerable<ShowStudentStatusDto>>> GetAllAttendence([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<ShowStudentStatusDto>>> GetAllAttendence([FromQuery] AttendenceParams attendenceParams, CancellationToken cancellationToken)
     {
-        PagedList<Attendence> pagedAttendences = await _memberRepository.GetAllAttendenceAsync(paginationParams, cancellationToken);
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
+
+        if (userId is null)
+            return Unauthorized("You are not logged in. Login in again.");
+        
+        attendenceParams.UserId = userId;
+
+        PagedList<Attendence> pagedAttendences = await _memberRepository.GetAllAttendenceAsync(attendenceParams, cancellationToken);
 
         if (pagedAttendences.Count == 0)
             return NoContent();
@@ -67,12 +74,6 @@ public class MemberController
 
         //after setup now we can covert appUser to studentDto
 
-        string? userIdHashed = User.GetHashedUserId();
-
-        ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
-
-        if (userId is null) return Unauthorized("You are unauthorized. Login again.");
-
         List<ShowStudentStatusDto> showStudentStatusDtos = [];
 
         foreach (Attendence attendence in pagedAttendences)
@@ -82,5 +83,5 @@ public class MemberController
 
         return showStudentStatusDtos;
     }
-    
+
 }

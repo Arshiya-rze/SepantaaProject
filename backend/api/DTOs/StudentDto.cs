@@ -8,6 +8,7 @@ public record AddStudentStatusDto(
 
 public class ShowStudentStatusDto
 {
+    // public AppUser? UserName { get; init; }
     public ObjectId StudentId { get; init; }
     public string DaysOfWeek { get; init; }
     public DateOnly Date { get; init; }
