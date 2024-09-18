@@ -63,4 +63,13 @@ public static class Mappers
             AbsentOrPresent = attendence.AbsentOrPresent
         };
     }
+
+    public static Discription ConvertAddDiscriptionDtoToDiscription(AddDiscriptionDto adminInput)
+    {
+        return new Discription(
+            Lesson: adminInput.Lesson,
+            NumberOfGhesd: adminInput.NumberOfGhesd,
+            ShahriyeharMah: adminInput.ShahriyeharMah
+        );
+    }
 }

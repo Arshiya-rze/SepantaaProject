@@ -125,15 +125,50 @@ public class AdminRepository : IAdminRepository
         return loggedInDto;
     }
 
-    public async Task<ObjectId?> GetObjectIdByUserNameAsync(string studentUserName, CancellationToken cancellationToken)
+    public async Task<AppUser?> GetByObjectIdAsync(ObjectId studentId, CancellationToken cancellationToken)
     {
-        ObjectId? studentId = await _collectionAppUser.AsQueryable<AppUser>()
-            .Where(appUser => appUser.NormalizedUserName == studentUserName.ToUpper())
-            .Select(item => item.Id)
-            .SingleOrDefaultAsync(cancellationToken);
+        AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
+            => doc.Id == studentId).SingleOrDefaultAsync(cancellationToken);
 
-        return ValidationsExtensions.ValidateObjectId(studentId);
+        if (appUser is null)
+            return null;
+
+        return appUser;
     }
+
+    public async Task<Discription?> CreateDiscriptionAsync(AddDiscriptionDto adminInput, string targetStudentUserName, CancellationToken cancellationToken)
+    {
+        ObjectId studentId = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.UserName == targetStudentUserName)
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync();
+
+        AppUser? appUser = await GetByObjectIdAsync(studentId, cancellationToken);
+        if (appUser is null)
+            return null; 
+
+        Discription discription;
+
+        discription = Mappers.ConvertAddDiscriptionDtoToDiscription(adminInput);
+
+        if (discription is not null)
+        {
+            appUser.discriptions.Add(discription);
+
+            var updatedAppUser = Builders<AppUser>.Update
+                .Set(doc => doc.discriptions, appUser.discriptions);
+
+            UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc =>
+                doc.Id == studentId, updatedAppUser, null, cancellationToken);
+
+            if (result is not null)
+                return discription;          
+        }
+        
+        return null;
+    }
+
+
 
     // public async Task<UpdateResult?> SetTeacherRoleAsync(string targetStudentUserName, CancellationToken cancellationToken)
     // {

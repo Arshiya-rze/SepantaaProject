@@ -47,6 +47,23 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
+    [HttpPost("add-discription/{targetStudentUserName}")]
+    public async Task<ActionResult<Discription>> CreateDiscription(
+            AddDiscriptionDto adminInput, string targetStudentUserName,
+            CancellationToken cancellationToken
+        )
+    {
+        if (targetStudentUserName is null)
+            return null;
+
+        Discription? discription = await _adminRepository.CreateDiscriptionAsync(adminInput, targetStudentUserName, cancellationToken);
+
+        return !string.IsNullOrEmpty(adminInput.Lesson)
+            ? Ok(discription)
+            : BadRequest("add-discription failed try again.");
+    }
+
+
     // [HttpPut("set-teacher-role/{targetStudentUserName}")]
     // public async Task<ActionResult> SetTeacherRole(string targetStudentUserName, CancellationToken cancellationToken)
     // {
