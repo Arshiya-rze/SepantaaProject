@@ -35,11 +35,12 @@ public static class Mappers
         return new MemberDto(
             Email: appUser.Email,
             UserName: appUser.NormalizedUserName!,
-            Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
             Name: appUser.Name,
             LastName: appUser.LastName,
             PhoneNum: appUser.PhoneNum,
-            Gender: appUser.Gender
+            Gender: appUser.Gender,
+            Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
+            discriptions: appUser.discriptions
         );
     }
 
