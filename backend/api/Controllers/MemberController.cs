@@ -93,4 +93,18 @@ public class MemberController
             ? BadRequest("Update failed. Try again later.")
             : Ok(new { message = "User has been updated successfully." });
     }
+
+    [HttpGet("get-profile")]
+    public async Task<ActionResult<MemberDto>> GetProfile(CancellationToken cancellationToken)
+    {
+        string? HashedUserId = User.GetHashedUserId();
+        if (string.IsNullOrEmpty(HashedUserId))
+            return BadRequest("No user was found with this userId.");
+
+        MemberDto? memberDto = await _memberRepository.GetProfileAsync(HashedUserId, cancellationToken);
+
+        return memberDto is null
+            ? Unauthorized("User is logged out or unauthorized. Login again.")
+            : memberDto;
+    }
 }

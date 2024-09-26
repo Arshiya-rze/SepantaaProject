@@ -67,4 +67,20 @@ public class MemberRepository : IMemberRepository
 
         return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedMember, null, cancellationToken);
     }
+
+    public async Task<MemberDto> GetProfileAsync(string HashedUserId, CancellationToken cancellationToken)
+    {
+        //tabdil userId be ObjectId        
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(HashedUserId, cancellationToken);
+
+        if (userId is null) return null;
+
+        AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser => appUser.Id == userId).
+            FirstOrDefaultAsync(cancellationToken);
+
+        return appUser is null
+            ? null
+            : Mappers.ConvertAppUserToMemberDto(appUser);
+
+    }
 }
