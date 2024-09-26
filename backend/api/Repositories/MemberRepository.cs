@@ -7,13 +7,15 @@ public class MemberRepository : IMemberRepository
     #region Constructor
     IMongoCollection<AppUser>? _collectionAppUser;
     IMongoCollection<Attendence>? _collectionAttendence;
+    private readonly ITokenService _tokenService;
 
-    public MemberRepository(IMongoClient client, IMyMongoDbSettings dbSettings)
+    public MemberRepository(IMongoClient client, IMyMongoDbSettings dbSettings, ITokenService tokenService)
     {
         var database = client.GetDatabase(dbSettings.DatabaseName);
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
         _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.collectionAttendences);
 
+        _tokenService = tokenService;
     }
     #endregion Constructor
 
@@ -46,4 +48,23 @@ public class MemberRepository : IMemberRepository
         return await PagedList<Attendence>.CreatePagedListAsync(query, attendenceParams.PageNumber, attendenceParams.PageSize, cancellationToken);
     }
 
+    public async Task<UpdateResult?> UpdateMemberAsync(MemberUpdateDto memberUpdateDto, string? hashedUserId, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(hashedUserId)) return null;
+
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
+
+        if (userId is null) return null;
+
+        UpdateDefinition<AppUser> updatedMember = Builders<AppUser>.Update
+        .Set(appUser => appUser.Email, memberUpdateDto.Email)
+        .Set(appUser => appUser.UserName, memberUpdateDto.UserName)
+        .Set(appUser => appUser.PasswordHash, memberUpdateDto.Password)
+        .Set(appUser => appUser.Name, memberUpdateDto.Name)
+        .Set(appUser => appUser.LastName, memberUpdateDto.LastName)
+        .Set(appUser => appUser.DateOfBirth, memberUpdateDto.DateOfBirth)
+        .Set(appUser => appUser.Gender, memberUpdateDto.Gender);
+
+        return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedMember, null, cancellationToken);
+    }
 }

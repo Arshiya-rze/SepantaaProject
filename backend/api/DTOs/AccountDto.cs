@@ -30,10 +30,13 @@ public class LoggedInDto
 {
     // required public string? Token { get; init; } // this one is REQUIRED
     public string? Token { get; init; }
+    public string? Email { get; init; }
     public string? UserName { get; init; }
     public string? Name { get; init; }
+    public string? LastName { get; init; }
     public string? PhoneNum { get; init; }
     public string? Gender { get; init; }
+    public DateOnly DateOfBirth { get; init; }
     public bool IsWrongCreds { get; set; }
     public List<string> Errors { get; init; } = [];
 }

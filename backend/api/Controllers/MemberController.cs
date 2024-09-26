@@ -84,4 +84,13 @@ public class MemberController
         return showStudentStatusDtos;
     }
 
+    [HttpPut]
+    public async Task<ActionResult> UpdateMember(MemberUpdateDto memberUpdateDto, CancellationToken cancellationToken)
+    {
+        UpdateResult? updateResult = await _memberRepository.UpdateMemberAsync(memberUpdateDto, User.GetHashedUserId(), cancellationToken);
+
+        return updateResult is null || !updateResult.IsModifiedCountAvailable
+            ? BadRequest("Update failed. Try again later.")
+            : Ok(new { message = "User has been updated successfully." });
+    }
 }
