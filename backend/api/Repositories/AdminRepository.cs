@@ -168,6 +168,28 @@ public class AdminRepository : IAdminRepository
         return null;
     }
 
+    public async Task<AppUser?> DeleteMemberAsync(string userName, CancellationToken cancellationToken)
+    {
+        ObjectId userId = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.UserName == userName)
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        AppUser? appUser = await GetByObjectIdAsync(userId, cancellationToken);
+
+        if (appUser is null)
+            return null;
+
+        DeleteResult result = await _collectionAppUser.DeleteOneAsync(doc =>
+            doc.Id == userId, cancellationToken);
+
+        if (result is not null)
+            return appUser;
+
+        return null;
+    }
+
+
 
 
     // public async Task<UpdateResult?> SetTeacherRoleAsync(string targetStudentUserName, CancellationToken cancellationToken)

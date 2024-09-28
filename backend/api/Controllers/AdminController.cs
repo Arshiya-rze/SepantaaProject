@@ -63,6 +63,19 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
             : BadRequest("add-discription failed try again.");
     }
 
+    [HttpDelete("deleteMember/{userName}")]
+    public async Task<ActionResult<AppUser?>> DeleteMember(string userName, CancellationToken cancellationToken)
+    {
+        AppUser? appUser = await _adminRepository.DeleteMemberAsync(userName, cancellationToken);
+
+        if (appUser is not null)
+        {
+            return Ok($""" "{userName}" got deleted successfully.""");
+        }
+
+        return null;
+    }
+
 
     // [HttpPut("set-teacher-role/{targetStudentUserName}")]
     // public async Task<ActionResult> SetTeacherRole(string targetStudentUserName, CancellationToken cancellationToken)
