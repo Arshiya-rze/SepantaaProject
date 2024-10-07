@@ -70,7 +70,7 @@ public static class Mappers
         return new Discription(
             Lesson: adminInput.Lesson,
             NumberOfGhesd: adminInput.NumberOfGhesd,
-            ShahriyeharMah: adminInput.ShahriyeharMah
+            ShahriyeHarMah: adminInput.ShahriyeHarMah
         );
     }
 }
