@@ -107,4 +107,12 @@ public class MemberController
             ? Unauthorized("User is logged out or unauthorized. Login again.")
             : memberDto;
     }
+
+    [HttpGet("username/{userName}")]
+    public async Task<ActionResult<MemberDto>> GetByUserName(string userName, CancellationToken cancellationToken)
+    {
+        MemberDto? memberDto = await _memberRepository.GetByUserNameAsync(userName, cancellationToken);
+
+        return memberDto is null ? BadRequest("No user found by this username.") : memberDto;
+    }
 }

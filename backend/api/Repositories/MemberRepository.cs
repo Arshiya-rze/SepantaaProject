@@ -83,4 +83,11 @@ public class MemberRepository : IMemberRepository
             : Mappers.ConvertAppUserToMemberDto(appUser);
 
     }
+
+    public async Task<MemberDto?> GetByUserNameAsync(string userName, CancellationToken cancellationToken)
+    {
+        AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser => appUser.NormalizedUserName == userName.ToUpper().Trim()).FirstOrDefaultAsync(cancellationToken);
+
+        return appUser is null ? null : Mappers.ConvertAppUserToMemberDto(appUser);
+    }
 }
