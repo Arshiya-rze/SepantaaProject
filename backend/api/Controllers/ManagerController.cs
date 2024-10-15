@@ -17,35 +17,36 @@ public class ManagerController(IManagerRepository _managerRepository) : BaseApiC
             ? BadRequest(loggedInDto.Errors)
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
-    // [HttpPost("add-student")]
-    // public async Task<ActionResult<LoggedInDto>> CreateStudent(RegisterDto managerInput, CancellationToken cancellationToken)
-    // {
-    //     if (managerInput.Password != managerInput.ConfirmPassword)
-    //         return BadRequest("Passwords don't match!");
 
-    //     LoggedInDto? loggedInDto = await _adminRepository.CreateStudentAsync(managerInput, cancellationToken);
+    [HttpPost("add-student")]
+    public async Task<ActionResult<LoggedInDto>> CreateStudent(RegisterDto managerInput, CancellationToken cancellationToken)
+    {
+        if (managerInput.Password != managerInput.ConfirmPassword)
+            return BadRequest("پسوردها درست نیستند");
 
-    //     return !string.IsNullOrEmpty(loggedInDto.Token)
-    //         ? Ok(loggedInDto)
-    //         : loggedInDto.Errors.Count != 0
-    //         ? BadRequest(loggedInDto.Errors)
-    //         : BadRequest("Registration has failed. Try again or contact the support.");
-    // }
+        LoggedInDto? loggedInDto = await _managerRepository.CreateStudentAsync(managerInput, cancellationToken);
 
-    // [HttpPost("add-teacher")]
-    // public async Task<ActionResult<LoggedInDto>> CreateTeacher(RegisterDto managerInput, CancellationToken cancellationToken)
-    // {
-    //     if (managerInput.Password != managerInput.ConfirmPassword)
-    //         return BadRequest("Passwords don't match!");
+        return !string.IsNullOrEmpty(loggedInDto.Token)
+            ? Ok(loggedInDto)
+            : loggedInDto.Errors.Count != 0
+            ? BadRequest(loggedInDto.Errors)
+            : BadRequest("Registration has failed. Try again or contact the support.");
+    }
 
-    //     LoggedInDto? loggedInDto = await _adminRepository.CreateTeacherAsync(managerInput, cancellationToken);
+    [HttpPost("add-teacher")]
+    public async Task<ActionResult<LoggedInDto>> CreateTeacher(RegisterDto managerInput, CancellationToken cancellationToken)
+    {
+        if (managerInput.Password != managerInput.ConfirmPassword)
+            return BadRequest("پسوردها درست نیستند");
 
-    //     return !string.IsNullOrEmpty(loggedInDto.Token)
-    //         ? Ok(loggedInDto)
-    //         : loggedInDto.Errors.Count != 0
-    //         ? BadRequest(loggedInDto.Errors)
-    //         : BadRequest("Registration has failed. Try again or contact the support.");
-    // }
+        LoggedInDto? loggedInDto = await _managerRepository.CreateTeacherAsync(managerInput, cancellationToken);
+
+        return !string.IsNullOrEmpty(loggedInDto.Token)
+            ? Ok(loggedInDto)
+            : loggedInDto.Errors.Count != 0
+            ? BadRequest(loggedInDto.Errors)
+            : BadRequest("Registration has failed. Try again or contact the support.");
+    }
 
     // [HttpPost("add-discription/{targetStudentUserName}")]
     // public async Task<ActionResult<Discription>> CreateDiscription(
@@ -63,16 +64,16 @@ public class ManagerController(IManagerRepository _managerRepository) : BaseApiC
     //         : BadRequest("add-discription failed try again.");
     // }
 
-    // [HttpDelete("deleteMember/{userName}")]
-    // public async Task<ActionResult<AppUser?>> DeleteMember(string userName, CancellationToken cancellationToken)
-    // {
-    //     AppUser? appUser = await _adminRepository.DeleteMemberAsync(userName, cancellationToken);
+    [HttpDelete("deleteMember/{userName}")]
+    public async Task<ActionResult<AppUser?>> DeleteMember(string userName, CancellationToken cancellationToken)
+    {
+        AppUser? appUser = await _managerRepository.DeleteMemberAsync(userName, cancellationToken);
 
-    //     if (appUser is not null)
-    //     {
-    //         return Ok($""" "{userName}" got deleted successfully.""");
-    //     }
+        if (appUser is not null)
+        {
+            return Ok($""" "{userName}" got deleted successfully.""");
+        }
 
-    //     return null;
-    // }
+        return null;
+    }
 }

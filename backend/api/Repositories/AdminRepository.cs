@@ -17,45 +17,6 @@ public class AdminRepository : IAdminRepository
     }
     #endregion Vars and Constructor
 
-    
-
-    // public async Task<LoggedInDto> CreateTeacherAsync(RegisterDto registerDto, CancellationToken cancellationToken)
-    // {
-    //     LoggedInDto loggedInDto = new();
-
-    //     bool doasePhoneNumEixst = await _collectionAppUser.Find<AppUser>(doc =>
-    //         doc.PhoneNum == registerDto.PhoneNum).AnyAsync(cancellationToken);
-
-    //     if (doasePhoneNumEixst) return null;
-
-    //     AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
-
-    //     IdentityResult? userCreatedResult = await _userManager.CreateAsync(appUser, registerDto.Password);
-
-    //     if (userCreatedResult.Succeeded)
-    //     {
-    //         IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "teacher");
-
-    //         if (!roleResult.Succeeded)
-    //             return loggedInDto;
-
-    //         string? token = await _tokenService.CreateToken(appUser, cancellationToken);
-
-    //         if (!string.IsNullOrEmpty(token))
-    //         {
-    //             return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-    //         }
-    //     }
-    //     else
-    //     {
-    //         foreach (IdentityError error in userCreatedResult.Errors)
-    //         {
-    //             loggedInDto.Errors.Add(error.Description);
-    //         }
-    //     }
-
-    //     return loggedInDto;
-    // }
     public async Task<LoggedInDto?> CreateAsync(RegisterDto registerDto, CancellationToken cancellationToken)
     {
         LoggedInDto loggedInDto = new();
@@ -126,16 +87,6 @@ public class AdminRepository : IAdminRepository
     //     return loggedInDto;
     // }
 
-    // public async Task<AppUser?> GetByObjectIdAsync(ObjectId studentId, CancellationToken cancellationToken)
-    // {
-    //     AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
-    //         => doc.Id == studentId).SingleOrDefaultAsync(cancellationToken);
-
-    //     if (appUser is null)
-    //         return null;
-
-    //     return appUser;
-    // }
 
     // public async Task<Discription?> CreateDiscriptionAsync(AddDiscriptionDto adminInput, string targetStudentUserName, CancellationToken cancellationToken)
     // {
@@ -169,26 +120,7 @@ public class AdminRepository : IAdminRepository
     //     return null;
     // }
 
-    // public async Task<AppUser?> DeleteMemberAsync(string userName, CancellationToken cancellationToken)
-    // {
-    //     ObjectId userId = await _collectionAppUser.AsQueryable()
-    //         .Where(doc => doc.UserName == userName)
-    //         .Select(doc => doc.Id)
-    //         .FirstOrDefaultAsync(cancellationToken);
-
-    //     AppUser? appUser = await GetByObjectIdAsync(userId, cancellationToken);
-
-    //     if (appUser is null)
-    //         return null;
-
-    //     DeleteResult result = await _collectionAppUser.DeleteOneAsync(doc =>
-    //         doc.Id == userId, cancellationToken);
-
-    //     if (result is not null)
-    //         return appUser;
-
-    //     return null;
-    // }
+    
 
 
 

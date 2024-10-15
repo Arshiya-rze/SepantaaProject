@@ -32,8 +32,6 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    
-
 
     // [HttpPut("set-teacher-role/{targetStudentUserName}")]
     // public async Task<ActionResult> SetTeacherRole(string targetStudentUserName, CancellationToken cancellationToken)
@@ -44,6 +42,4 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
     //             ? BadRequest("Set role failed. Try again in a few moments.")
     //             : Ok(new { message = "Set this role as teacher succeeded." });
     // }
-
-
 }
