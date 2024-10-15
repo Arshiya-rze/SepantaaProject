@@ -17,43 +17,7 @@ public class AdminRepository : IAdminRepository
     }
     #endregion Vars and Constructor
 
-    // public async Task<LoggedInDto> CreateStudentAsync(RegisterDto registerDto, CancellationToken cancellationToken)
-    // {
-    //     LoggedInDto loggedInDto = new();
-
-    //     bool doasePhoneNumEixst = await _collectionAppUser.Find<AppUser>(doc =>
-    //         doc.PhoneNum == registerDto.PhoneNum).AnyAsync(cancellationToken);
-
-    //     if (doasePhoneNumEixst) return null;
-
-    //     AppUser appUser = Mappers.ConvertRegisterDtoToAppUser(registerDto);
-
-    //     IdentityResult? userCreatedResult = await _userManager.CreateAsync(appUser, registerDto.Password);
-
-    //     if (userCreatedResult.Succeeded)
-    //     {
-    //         IdentityResult? roleResult = await _userManager.AddToRoleAsync(appUser, "student");
-
-    //         if (!roleResult.Succeeded)
-    //             return loggedInDto;
-
-    //         string? token = await _tokenService.CreateToken(appUser, cancellationToken);
-
-    //         if (!string.IsNullOrEmpty(token))
-    //         {
-    //             return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-    //         }
-    //     }
-    //     else
-    //     {
-    //         foreach (IdentityError error in userCreatedResult.Errors)
-    //         {
-    //             loggedInDto.Errors.Add(error.Description);
-    //         }
-    //     }
-
-    //     return loggedInDto;
-    // }
+    
 
     // public async Task<LoggedInDto> CreateTeacherAsync(RegisterDto registerDto, CancellationToken cancellationToken)
     // {
@@ -130,37 +94,37 @@ public class AdminRepository : IAdminRepository
         return loggedInDto;
     }
 
-    public async Task<LoggedInDto> LoginAsync(LoginDto adminInput, CancellationToken cancellationToken)
-    {
-        LoggedInDto loggedInDto = new();
+    // public async Task<LoggedInDto> LoginAsync(LoginDto adminInput, CancellationToken cancellationToken)
+    // {
+    //     LoggedInDto loggedInDto = new();
 
-        AppUser? appUser;
+    //     AppUser? appUser;
 
-        appUser = await _userManager.FindByEmailAsync(adminInput.Email);
+    //     appUser = await _userManager.FindByEmailAsync(adminInput.Email);
 
-        if (appUser is null)
-        {
-            loggedInDto.IsWrongCreds = true;
-            return loggedInDto;
-        }
+    //     if (appUser is null)
+    //     {
+    //         loggedInDto.IsWrongCreds = true;
+    //         return loggedInDto;
+    //     }
 
-        bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, adminInput.Password);
+    //     bool isPassCorrect = await _userManager.CheckPasswordAsync(appUser, adminInput.Password);
 
-        if (!isPassCorrect)
-        {
-            loggedInDto.IsWrongCreds = true;
-            return loggedInDto;
-        }
+    //     if (!isPassCorrect)
+    //     {
+    //         loggedInDto.IsWrongCreds = true;
+    //         return loggedInDto;
+    //     }
 
-        string? token = await _tokenService.CreateToken(appUser, cancellationToken);
+    //     string? token = await _tokenService.CreateToken(appUser, cancellationToken);
 
-        if (!string.IsNullOrEmpty(token))
-        {
-            return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-        }
+    //     if (!string.IsNullOrEmpty(token))
+    //     {
+    //         return Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+    //     }
 
-        return loggedInDto;
-    }
+    //     return loggedInDto;
+    // }
 
     // public async Task<AppUser?> GetByObjectIdAsync(ObjectId studentId, CancellationToken cancellationToken)
     // {

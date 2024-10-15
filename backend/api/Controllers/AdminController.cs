@@ -3,19 +3,19 @@ namespace api.Controllers;
 [Authorize(Policy = "RequiredAdminRole")]
 public class AdminController(IAdminRepository _adminRepository) : BaseApiController
 {
-    [AllowAnonymous]
-    [HttpPost("login")]
-    public async Task<ActionResult<LoggedInDto>> Login(LoginDto adminInput, CancellationToken cancellationToken)
-    {
-        LoggedInDto? loggedInDto = await _adminRepository.LoginAsync(adminInput, cancellationToken);
+    // [AllowAnonymous]
+    // [HttpPost("login")]
+    // public async Task<ActionResult<LoggedInDto>> Login(LoginDto adminInput, CancellationToken cancellationToken)
+    // {
+    //     LoggedInDto? loggedInDto = await _adminRepository.LoginAsync(adminInput, cancellationToken);
 
-        return
-            !string.IsNullOrEmpty(loggedInDto.Token)
-            ? Ok(loggedInDto)
-            : loggedInDto.IsWrongCreds
-            ? Unauthorized("Wrong email or Password")
-            : BadRequest("Registration has failed. Try again or contact the support.");
-    }
+    //     return
+    //         !string.IsNullOrEmpty(loggedInDto.Token)
+    //         ? Ok(loggedInDto)
+    //         : loggedInDto.IsWrongCreds
+    //         ? Unauthorized("Wrong email or Password")
+    //         : BadRequest("Registration has failed. Try again or contact the support.");
+    // }
 
     [HttpPost("create")] //add-manager
     public async Task<ActionResult<LoggedInDto>> Create(RegisterDto adminInput, CancellationToken cancellationToken)
