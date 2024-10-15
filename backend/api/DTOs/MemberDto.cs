@@ -6,5 +6,5 @@ public record MemberDto(
     string PhoneNum,
     string? Gender,
     int Age,
-    List<Discription> discriptions
+    List<AddCorse> corses
 );

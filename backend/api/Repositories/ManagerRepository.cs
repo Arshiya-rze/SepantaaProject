@@ -162,4 +162,36 @@ public class ManagerRepository : IManagerRepository
 
         return null;
     }
+
+    public async Task<AddCorse?> AddCorseAsync(AddCorseDto addCorseDto, string targetStudentUserName, CancellationToken cancellationToken)
+    {
+        ObjectId studentId = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.UserName == targetStudentUserName)
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync();
+
+        AppUser? appUser = await GetByObjectIdAsync(studentId, cancellationToken);
+        if (appUser is null)
+            return null; 
+
+        AddCorse addCorse;
+
+        addCorse = Mappers.ConvertAddCorseDtoToCorse(addCorseDto);
+
+        if (addCorse is not null)
+        {
+            appUser.addCorses.Add(addCorse);
+
+            var updatedAppUser = Builders<AppUser>.Update
+                .Set(doc => doc.addCorses, appUser.addCorses);
+
+            UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc =>
+                doc.Id == studentId, updatedAppUser, null, cancellationToken);
+
+            if (result is not null)
+                return addCorse;          
+        }
+        
+        return null;
+    }
 }

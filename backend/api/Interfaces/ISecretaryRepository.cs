@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace api.Interfaces;
 
 public interface ISecretaryRepository
 {
-    
+    public Task<LoggedInDto?> CreateStudentAsync(RegisterDto managerInput, CancellationToken cancellationToken);
+    public Task<AddCorse?> AddCorseAsync(AddCorseDto managerInput, string targetStudentUserName, CancellationToken cancellationToken);
 }

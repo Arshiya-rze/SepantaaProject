@@ -18,7 +18,7 @@ public static class Mappers
         };
     }
 
-   public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
+    public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
     {
         return new LoggedInDto
         {
@@ -40,14 +40,14 @@ public static class Mappers
             PhoneNum: appUser.PhoneNum,
             Gender: appUser.Gender,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-            discriptions: appUser.discriptions
+            corses: appUser.addCorses
         );
     }
 
     public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto teacherInput, ObjectId studentId)
     {
         return new Attendence(
-            StudentId:  studentId,
+            StudentId: studentId,
             DaysOfWeek: teacherInput.DaysOfWeek,
             Date: teacherInput.Date,
             AbsentOrPresent: teacherInput.AbsentOrPresent
@@ -65,12 +65,12 @@ public static class Mappers
         };
     }
 
-    public static Discription ConvertAddDiscriptionDtoToDiscription(AddDiscriptionDto adminInput)
+    public static AddCorse ConvertAddCorseDtoToCorse(AddCorseDto managerInput)
     {
-        return new Discription(
-            Lesson: adminInput.Lesson,
-            NumberOfGhesd: adminInput.NumberOfGhesd,
-            ShahriyeHarMah: adminInput.ShahriyeHarMah
+        return new AddCorse(
+            Dars: managerInput.Dars,
+            TedadeKoleGhesdHa: managerInput.TedadeKoleGhesdHa,
+            Shahriye: managerInput.Shahriye
         );
     }
 }

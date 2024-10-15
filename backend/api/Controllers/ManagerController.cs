@@ -48,21 +48,21 @@ public class ManagerController(IManagerRepository _managerRepository) : BaseApiC
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    // [HttpPost("add-discription/{targetStudentUserName}")]
-    // public async Task<ActionResult<Discription>> CreateDiscription(
-    //         AddDiscriptionDto managerInput, string targetStudentUserName,
-    //         CancellationToken cancellationToken
-    //     )
-    // {
-    //     if (targetStudentUserName is null)
-    //         return null;
+    [HttpPost("add-corse/{targetStudentUserName}")]
+    public async Task<ActionResult<AddCorse>> AddCorse(
+            AddCorseDto managerInput, string targetStudentUserName,
+            CancellationToken cancellationToken
+        )
+    {
+        if (targetStudentUserName is null)
+            return null;
 
-    //     Discription? discription = await _adminRepository.CreateDiscriptionAsync(managerInput, targetStudentUserName, cancellationToken);
+        AddCorse? addCorse = await _managerRepository.AddCorseAsync(managerInput, targetStudentUserName, cancellationToken);
 
-    //     return !string.IsNullOrEmpty(managerInput.Lesson)
-    //         ? Ok(discription)
-    //         : BadRequest("add-discription failed try again.");
-    // }
+        return !string.IsNullOrEmpty(managerInput.Dars)
+            ? Ok(addCorse)
+            : BadRequest("add-discription failed try again.");
+    }
 
     [HttpDelete("deleteMember/{userName}")]
     public async Task<ActionResult<AppUser?>> DeleteMember(string userName, CancellationToken cancellationToken)
