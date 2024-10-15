@@ -13,7 +13,8 @@ public static class AppVariablesExtensions
 
     public readonly static AppRole[] roles = [
             new() {Name = Roles.admin.ToString()},
-            new() {Name = Roles.moderator.ToString()},
+            new() {Name = Roles.manager.ToString()},
+            new() {Name = Roles.secretary.ToString()},
             new() {Name = Roles.teacher.ToString()},
             new() {Name = Roles.student.ToString()}
         ];
@@ -22,7 +23,8 @@ public static class AppVariablesExtensions
 public enum Roles
 {
     admin,
-    moderator,
+    manager,
+    secretary,
     teacher,
     student
 }

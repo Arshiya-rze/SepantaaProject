@@ -49,13 +49,14 @@ public class SeedController : BaseApiController
         #endregion If databaseExists
 
         #region Create Roles
-        await _roleManager.CreateAsync(new AppRole { Name = "admin" });
-        await _roleManager.CreateAsync(new AppRole { Name = "moderator" });
+        await _roleManager.CreateAsync(new AppRole { Name = "admin" }); //khodam
+        await _roleManager.CreateAsync(new AppRole { Name = "manager" }); //modir amozeshgah
+        await _roleManager.CreateAsync(new AppRole { Name = "secretary" }); //monshi amozeshgah
         await _roleManager.CreateAsync(new AppRole { Name = "teacher" });
         await _roleManager.CreateAsync(new AppRole { Name = "student" });
         #endregion
 
-        #region Create Admin and Moderator
+        #region Create Admin
         // Admin
         AppUser admin = new()
         {
@@ -64,17 +65,7 @@ public class SeedController : BaseApiController
         };
 
         await _userManager.CreateAsync(admin, "Aaaaaaaa/"); // Create admin
-        await _userManager.AddToRolesAsync(admin, ["admin", "moderator"]); // Add admin to two roles of "admin" and "moderator"
-
-        // Moderator
-        AppUser moderator = new()
-        {
-            Email = "moderator@a.com",
-            UserName = "moderator"
-        };
-
-        await _userManager.CreateAsync(moderator, "Aaaaaaaa/"); // Create moderator
-        await _userManager.AddToRoleAsync(moderator, "moderator"); // Add moderator to a role of "moderator"
+        await _userManager.AddToRolesAsync(admin, ["admin"]); 
 
         #endregion Create Admin and Moderator
 
