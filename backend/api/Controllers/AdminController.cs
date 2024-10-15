@@ -3,36 +3,6 @@ namespace api.Controllers;
 [Authorize(Policy = "RequiredAdminRole")]
 public class AdminController(IAdminRepository _adminRepository) : BaseApiController
 {
-    [HttpPost("add-student")]
-    public async Task<ActionResult<LoggedInDto>> CreateStudent(RegisterDto adminInput, CancellationToken cancellationToken)
-    {
-        if (adminInput.Password != adminInput.ConfirmPassword)
-            return BadRequest("Passwords don't match!");
-
-        LoggedInDto? loggedInDto = await _adminRepository.CreateStudentAsync(adminInput, cancellationToken);
-
-        return !string.IsNullOrEmpty(loggedInDto.Token)
-            ? Ok(loggedInDto)
-            : loggedInDto.Errors.Count != 0
-            ? BadRequest(loggedInDto.Errors)
-            : BadRequest("Registration has failed. Try again or contact the support.");
-    }
-
-    [HttpPost("add-teacher")]
-    public async Task<ActionResult<LoggedInDto>> CreateTeacher(RegisterDto adminInput, CancellationToken cancellationToken)
-    {
-        if (adminInput.Password != adminInput.ConfirmPassword)
-            return BadRequest("Passwords don't match!");
-
-        LoggedInDto? loggedInDto = await _adminRepository.CreateTeacherAsync(adminInput, cancellationToken);
-
-        return !string.IsNullOrEmpty(loggedInDto.Token)
-            ? Ok(loggedInDto)
-            : loggedInDto.Errors.Count != 0
-            ? BadRequest(loggedInDto.Errors)
-            : BadRequest("Registration has failed. Try again or contact the support.");
-    }
-
     [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<LoggedInDto>> Login(LoginDto adminInput, CancellationToken cancellationToken)
@@ -47,34 +17,22 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    [HttpPost("add-discription/{targetStudentUserName}")]
-    public async Task<ActionResult<Discription>> CreateDiscription(
-            AddDiscriptionDto adminInput, string targetStudentUserName,
-            CancellationToken cancellationToken
-        )
+    [HttpPost("create")] //add-manager
+    public async Task<ActionResult<LoggedInDto>> Create(RegisterDto adminInput, CancellationToken cancellationToken)
     {
-        if (targetStudentUserName is null)
-            return null;
+        if (adminInput.Password != adminInput.ConfirmPassword)
+            return BadRequest("پسوردها درست نیستند");
 
-        Discription? discription = await _adminRepository.CreateDiscriptionAsync(adminInput, targetStudentUserName, cancellationToken);
+        LoggedInDto? loggedInDto = await _adminRepository.CreateAsync(adminInput, cancellationToken);
 
-        return !string.IsNullOrEmpty(adminInput.Lesson)
-            ? Ok(discription)
-            : BadRequest("add-discription failed try again.");
+        return !string.IsNullOrEmpty(loggedInDto.Token)
+            ? Ok(loggedInDto)
+            : loggedInDto.Errors.Count != 0
+            ? BadRequest(loggedInDto.Errors)
+            : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    [HttpDelete("deleteMember/{userName}")]
-    public async Task<ActionResult<AppUser?>> DeleteMember(string userName, CancellationToken cancellationToken)
-    {
-        AppUser? appUser = await _adminRepository.DeleteMemberAsync(userName, cancellationToken);
-
-        if (appUser is not null)
-        {
-            return Ok($""" "{userName}" got deleted successfully.""");
-        }
-
-        return null;
-    }
+    
 
 
     // [HttpPut("set-teacher-role/{targetStudentUserName}")]
