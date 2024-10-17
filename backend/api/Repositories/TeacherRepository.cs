@@ -1,4 +1,5 @@
 using api.Helpers;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace api.Repositories;
 
@@ -82,16 +83,16 @@ public class TeacherRepository : ITeacherRepository
 
     }
 
-    // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
-    // {
-    //     IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable<AppUser>()
-    //             .Where(appUser => appUser.Lesson == appUser.Lesson) // filter by Lisa's id
-    //             .Join(_collectionAppUser.AsQueryable<AppUser>(), // get appUsers list which are appUsered by the appUsererId/loggedInUserId
-    //                 appUser => appUser.Lesson, // map each appUseredId user with their AppUser Id bellow
-    //                 appUser => appUser.Id,
-    //                 (appUser, appUser) => appUser); // project the AppUser
+    public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string hashedUserId, CancellationToken cancellationToken)
+    {
+        
+        string? loggedInUserLesson = await _tokenService.GetActualUserIdLessonAsync(hashedUserId, cancellationToken);
 
-    //         return await PagedList<AppUser>
-    //             .CreatePagedListAsync(query, appUserParams.PageNumber, appUserParams.PageSize, cancellationToken);
-    // }
+        IMongoQueryable<AppUser> query = _collectionAppUser.Find<AppUser>(
+            doc => doc.Lesson == loggedInUserLesson).ToList(cancellationToken);
+        
+        
+
+        return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    }
 }
