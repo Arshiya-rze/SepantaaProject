@@ -1,3 +1,5 @@
+using api.Helpers;
+
 namespace api.Repositories;
 
 public class TeacherRepository : ITeacherRepository
@@ -27,7 +29,7 @@ public class TeacherRepository : ITeacherRepository
 
     //     return appUser;
     // }
-    
+
     public async Task<ObjectId?> GetObjectIdByUserNameAsync(string studentUserName, CancellationToken cancellationToken)
     {
         ObjectId? studentId = await _collectionAppUser.AsQueryable<AppUser>()
@@ -54,7 +56,7 @@ public class TeacherRepository : ITeacherRepository
 
         // if (doeseDateExist)
         //     return null;
-            
+
         Attendence? attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(teacherInput, studentId.Value);
 
         if (_collectionAttendence is not null)
@@ -71,12 +73,25 @@ public class TeacherRepository : ITeacherRepository
 
         return null;
 
-            // appUser.Attendences.Add(attendence);
-            
-            // var updatedStudent = Builders<AppUser>.Update
-            //     .Set(doc => doc.Attendences, appUser.Attendences);
+        // appUser.Attendences.Add(attendence);
 
-            // UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
+        // var updatedStudent = Builders<AppUser>.Update
+        //     .Set(doc => doc.Attendences, appUser.Attendences);
+
+        // UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
 
     }
+
+    // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
+    // {
+    //     IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable<AppUser>()
+    //             .Where(appUser => appUser.Lesson == appUser.Lesson) // filter by Lisa's id
+    //             .Join(_collectionAppUser.AsQueryable<AppUser>(), // get appUsers list which are appUsered by the appUsererId/loggedInUserId
+    //                 appUser => appUser.Lesson, // map each appUseredId user with their AppUser Id bellow
+    //                 appUser => appUser.Id,
+    //                 (appUser, appUser) => appUser); // project the AppUser
+
+    //         return await PagedList<AppUser>
+    //             .CreatePagedListAsync(query, appUserParams.PageNumber, appUserParams.PageSize, cancellationToken);
+    // }
 }
