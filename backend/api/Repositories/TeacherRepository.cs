@@ -83,16 +83,16 @@ public class TeacherRepository : ITeacherRepository
 
     }
 
-    public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string hashedUserId, CancellationToken cancellationToken)
-    {
+    // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string hashedUserId, CancellationToken cancellationToken)
+    // {
         
-        string? loggedInUserLesson = await _tokenService.GetActualUserIdLessonAsync(hashedUserId, cancellationToken);
+    //     string? loggedInUserLesson = await _tokenService.GetActualUserIdLessonAsync(hashedUserId, cancellationToken);
 
-        IMongoQueryable<AppUser> query = _collectionAppUser.Find<AppUser>(
-            doc => doc.Lesson == loggedInUserLesson).ToList(cancellationToken);
+    //     IMongoQueryable<AppUser> query = _collectionAppUser.Find<AppUser>(
+    //         doc => doc.Lesson == loggedInUserLesson).ToList(cancellationToken);
         
         
 
-        return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
-    }
+    //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    // }
 }

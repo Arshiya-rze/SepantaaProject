@@ -5,5 +5,5 @@ namespace api.Interfaces;
 public interface ITeacherRepository
 {
     public Task<ShowStudentStatusDto> AddAsync(AddStudentStatusDto teacherInput,  CancellationToken cancellationToken);
-    public Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string hashedUserId, CancellationToken cancellationToken);
+    // public Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string hashedUserId, CancellationToken cancellationToken);
 }

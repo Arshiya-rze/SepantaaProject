@@ -194,4 +194,25 @@ public class ManagerRepository : IManagerRepository
         
         return null;
     }
+
+    public async Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync()
+    {
+        List<UserWithRoleDto> usersWithRoles = [];
+
+        IEnumerable<AppUser> appUsers = _userManager.Users;
+
+        foreach (AppUser appUser in appUsers)
+        {
+            IEnumerable<string> roles = await _userManager.GetRolesAsync(appUser);
+
+            usersWithRoles.Add(
+                new UserWithRoleDto(
+                    UserName: appUser.UserName!,
+                    Roles: roles
+                )
+            );
+        }
+
+        return usersWithRoles;
+    }
 }

@@ -89,4 +89,12 @@ public class ManagerController(IManagerRepository _managerRepository) : BaseApiC
 
         return null;
     }
+
+    [HttpGet("users-with-roles")]
+    public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> UsersWithRoles()
+    {
+        IEnumerable<UserWithRoleDto> users = await _managerRepository.GetUsersWithRolesAsync();
+
+        return !users.Any() ? NoContent() : Ok(users);
+    }
 }
