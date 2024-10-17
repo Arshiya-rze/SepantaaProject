@@ -4,8 +4,5 @@ public record MemberUpdateDto (
     string Email,
     string UserName,
     string Password,
-    string? Name,
-    string? LastName,
-    DateOnly DateOfBirth,
-    string? Gender
+    string ConfirmPassword
 );

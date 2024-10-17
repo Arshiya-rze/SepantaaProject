@@ -60,10 +60,8 @@ public class MemberRepository : IMemberRepository
         .Set(appUser => appUser.Email, memberUpdateDto.Email)
         .Set(appUser => appUser.UserName, memberUpdateDto.UserName)
         .Set(appUser => appUser.PasswordHash, memberUpdateDto.Password)
-        .Set(appUser => appUser.Name, memberUpdateDto.Name)
-        .Set(appUser => appUser.LastName, memberUpdateDto.LastName)
-        .Set(appUser => appUser.DateOfBirth, memberUpdateDto.DateOfBirth)
-        .Set(appUser => appUser.Gender, memberUpdateDto.Gender);
+        .Set(appUser => appUser.PasswordHash, memberUpdateDto.ConfirmPassword);
+
 
         return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedMember, null, cancellationToken);
     }
