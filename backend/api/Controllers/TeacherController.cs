@@ -1,16 +1,17 @@
 namespace api.Controllers;
 
-[Authorize(Policy = "RequiredTeacherRole")]   
+// [Authorize(Policy = "RequiredTeacherRole")]   
 public class TeacherController(ITeacherRepository _teacherRepository, ITokenService _tokenService) : BaseApiController
 {
-    [HttpPost("add-attendence/{targetStudentUserName}")]
-    public async Task<ActionResult<ShowStudentStatusDto>> Add(string targetStudentUserName, AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
+    [AllowAnonymous]
+    [HttpPost("add-attendence")]
+    public async Task<ActionResult<ShowStudentStatusDto>> Add(AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
     {
-        if (teacherInput.AbsentOrPresent is null) return BadRequest("No Times selected");
+        if (teacherInput.UserName is null) return BadRequest("یوزرنیم خالی است.");
 
-        ShowStudentStatusDto? showStudentStatusDto = await _teacherRepository.AddAsync(targetStudentUserName, teacherInput, cancellationToken);
+        ShowStudentStatusDto? showStudentStatusDto = await _teacherRepository.AddAsync(teacherInput, cancellationToken);
 
-        if (targetStudentUserName is null) return null;
+        if (teacherInput.AbsentOrPresent is null) return null;
 
         return showStudentStatusDto;
     }

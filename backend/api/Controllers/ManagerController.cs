@@ -1,6 +1,6 @@
 namespace api.Controllers;
 
-[Authorize(Policy = "RequiredManagerRole")]
+// [Authorize(Policy = "RequiredManagerRole")]
 public class ManagerController(IManagerRepository _managerRepository) : BaseApiController
 {
     [HttpPost("add-secretary")]

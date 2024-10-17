@@ -1,6 +1,6 @@
 namespace api.Controllers;
 
-[Authorize(Policy = "RequiredAdminRole")]
+// [Authorize(Policy = "RequiredAdminRole")]
 public class AdminController(IAdminRepository _adminRepository) : BaseApiController
 {
     [AllowAnonymous]

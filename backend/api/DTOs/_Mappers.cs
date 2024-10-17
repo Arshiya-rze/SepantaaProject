@@ -48,6 +48,7 @@ public static class Mappers
     {
         return new Attendence(
             StudentId: studentId,
+            UserName: teacherInput.UserName,
             DaysOfWeek: teacherInput.DaysOfWeek,
             Date: teacherInput.Date,
             AbsentOrPresent: teacherInput.AbsentOrPresent
@@ -57,8 +58,8 @@ public static class Mappers
     {
         return new ShowStudentStatusDto
         {
-            // UserName = attendence.UserName,
             StudentId = attendence.Id,
+            UserName = attendence.UserName,
             DaysOfWeek = attendence.DaysOfWeek,
             Date = attendence.Date,
             AbsentOrPresent = attendence.AbsentOrPresent

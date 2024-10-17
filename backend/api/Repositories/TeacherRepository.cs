@@ -18,15 +18,15 @@ public class TeacherRepository : ITeacherRepository
         _tokenService = tokenService;
     }
     #endregion Vars and Constructor
-    public async Task<AppUser?> GetByIdAsync(ObjectId studentId, CancellationToken cancellationToken)
-    {
-        AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
-            => doc.Id == studentId).SingleOrDefaultAsync(cancellationToken);
+    // public async Task<AppUser?> GetByIdAsync(ObjectId studentId, CancellationToken cancellationToken)
+    // {
+    //     AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
+    //         => doc.Id == studentId).SingleOrDefaultAsync(cancellationToken);
 
-        if (appUser is null) return null;
+    //     if (appUser is null) return null;
 
-        return appUser;
-    }
+    //     return appUser;
+    // }
     
     public async Task<ObjectId?> GetObjectIdByUserNameAsync(string studentUserName, CancellationToken cancellationToken)
     {
@@ -38,10 +38,10 @@ public class TeacherRepository : ITeacherRepository
         return ValidationsExtensions.ValidateObjectId(studentId);
     }
 
-    public async Task<ShowStudentStatusDto> AddAsync(string targetStudentUserName, AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
+    public async Task<ShowStudentStatusDto> AddAsync(AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
     {
         //inja ma bayad dar studentId id on student ke mikhaym ro dashte bashim
-        ObjectId? studentId = await GetObjectIdByUserNameAsync(targetStudentUserName, cancellationToken);
+        ObjectId? studentId = await GetObjectIdByUserNameAsync(teacherInput.UserName.ToUpper(), cancellationToken);
 
         if (studentId is null) return null;
 
@@ -55,7 +55,7 @@ public class TeacherRepository : ITeacherRepository
         // if (doeseDateExist)
         //     return null;
             
-        Attendence attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(teacherInput, studentId.Value);
+        Attendence? attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(teacherInput, studentId.Value);
 
         if (_collectionAttendence is not null)
         {
