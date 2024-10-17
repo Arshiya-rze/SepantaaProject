@@ -163,10 +163,10 @@ public class ManagerRepository : IManagerRepository
         return null;
     }
 
-    public async Task<AddCorse?> AddCorseAsync(AddCorseDto addCorseDto, string targetStudentUserName, CancellationToken cancellationToken)
+    public async Task<AddCorse?> AddCorseAsync(AddCorseDto addCorseDto, CancellationToken cancellationToken)
     {
         ObjectId studentId = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.UserName == targetStudentUserName)
+            .Where(doc => doc.UserName == addCorseDto.UserName.ToString())
             .Select(doc => doc.Id)
             .FirstOrDefaultAsync();
 

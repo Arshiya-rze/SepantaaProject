@@ -48,20 +48,33 @@ public class ManagerController(IManagerRepository _managerRepository) : BaseApiC
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    [HttpPost("add-corse/{targetStudentUserName}")]
-    public async Task<ActionResult<AddCorse>> AddCorse(
-            AddCorseDto managerInput, string targetStudentUserName,
-            CancellationToken cancellationToken
-        )
+    // [HttpPost("add-corse/{targetStudentUserName}")]
+    // public async Task<ActionResult<AddCorse>> AddCorse(
+    //         AddCorseDto managerInput, string targetStudentUserName,
+    //         CancellationToken cancellationToken
+    //     )
+    // {
+    //     if (targetStudentUserName is null)
+    //         return null;
+
+    //     AddCorse? addCorse = await _managerRepository.AddCorseAsync(managerInput, targetStudentUserName, cancellationToken);
+
+    //     return !string.IsNullOrEmpty(managerInput.Dars)
+    //         ? Ok(addCorse)
+    //         : BadRequest("add-corse failed try again.");
+    // }
+
+    [HttpPost("add-corse")]
+    public async Task<ActionResult<AddCorse>> AddCorse(AddCorseDto managerInput, CancellationToken cancellationToken)
     {
-        if (targetStudentUserName is null)
+        if (managerInput.UserName is null)
             return null;
 
-        AddCorse? addCorse = await _managerRepository.AddCorseAsync(managerInput, targetStudentUserName, cancellationToken);
+        AddCorse? addCorse = await _managerRepository.AddCorseAsync(managerInput, cancellationToken);
 
         return !string.IsNullOrEmpty(managerInput.Dars)
             ? Ok(addCorse)
-            : BadRequest("add-discription failed try again.");
+            : BadRequest("add-corse failed try again.");
     }
 
     [HttpDelete("deleteMember/{userName}")]

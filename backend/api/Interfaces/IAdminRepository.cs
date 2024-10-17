@@ -2,7 +2,6 @@ namespace api.Interfaces;
 
 public interface IAdminRepository
 {
-    public Task<LoggedInDto> LoginAsync(LoginDto adminInput, CancellationToken cancellationToken);
     public Task<LoggedInDto?> CreateAsync(RegisterDto adminInput, CancellationToken cancellationToken);
     // public Task<UpdateResult?> SetTeacherRoleAsync(string targetStudentUserName, CancellationToken cancellationToken);
 }

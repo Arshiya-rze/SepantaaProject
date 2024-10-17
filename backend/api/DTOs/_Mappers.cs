@@ -4,17 +4,17 @@ namespace api.DTOs;
 
 public static class Mappers
 {
-    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto userInput)
+    public static AppUser ConvertRegisterDtoToAppUser(RegisterDto adminInput)
     {
         return new AppUser
         {
-            Email = userInput.Email, // required by AspNet Identity
-            UserName = userInput.UserName, // required by AspNet Identity
-            DateOfBirth = userInput.DateOfBirth,
-            Name = userInput.Name.Trim(),
-            LastName = userInput.LastName.Trim(),
-            PhoneNum = userInput.PhoneNum,
-            Gender = userInput.Gender.ToLower(),
+            Email = adminInput.Email, // required by AspNet Identity
+            UserName = adminInput.UserName, // required by AspNet Identity
+            DateOfBirth = adminInput.DateOfBirth,
+            Name = adminInput.Name.Trim(),
+            LastName = adminInput.LastName.Trim(),
+            PhoneNum = adminInput.PhoneNum,
+            Gender = adminInput.Gender.ToLower(),
         };
     }
 
@@ -68,6 +68,7 @@ public static class Mappers
     public static AddCorse ConvertAddCorseDtoToCorse(AddCorseDto managerInput)
     {
         return new AddCorse(
+            UserName: managerInput.UserName,
             Dars: managerInput.Dars,
             TedadeKoleGhesdHa: managerInput.TedadeKoleGhesdHa,
             Shahriye: managerInput.Shahriye

@@ -13,7 +13,7 @@ public record RegisterDto(
     [DataType(DataType.Password), Length(7, 20)] string ConfirmPassword,
     [Length(0, 30)] string? Name,
     [Length(0, 30)] string? LastName,
-    string PhoneNum,
+    string? PhoneNum,
     // DateOnly DateOfBirth, //"1-1-1"
     DateOnly DateOfBirth, // Prevent from 1/1/1
     string? Gender
