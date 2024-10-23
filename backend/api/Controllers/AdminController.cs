@@ -19,13 +19,13 @@ public class AdminController(IAdminRepository _adminRepository) : BaseApiControl
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    [HttpGet("users-with-roles")]
-    public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> UsersWithRoles()
-    {
-        IEnumerable<UserWithRoleDto> users = await _adminRepository.GetUsersWithRolesAsync();
+    // [HttpGet("users-with-roles")]
+    // public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> UsersWithRoles()
+    // {
+    //     IEnumerable<UserWithRoleDto> users = await _adminRepository.GetUsersWithRolesAsync();
 
-        return !users.Any() ? NoContent() : Ok(users);
-    }
+    //     return !users.Any() ? NoContent() : Ok(users);
+    // }
 
 
     // [HttpPut("set-teacher-role/{targetStudentUserName}")]

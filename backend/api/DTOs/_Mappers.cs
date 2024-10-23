@@ -45,6 +45,13 @@ public static class Mappers
             corses: appUser.addCorses
         );
     }
+    public static UserWithRoleDto ConvertAppUserToUserWithRoleDto(AppUser appUser)
+    {
+        return new UserWithRoleDto(
+            UserName: appUser.NormalizedUserName!,
+            Roles: appUser.appRoles
+        );
+    }
 
     public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto teacherInput, ObjectId studentId)
     {

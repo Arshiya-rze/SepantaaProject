@@ -1,7 +1,9 @@
+using api.Helpers;
+
 namespace api.Controllers;
 
 // [Authorize(Policy = "RequiredManagerRole")]
-public class ManagerController(IManagerRepository _managerRepository) : BaseApiController
+public class ManagerController(IManagerRepository _managerRepository, ITokenService _tokenService) : BaseApiController
 {
     [HttpPost("add-secretary")]
     public async Task<ActionResult<LoggedInDto>> CreateSecretary(RegisterDto managerInput, CancellationToken cancellationToken)
@@ -97,4 +99,33 @@ public class ManagerController(IManagerRepository _managerRepository) : BaseApiC
 
         return !users.Any() ? NoContent() : Ok(users);
     }
+
+    // [HttpGet("users-with-roles")]
+    // public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
+    // {
+    //     ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
+
+    //     if (userId is null)
+    //         return Unauthorized("You are not logged in. Login in again.");
+
+    //     PagedList<AppUser> pagedAppUsers = await _managerRepository.GetAllAsync(paginationParams, cancellationToken);        
+        
+    //     if (pagedAppUsers.Count == 0) return NoContent();
+
+    //     Response.AddPaginationHeader(new(
+    //         pagedAppUsers.CurrentPage,
+    //         pagedAppUsers.PageSize,
+    //         pagedAppUsers.TotalItems,
+    //         pagedAppUsers.TotalPages
+    //     ));
+
+    //     List<UserWithRoleDto> userWithRoleDtos = [];
+
+    //     foreach (AppUser appUser in pagedAppUsers)
+    //     {
+    //         userWithRoleDtos.Add(Mappers.ConvertAppUserToUserWithRoleDto(appUser));
+    //     }
+        
+    //     return userWithRoleDtos;
+    // }
 }

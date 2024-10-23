@@ -56,26 +56,27 @@ public class AdminRepository : IAdminRepository
         return loggedInDto;
     }
 
-    public async Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync()
-    {
-        List<UserWithRoleDto> usersWithRoles = [];
+    // public async Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync()
+    // {
+    //     List<UserWithRoleDto> usersWithRoles = [];
 
-        IEnumerable<AppUser> appUsers = _userManager.Users;
+    //     IEnumerable<AppUser> appUsers = _userManager.Users;
 
-        foreach (AppUser appUser in appUsers)
-        {
-            IEnumerable<string> roles = await _userManager.GetRolesAsync(appUser);
+    //     foreach (AppUser appUser in appUsers)
+    //     {
+    //         IEnumerable<string> roles = await _userManager.GetRolesAsync(appUser);
 
-            usersWithRoles.Add(
-                new UserWithRoleDto(
-                    UserName: appUser.UserName!,
-                    Roles: roles
-                )
-            );
-        }
+    //         usersWithRoles.Add(
+    //             new UserWithRoleDto(
+    //                 UserName: appUser.UserName!,
+    //                 Roles: roles
+    //             )
+    //         );
+    //     }
 
-        return usersWithRoles;
-    }
+    //     return usersWithRoles;
+    // }
+    
     // public async Task<UpdateResult?> SetTeacherRoleAsync(string targetStudentUserName, CancellationToken cancellationToken)
     // {
     //     ObjectId? studentId = await GetObjectIdByUserNameAsync(targetStudentUserName, cancellationToken);

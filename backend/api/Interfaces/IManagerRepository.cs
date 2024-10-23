@@ -1,3 +1,5 @@
+using api.Helpers;
+
 namespace api.Interfaces;
 
 public interface IManagerRepository
@@ -8,4 +10,5 @@ public interface IManagerRepository
     public Task<AppUser?> DeleteMemberAsync(string userName, CancellationToken cancellationToken);
     public Task<AddCorse?> AddCorseAsync(AddCorseDto managerInput, CancellationToken cancellationToken);
     public Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync();
+    // public Task<PagedList<UserWithRoleDto>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken);
 }

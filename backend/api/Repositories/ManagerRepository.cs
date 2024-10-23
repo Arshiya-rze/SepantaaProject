@@ -1,3 +1,5 @@
+using api.Helpers;
+
 namespace api.Repositories;
 
 public class ManagerRepository : IManagerRepository
@@ -172,7 +174,7 @@ public class ManagerRepository : IManagerRepository
 
         AppUser? appUser = await GetByObjectIdAsync(studentId, cancellationToken);
         if (appUser is null)
-            return null; 
+            return null;
 
         AddCorse addCorse;
 
@@ -189,9 +191,9 @@ public class ManagerRepository : IManagerRepository
                 doc.Id == studentId, updatedAppUser, null, cancellationToken);
 
             if (result is not null)
-                return addCorse;          
+                return addCorse;
         }
-        
+
         return null;
     }
 
@@ -215,4 +217,27 @@ public class ManagerRepository : IManagerRepository
 
         return usersWithRoles;
     }
+
+    // public async Task<PagedList<UserWithRoleDto>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
+    // {
+    //     List<UserWithRoleDto> usersWithRoles = [];
+
+    //     IMongoQueryable<AppUser> appUsers = _userManager.Users.AsQueryable();
+
+
+    //     foreach (AppUser appUser in appUsers)
+    //     {
+    //         IEnumerable<string> roles = await _userManager.GetRolesAsync(appUser);
+
+    //         usersWithRoles.Add(
+    //             new UserWithRoleDto(
+    //                 UserName: appUser.UserName!,
+    //                 Roles: roles
+    //             )
+    //         );
+    //     }
+
+    //     return await PagedList<UserWithRoleDto>.CreatePagedListAsync(appUsers, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    // }
+
 }
