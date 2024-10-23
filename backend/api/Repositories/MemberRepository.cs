@@ -81,10 +81,21 @@ public class MemberRepository : IMemberRepository
 
     }
 
-    public async Task<MemberDto?> GetByUserNameAsync(string userName, CancellationToken cancellationToken)
+    public async Task<MemberDto?> GetByUserNameAsync(string memberUserName, CancellationToken cancellationToken)
     {
-        AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser => appUser.NormalizedUserName == userName.ToUpper().Trim()).FirstOrDefaultAsync(cancellationToken);
+        // ObjectId memberId = await _collectionAppUser.AsQueryable()
+        // .Where(appUser => appUser.NormalizedUserName == memberUserName)
+        // .Select(appUser => appUser.Id)
+        // .FirstOrDefaultAsync(cancellationToken);
 
-        return appUser is null ? null : Mappers.ConvertAppUserToMemberDto(appUser);
+        AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser =>
+                appUser.NormalizedUserName == memberUserName).FirstOrDefaultAsync(cancellationToken);
+
+        if (appUser.ToString() is not null)
+        {
+            return Mappers.ConvertAppUserToMemberDto(appUser);
+        }
+
+        return null;
     }
 }

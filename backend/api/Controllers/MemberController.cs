@@ -108,11 +108,14 @@ public class MemberController
             : memberDto;
     }
 
-    [HttpGet("username/{userName}")]
-    public async Task<ActionResult<MemberDto>> GetByUserName(string userName, CancellationToken cancellationToken)
+    [HttpGet("get-by-userName/{memberUserName}")]
+    public async Task<ActionResult<MemberDto>> GetByUserName(string memberUserName, CancellationToken cancellationToken)
     {
-        MemberDto? memberDto = await _memberRepository.GetByUserNameAsync(userName, cancellationToken);
+        MemberDto? memberDto = await _memberRepository.GetByUserNameAsync(memberUserName, cancellationToken);
 
-        return memberDto is null ? BadRequest("No user found by this username.") : memberDto;
+        if (memberDto is null)
+            return NotFound("No user with this userName address");
+
+        return memberDto;
     }
 }
