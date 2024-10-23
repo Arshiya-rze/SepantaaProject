@@ -6,7 +6,7 @@ public record AddStudentStatusDto(
     DateOnly Date,
     string AbsentOrPresent
 );
-
+  
 public class ShowStudentStatusDto
 {
     // public AppUser? UserName { get; init; }
