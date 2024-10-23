@@ -1,6 +1,6 @@
 namespace api.Controllers;
 
-[Authorize(Policy = "RequiredSecretaryRole")]
+// [Authorize(Policy = "RequiredSecretaryRole")]
 public class SecretaryController(ISecretaryRepository _secretaryRepository) : BaseApiController
 {
     [HttpPost("add-student")]
