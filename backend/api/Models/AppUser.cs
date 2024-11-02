@@ -19,7 +19,7 @@ public class AppUser : MongoIdentityUser<ObjectId>
     public string Gender { get; init; }
     public string Lesson { get; init; }
     public List<AddCorse> addCorses { get; init; } = [];
-    public List<string> appRoles { get; init; }
+    // public List<string> appRoles { get; init; }
 }
 
 
