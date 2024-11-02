@@ -8,9 +8,11 @@ public class ManagerRepository : IManagerRepository
     private readonly IMongoCollection<AppUser>? _collectionAppUser;
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly IMongoClient _client; // used for Session
 
     public ManagerRepository(IMongoClient client, ITokenService tokenService, IMyMongoDbSettings dbSettings, UserManager<AppUser> userManager)
     {
+        _client = client; // used for Session
         var database = client.GetDatabase(dbSettings.DatabaseName);
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
 
@@ -133,21 +135,30 @@ public class ManagerRepository : IManagerRepository
         return loggedInDto;
     }
 
-    public async Task<AppUser?> GetByObjectIdAsync(ObjectId studentId, CancellationToken cancellationToken)
+    public async Task<AppUser?> GetByObjectIdAsync(ObjectId memberId, CancellationToken cancellationToken)
     {
         AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
-            => doc.Id == studentId).SingleOrDefaultAsync(cancellationToken);
+            => doc.Id == memberId).SingleOrDefaultAsync(cancellationToken);
 
         if (appUser is null)
             return null;
 
         return appUser;
     }
+    // public async Task<ObjectId?> GetObjectIdByUserNameAsync(string userName, CancellationToken cancellationToken)
+    // {
+    //     ObjectId? userId = await _collectionAppUser.AsQueryable<AppUser>()
+    //         .Where(appUser => appUser.NormalizedUserName == userName.ToUpper())
+    //         .Select(item => item.Id)
+    //         .SingleOrDefaultAsync(cancellationToken);
 
-    public async Task<AppUser?> DeleteMemberAsync(string userName, CancellationToken cancellationToken)
+    //     return ValidationsExtensions.ValidateObjectId(userId);
+    // }
+
+    public async Task<AppUser?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken)
     {
         ObjectId userId = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.UserName == userName)
+            .Where(doc => doc.NormalizedUserName == targetMemberUserName)
             .Select(doc => doc.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
@@ -218,26 +229,12 @@ public class ManagerRepository : IManagerRepository
         return usersWithRoles;
     }
 
-    // public async Task<PagedList<UserWithRoleDto>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
+    // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
     // {
-    //     List<UserWithRoleDto> usersWithRoles = [];
+        
+    //     IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable();
 
-    //     IMongoQueryable<AppUser> appUsers = _userManager.Users.AsQueryable();
-
-
-    //     foreach (AppUser appUser in appUsers)
-    //     {
-    //         IEnumerable<string> roles = await _userManager.GetRolesAsync(appUser);
-
-    //         usersWithRoles.Add(
-    //             new UserWithRoleDto(
-    //                 UserName: appUser.UserName!,
-    //                 Roles: roles
-    //             )
-    //         );
-    //     }
-
-    //     return await PagedList<UserWithRoleDto>.CreatePagedListAsync(appUsers, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     // }
 
 }

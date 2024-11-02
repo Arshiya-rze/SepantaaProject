@@ -1,4 +1,5 @@
 using api.Helpers;
+using Microsoft.AspNetCore.Identity;
 
 namespace api.Controllers;
 
@@ -79,22 +80,60 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             : BadRequest("add-corse failed try again.");
     }
 
-    [HttpDelete("deleteMember/{userName}")]
-    public async Task<ActionResult<AppUser?>> DeleteMember(string userName, CancellationToken cancellationToken)
+    [HttpDelete("deleteMember/{targetMemberUserName}")]
+    public async Task<ActionResult<AppUser>> Delete(string targetMemberUserName, CancellationToken cancellationToken)
     {
-        AppUser? appUser = await _managerRepository.DeleteMemberAsync(userName, cancellationToken);
+        AppUser? appUser = await _managerRepository.DeleteAsync(targetMemberUserName, cancellationToken);
 
         if (appUser is not null)
         {
-            return Ok($""" "{userName}" got deleted successfully.""");
+            return Ok($""" "{targetMemberUserName}" got deleted successfully.""");
         }
 
         return null;
+        // ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
+
+        // if (userId is null)
+        //     return Unauthorized("You are not logged in. Login in again.");
+
+        // AppUser appUser = await _managerRepository.DeleteAsync(userId.Value, targetMemberUserName, cancellationToken);
+
+        // if (appUser is not null)
+        //     return Ok($""" "{targetMemberUserName}" got deleted successfully.""");
+
+        // return null;
     }
 
     [HttpGet("users-with-roles")]
+    // public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
     public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> UsersWithRoles()
     {
+        // ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
+
+        // if (userId is null)
+        //     return Unauthorized("You are not logged in. Login in again.");
+
+        // paginationParams.UserId = userId;
+
+        // PagedList<AppUser> pagedAppUsers = await _managerRepository.GetAllAsync(paginationParams, cancellationToken);
+
+        // if (pagedAppUsers.Count == 0) return NoContent();
+
+        // Response.AddPaginationHeader(new(
+        //     pagedAppUsers.CurrentPage,
+        //     pagedAppUsers.PageSize,
+        //     pagedAppUsers.TotalItems,
+        //     pagedAppUsers.TotalPages
+        // ));
+
+        // List<UserWithRoleDto> userWithRoleDtos = [];
+
+        // foreach (AppUser appUser in pagedAppUsers)
+        // {
+        //     userWithRoleDtos.Add(Mappers.ConvertAppUserToUserWithRoleDto(appUser));
+        // }
+
+        // return userWithRoleDtos;
         IEnumerable<UserWithRoleDto> users = await _managerRepository.GetUsersWithRolesAsync();
 
         return !users.Any() ? NoContent() : Ok(users);

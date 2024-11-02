@@ -12,4 +12,5 @@ public class PaginationParams
         get { return _pageSize; }
         set { _pageSize = value > MaxPageSize ? MaxPageSize : value; }
     }
+    public ObjectId? UserId { get; set; } // token, Faranak's method
 }
