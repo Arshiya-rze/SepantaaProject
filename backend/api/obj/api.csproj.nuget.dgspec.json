@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/api.csproj": {}
+    "/home/arshia/Documents/Projects/SepantaaProject/backend/api/api.csproj": {}
   },
   "projects": {
-    "/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/api.csproj": {
+    "/home/arshia/Documents/Projects/SepantaaProject/backend/api/api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/api.csproj",
+        "projectUniqueName": "/home/arshia/Documents/Projects/SepantaaProject/backend/api/api.csproj",
         "projectName": "api",
-        "projectPath": "/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/api.csproj",
-        "packagesPath": "/home/arshiya-rze/.nuget/packages/",
-        "outputPath": "/home/arshiya-rze/Documents/Projects/SepantaProject/backend/api/obj/",
+        "projectPath": "/home/arshia/Documents/Projects/SepantaaProject/backend/api/api.csproj",
+        "packagesPath": "/home/arshia/.nuget/packages/",
+        "outputPath": "/home/arshia/Documents/Projects/SepantaaProject/backend/api/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/arshiya-rze/.nuget/NuGet/NuGet.Config"
+          "/home/arshia/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -36,8 +36,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -45,7 +46,7 @@
           "dependencies": {
             "AspNetCore.Identity.MongoDbCore": {
               "target": "Package",
-              "version": "[3.1.2, )"
+              "version": "[6.0.0, )"
             },
             "BCrypt.Net-Next": {
               "target": "Package",
@@ -71,6 +72,20 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -79,7 +94,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
