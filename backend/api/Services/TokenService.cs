@@ -108,15 +108,15 @@ public class TokenService : ITokenService
         return ValidationsExtensions.ValidateObjectId(userId);
     }
 
-    public async Task<string?> GetActualUserIdLessonAsync(string? hashedUserId, CancellationToken cancellationToken)
-    {
-        if (hashedUserId is null) return null;
+    // public async Task<string?> GetActualUserIdLessonAsync(string? hashedUserId, CancellationToken cancellationToken)
+    // {
+    //     if (hashedUserId is null) return null;
 
-        string loggedInUserLesson = await _collection.AsQueryable()
-            .Where(appUser => appUser.IdentifierHash == hashedUserId)
-            .Select(appUser => appUser.Lesson)
-            .SingleOrDefaultAsync(cancellationToken);
+    //     string loggedInUserLesson = await _collection.AsQueryable()
+    //         .Where(appUser => appUser.IdentifierHash == hashedUserId)
+    //         .Select(appUser => appUser.Lesson)
+    //         .SingleOrDefaultAsync(cancellationToken);
 
-        return loggedInUserLesson;
-    }
+    //     return loggedInUserLesson;
+    // }
 }

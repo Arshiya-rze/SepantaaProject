@@ -15,7 +15,7 @@ public static class Mappers
             LastName = adminInput.LastName.Trim(),
             PhoneNum = adminInput.PhoneNum,
             Gender = adminInput.Gender.ToLower(),
-            Lesson = adminInput.Lesson.ToUpper()
+            Lessons = adminInput.Lessons
         };
     }
 
@@ -40,7 +40,7 @@ public static class Mappers
             LastName: appUser.LastName,
             PhoneNum: appUser.PhoneNum,
             Gender: appUser.Gender,
-            Lesson: appUser.Lesson,
+            Lessons: appUser.Lessons,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
             corses: appUser.addCorses
         );
