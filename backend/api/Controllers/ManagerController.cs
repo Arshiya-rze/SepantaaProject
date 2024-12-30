@@ -80,28 +80,17 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             : BadRequest("add-corse failed try again.");
     }
 
-    [HttpDelete("deleteMember/{targetMemberUserName}")]
-    public async Task<ActionResult<AppUser>> Delete(string targetMemberUserName, CancellationToken cancellationToken)
+    [HttpPut("delete-member/{targetMemberUserName}")]
+    public async Task<ActionResult> Delete(string targetMemberUserName, CancellationToken cancellationToken)
     {
-        AppUser? appUser = await _managerRepository.DeleteAsync(targetMemberUserName, cancellationToken);
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
+        if (userId is null) return Unauthorized("You are not loggedIn login again");
 
-        if (appUser is not null)
-        {
-            return Ok($""" "{targetMemberUserName}" got deleted successfully.""");
-        }
+        DeleteResult? deleteResult = await _managerRepository.DeleteAsync(targetMemberUserName, cancellationToken);
 
-        return null;
-        // ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
-
-        // if (userId is null)
-        //     return Unauthorized("You are not logged in. Login in again.");
-
-        // AppUser appUser = await _managerRepository.DeleteAsync(userId.Value, targetMemberUserName, cancellationToken);
-
-        // if (appUser is not null)
-        //     return Ok($""" "{targetMemberUserName}" got deleted successfully.""");
-
-        // return null;
+        return deleteResult is null
+        ? BadRequest("Delete member failed try again.")
+        : Ok(new { message = "Delete member successfull" });
     }
 
     [HttpGet("users-with-roles")]

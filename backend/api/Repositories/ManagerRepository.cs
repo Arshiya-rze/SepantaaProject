@@ -135,13 +135,12 @@ public class ManagerRepository : IManagerRepository
         return loggedInDto;
     }
 
-    public async Task<AppUser?> GetByObjectIdAsync(ObjectId memberId, CancellationToken cancellationToken)
+    public async Task<AppUser?> GetByIdAsync(ObjectId userId, CancellationToken cancellationToken)
     {
         AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
-            => doc.Id == memberId).SingleOrDefaultAsync(cancellationToken);
+            => doc.Id == userId).SingleOrDefaultAsync(cancellationToken);
 
-        if (appUser is null)
-            return null;
+        if (appUser is null) return null;
 
         return appUser;
     }
@@ -155,25 +154,19 @@ public class ManagerRepository : IManagerRepository
     //     return ValidationsExtensions.ValidateObjectId(userId);
     // }
 
-    public async Task<AppUser?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken)
+    public async Task<DeleteResult?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken)
     {
         ObjectId userId = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.NormalizedUserName == targetMemberUserName)
+            .Where(doc => doc.UserName == targetMemberUserName)
             .Select(doc => doc.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
-        AppUser? appUser = await GetByObjectIdAsync(userId, cancellationToken);
+        AppUser? appUser = await GetByIdAsync(userId, cancellationToken);
 
         if (appUser is null)
             return null;
 
-        DeleteResult result = await _collectionAppUser.DeleteOneAsync(doc =>
-            doc.Id == userId, cancellationToken);
-
-        if (result is not null)
-            return appUser;
-
-        return null;
+        return await _collectionAppUser.DeleteOneAsync<AppUser>(appUser => appUser.Id == userId, null, cancellationToken);
     }
 
     public async Task<AddCorse?> AddCorseAsync(AddCorseDto addCorseDto, CancellationToken cancellationToken)
@@ -183,7 +176,7 @@ public class ManagerRepository : IManagerRepository
             .Select(doc => doc.Id)
             .FirstOrDefaultAsync();
 
-        AppUser? appUser = await GetByObjectIdAsync(studentId, cancellationToken);
+        AppUser? appUser = await GetByIdAsync(studentId, cancellationToken);
         if (appUser is null)
             return null;
 

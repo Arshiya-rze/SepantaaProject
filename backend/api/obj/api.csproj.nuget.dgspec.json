@@ -46,7 +46,7 @@
           "dependencies": {
             "AspNetCore.Identity.MongoDbCore": {
               "target": "Package",
-              "version": "[3.1.2, )"
+              "version": "[6.0.0, )"
             },
             "BCrypt.Net-Next": {
               "target": "Package",

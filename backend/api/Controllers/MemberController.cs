@@ -7,7 +7,7 @@ namespace api.Controllers;
 public class MemberController
     (IMemberRepository _memberRepository, ITokenService _tokenService) : BaseApiController
 {
-    [AllowAnonymous]
+    [Authorize(Policy = "RequiredManagerRole")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
     {
