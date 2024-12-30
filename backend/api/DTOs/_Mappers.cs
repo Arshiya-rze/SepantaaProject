@@ -78,7 +78,7 @@ public static class Mappers
     public static AddCorse ConvertAddCorseDtoToCorse(AddCorseDto managerInput)
     {
         return new AddCorse(
-            UserName: managerInput.UserName,
+            // UserName: managerInput.UserName,
             Dars: managerInput.Dars,
             TedadeKoleGhesdHa: managerInput.TedadeKoleGhesdHa,
             Shahriye: managerInput.Shahriye

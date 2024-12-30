@@ -169,10 +169,10 @@ public class ManagerRepository : IManagerRepository
         return await _collectionAppUser.DeleteOneAsync<AppUser>(appUser => appUser.Id == userId, null, cancellationToken);
     }
 
-    public async Task<AddCorse?> AddCorseAsync(AddCorseDto addCorseDto, CancellationToken cancellationToken)
+    public async Task<AddCorse?> AddCorseAsync(AddCorseDto addCorseDto, string targetStudentUserName, CancellationToken cancellationToken)
     {
         ObjectId studentId = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.UserName == addCorseDto.UserName.ToString())
+            .Where(doc => doc.UserName == targetStudentUserName)
             .Select(doc => doc.Id)
             .FirstOrDefaultAsync();
 
