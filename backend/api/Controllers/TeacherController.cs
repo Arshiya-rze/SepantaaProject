@@ -59,7 +59,7 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
 
     [AllowAnonymous]
     [HttpGet("get-lessons")]
-    public async Task<ActionResult<LoggedInDto>> GetLesson(CancellationToken cancellationToken)
+    public async Task<ActionResult<List<string>>> GetLesson(CancellationToken cancellationToken)
     {
         string? token = null; 
         
@@ -75,8 +75,8 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         if (string.IsNullOrEmpty(hashedUserId))
             return BadRequest("No user was found with this user Id.");
 
-        LoggedInDto? loggedInDto = await _teacherRepository.GetLessonAsync(hashedUserId, token, cancellationToken);
+        List<string>? lessons = await _teacherRepository.GetLessonAsync(hashedUserId, token, cancellationToken);
 
-        return loggedInDto is null ? Unauthorized("User is logged out or unauthorized. Login again.") : loggedInDto;
+        return lessons is null ? Unauthorized("User is logged out or unauthorized. Login again.") : lessons;
     }
 }
