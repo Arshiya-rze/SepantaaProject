@@ -56,4 +56,27 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
 
         return memberDtos;
     }
+
+    [AllowAnonymous]
+    [HttpGet("get-lessons")]
+    public async Task<ActionResult<LoggedInDto>> GetLesson(CancellationToken cancellationToken)
+    {
+        string? token = null; 
+        
+        bool isTokenValid = HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
+
+        if (isTokenValid)
+            token = authHeader.ToString().Split(' ').Last();
+
+        if (string.IsNullOrEmpty(token))
+            return Unauthorized("Token is expired or invalid. Login again.");
+
+        string? hashedUserId = User.GetHashedUserId();
+        if (string.IsNullOrEmpty(hashedUserId))
+            return BadRequest("No user was found with this user Id.");
+
+        LoggedInDto? loggedInDto = await _teacherRepository.GetLessonAsync(hashedUserId, token, cancellationToken);
+
+        return loggedInDto is null ? Unauthorized("User is logged out or unauthorized. Login again.") : loggedInDto;
+    }
 }

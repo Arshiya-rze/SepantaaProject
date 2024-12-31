@@ -120,4 +120,18 @@ public class TeacherRepository : ITeacherRepository
 
         // return await PagedList<AppUser>.CreatePagedListAsync(appUsers, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     }
+
+    public async Task<LoggedInDto?> GetLessonAsync(string hashedUserId, string token, CancellationToken cancellationToken)
+    {
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
+
+        if (userId is null)
+            return null;
+
+        AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser => appUser.Id == userId).FirstOrDefaultAsync(cancellationToken);
+
+        return appUser is null
+            ? null
+            : Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+    }
 }
