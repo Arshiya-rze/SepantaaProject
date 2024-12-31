@@ -16,3 +16,7 @@ public class ShowStudentStatusDto
     public DateOnly Date { get; init; }
     public string AbsentOrPresent { get; init; }
 }
+
+public record StudentLessonUpdateDto (
+    List<String> Lessons
+);

@@ -107,4 +107,14 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
 
         return !users.Any() ? NoContent() : Ok(users);
     }
+
+    [HttpPut("update-lesson/{targetStudentUserName}")]
+    public async Task<ActionResult> UpdateStudentLesson(StudentLessonUpdateDto studentLessonUpdateDto, string targetStudentUserName, CancellationToken cancellationToken)
+    {
+        UpdateResult? updateResult = await _managerRepository.UpdateStudentLessonAsync(studentLessonUpdateDto, User.GetHashedUserId(), targetStudentUserName, cancellationToken);
+
+        return updateResult is null || !updateResult.IsModifiedCountAvailable
+            ? BadRequest("Update failed. Try again later.")
+            : Ok(new { message = "Student Lesson has been updated successfully." });
+    }
 }

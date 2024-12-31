@@ -229,6 +229,25 @@ public class ManagerRepository : IManagerRepository
 
     //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     // }
+
+    public async Task<UpdateResult?> UpdateStudentLessonAsync(StudentLessonUpdateDto studentLessonUpdateDto, string? hashedUserId, string targetStudentUserName, CancellationToken cancellationToken)
+    {
+        // AppUser? targetAppUser = await _collectionAppUser.Find<AppUser>(doc =>
+        //     doc.UserName == targetStudentUserName).FirstOrDefaultAsync(cancellationToken);
+        ObjectId? targetStudentId = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.UserName == targetStudentUserName)
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if(targetStudentId is null) return null;
+
+        UpdateDefinition<AppUser> updateStudent = Builders<AppUser>.Update
+            .Set(appUser => appUser.Lessons, studentLessonUpdateDto.Lessons);
+
+
+        return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == targetStudentId, updateStudent, null, cancellationToken);
+    }
+
     public async Task<int> CalculateMonthlyTuition(int totalInstallments, int totalTuition)
     {
         if (totalInstallments <= 0)
@@ -236,5 +255,4 @@ public class ManagerRepository : IManagerRepository
 
         return totalTuition / totalInstallments;
     }
-
 }
