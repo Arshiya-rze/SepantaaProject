@@ -83,16 +83,41 @@ public class TeacherRepository : ITeacherRepository
 
     }
 
-    // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string hashedUserId, CancellationToken cancellationToken)
-    // {
-        
-    //     string? loggedInUserLesson = await _tokenService.GetActualUserIdLessonAsync(hashedUserId, cancellationToken);
+    public async Task<List<AppUser>> GetAllAsync(string userIdHashed, CancellationToken cancellationToken)
+    {
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
 
-    //     IMongoQueryable<AppUser> query = _collectionAppUser.Find<AppUser>(
-    //         doc => doc.Lesson == loggedInUserLesson).ToList(cancellationToken);
-        
+        if (userId is null) return null;
+
+        // List<string>? loggedInTargetLessons = await _collectionAppUser.AsQueryable()
+        //     .Where(appUser => appUser.Id == userId)
+        //     .Select(appUser => appUser.Lessons)
+        //     .FirstOrDefaultAsync(cancellationToken);
+
+        AppUser? targetAppUser = await _collectionAppUser.Find<AppUser>(doc =>
+        doc.Id == userId).FirstOrDefaultAsync(cancellationToken);
+
+        if(targetAppUser is null)
+            return null;
+
+        // IMongoQueryable<AppUser> query = _collectionAppUser.Find<AppUser>(
+        //     doc => doc.Lessons == loggedInTargetLessons).ToListAsync(cancellationToken);    
+        List<AppUser>? targetAppUsers = _collectionAppUser.Find<AppUser>(
+            doc => doc.Lessons == targetAppUser.Lessons).ToList(cancellationToken);
+
+        // IMongoQueryable<AppUser> appUsers = _collectionAppUser.AsQueryable()
+        // .Where(doc => doc.Lessons == targetAppUsers)
+        // .AnyAsync(cancellationToken);   
+
+        if (targetAppUsers is null)
+            return null;
+
+        return targetAppUsers;
+
+        // IMongoQueryable<AppUser> query = _collectionAppUser.Find<AppUser>(
+        //     doc => doc.Lesson == loggedInUserLesson).ToList(cancellationToken);
         
 
-    //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
-    // }
+        // return await PagedList<AppUser>.CreatePagedListAsync(appUsers, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    }
 }

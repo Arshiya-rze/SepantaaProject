@@ -19,41 +19,41 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         return showStudentStatusDto;
     }
 
-    // [AllowAnonymous]
-    // [HttpGet]
-    // public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, string hashedUserId, CancellationToken cancellationToken)
-    // {
-    //     PagedList<AppUser> pagedAppUsers = await _teacherRepository.GetAllAsync(paginationParams, hashedUserId, cancellationToken);
+    [AllowAnonymous]
+    [HttpGet("get-students")]
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll(CancellationToken cancellationToken)
+    {
+        string? userIdHashed = User.GetHashedUserId();
 
-    //     if (pagedAppUsers.Count == 0)
-    //         return NoContent();
+        if (userIdHashed is null) return Unauthorized("Login again.");
+        
+        List<AppUser> pagedAppUsers = await _teacherRepository.GetAllAsync(userIdHashed, cancellationToken);
 
-    //     // After that we shure to exist on Controller we must set PaginaionHeader here before Converting AppUseer to studentDto
+        if (pagedAppUsers.Count == 0)
+            return NoContent();
 
-    //     PaginationHeader paginationHeader = new(
-    //         CurrentPage: pagedAppUsers.CurrentPage,
-    //         ItemsPerPage: pagedAppUsers.PageSize,
-    //         TotalItems: pagedAppUsers.TotalItems,
-    //         TotalPages: pagedAppUsers.TotalPages
-    //     );
+        // PaginationHeader paginationHeader = new(
+        //     CurrentPage: pagedAppUsers.CurrentPage,
+        //     ItemsPerPage: pagedAppUsers.PageSize,
+        //     TotalItems: pagedAppUsers.TotalItems,
+        //     TotalPages: pagedAppUsers.TotalPages
+        // );
 
-    //     Response.AddPaginationHeader(paginationHeader);
+        // Response.AddPaginationHeader(paginationHeader);
 
-    //     //after setup now we can covert appUser to studentDto
+        // string? userIdHashed = User.GetHashedUserId();
 
-    //     string? userIdHashed = User.GetHashedUserId();
+        // string? loggedInUserLesson = await _tokenService.GetActualUserIdLessonAsync(userIdHashed, cancellationToken);
 
-    //     string? loggedInUserLesson = await _tokenService.GetActualUserIdLessonAsync(userIdHashed, cancellationToken);
+        // if (loggedInUserLesson is null) return Unauthorized("You are unauthorized. Login again.");
 
-    //     if (loggedInUserLesson is null) return Unauthorized("You are unauthorized. Login again.");
+        List<MemberDto> memberDtos = [];
 
-    //     List<MemberDto> memberDtos = [];
+        foreach (AppUser appUser in pagedAppUsers)
+        {
+            memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
+        }
 
-    //     foreach (AppUser appUser in pagedAppUsers)
-    //     {
-    //         memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
-    //     }
-
-    //     return memberDtos;
-    // }
+        return memberDtos;
+    }
 }
