@@ -121,4 +121,41 @@ public class MemberController
 
         return memberDto;
     }
+
+    [HttpGet("get-classmate")]
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllClassmate(CancellationToken cancellationToken)
+    {
+        string? userIdHashed = User.GetHashedUserId();
+
+        if (userIdHashed is null) return Unauthorized("Login again.");
+        
+        List<AppUser> pagedAppUsers = await _memberRepository.GetAllClassmateAsync(userIdHashed, cancellationToken);
+
+        if (pagedAppUsers.Count == 0)
+            return NoContent();
+
+        // PaginationHeader paginationHeader = new(
+        //     CurrentPage: pagedAppUsers.CurrentPage,
+        //     ItemsPerPage: pagedAppUsers.PageSize,
+        //     TotalItems: pagedAppUsers.TotalItems,
+        //     TotalPages: pagedAppUsers.TotalPages
+        // );
+
+        // Response.AddPaginationHeader(paginationHeader);
+
+        // string? userIdHashed = User.GetHashedUserId();
+
+        // string? loggedInUserLesson = await _tokenService.GetActualUserIdLessonAsync(userIdHashed, cancellationToken);
+
+        // if (loggedInUserLesson is null) return Unauthorized("You are unauthorized. Login again.");
+
+        List<MemberDto> memberDtos = [];
+
+        foreach (AppUser appUser in pagedAppUsers)
+        {
+            memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
+        }
+
+        return memberDtos;
+    }
 }

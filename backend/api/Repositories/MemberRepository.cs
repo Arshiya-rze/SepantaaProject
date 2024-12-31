@@ -98,4 +98,25 @@ public class MemberRepository : IMemberRepository
 
         return null;
     }
+
+    public async Task<List<AppUser>> GetAllClassmateAsync(string userIdHashed, CancellationToken cancellationToken)
+    {
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
+
+        if (userId is null) return null;
+
+        AppUser? targetAppUser = await _collectionAppUser.Find<AppUser>(doc =>
+        doc.Id == userId).FirstOrDefaultAsync(cancellationToken);
+
+        if(targetAppUser is null)
+            return null;
+
+        List<AppUser>? targetAppUsers = _collectionAppUser.Find<AppUser>(
+            doc => doc.Lessons == targetAppUser.Lessons).ToList(cancellationToken);
+
+        if (targetAppUsers is null)
+            return null;
+
+        return targetAppUsers;
+    }
 }
