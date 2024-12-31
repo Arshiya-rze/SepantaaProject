@@ -1,12 +1,8 @@
-using api.Helpers;
-using api.Models.Helpers;
-
 namespace api.Controllers;
 
-// [Authorize(Policy = "RequiredTeacherRole")]   
+[Authorize(Policy = "RequiredTeacherRole")]   
 public class TeacherController(ITeacherRepository _teacherRepository, ITokenService _tokenService) : BaseApiController
 {
-    [AllowAnonymous]
     [HttpPost("add-attendence")]
     public async Task<ActionResult<ShowStudentStatusDto>> Add(AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
     {
@@ -19,7 +15,6 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         return showStudentStatusDto;
     }
 
-    [AllowAnonymous]
     [HttpGet("get-students")]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll(CancellationToken cancellationToken)
     {
@@ -57,7 +52,6 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         return memberDtos;
     }
 
-    [AllowAnonymous]
     [HttpGet("get-lessons")]
     public async Task<ActionResult<List<string>>> GetLesson(CancellationToken cancellationToken)
     {

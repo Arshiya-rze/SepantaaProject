@@ -1,9 +1,6 @@
-using api.Helpers;
-using Microsoft.AspNetCore.Identity;
-
 namespace api.Controllers;
 
-// [Authorize(Policy = "RequiredManagerRole")]
+[Authorize(Policy = "RequiredManagerRole")]
 public class ManagerController(IManagerRepository _managerRepository, ITokenService _tokenService) : BaseApiController
 {
     [HttpPost("add-secretary")]
@@ -51,22 +48,6 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    // [HttpPost("add-corse/{targetStudentUserName}")]
-    // public async Task<ActionResult<AddCorse>> AddCorse(
-    //         AddCorseDto managerInput, string targetStudentUserName,
-    //         CancellationToken cancellationToken
-    //     )
-    // {
-    //     if (targetStudentUserName is null)
-    //         return null;
-
-    //     AddCorse? addCorse = await _managerRepository.AddCorseAsync(managerInput, targetStudentUserName, cancellationToken);
-
-    //     return !string.IsNullOrEmpty(managerInput.Dars)
-    //         ? Ok(addCorse)
-    //         : BadRequest("add-corse failed try again.");
-    // }
-
     [HttpPost("add-corse/{targetStudentUserName}")]
     public async Task<ActionResult<AddCorse>> AddCorse(AddCorseDto managerInput, string targetStudentUserName, CancellationToken cancellationToken)
     {
@@ -94,7 +75,6 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
     }
 
     [HttpGet("users-with-roles")]
-    // public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
     public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> UsersWithRoles()
     {
         // ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
@@ -127,33 +107,4 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
 
         return !users.Any() ? NoContent() : Ok(users);
     }
-
-    // [HttpGet("users-with-roles")]
-    // public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
-    // {
-    //     ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
-
-    //     if (userId is null)
-    //         return Unauthorized("You are not logged in. Login in again.");
-
-    //     PagedList<AppUser> pagedAppUsers = await _managerRepository.GetAllAsync(paginationParams, cancellationToken);        
-        
-    //     if (pagedAppUsers.Count == 0) return NoContent();
-
-    //     Response.AddPaginationHeader(new(
-    //         pagedAppUsers.CurrentPage,
-    //         pagedAppUsers.PageSize,
-    //         pagedAppUsers.TotalItems,
-    //         pagedAppUsers.TotalPages
-    //     ));
-
-    //     List<UserWithRoleDto> userWithRoleDtos = [];
-
-    //     foreach (AppUser appUser in pagedAppUsers)
-    //     {
-    //         userWithRoleDtos.Add(Mappers.ConvertAppUserToUserWithRoleDto(appUser));
-    //     }
-        
-    //     return userWithRoleDtos;
-    // }
 }

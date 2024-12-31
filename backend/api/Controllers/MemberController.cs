@@ -83,7 +83,8 @@ public class MemberController
 
         return showStudentStatusDtos;
     }
-
+    
+    [AllowAnonymous]
     [HttpPut]
     public async Task<ActionResult> UpdateMember(MemberUpdateDto memberUpdateDto, CancellationToken cancellationToken)
     {
@@ -94,6 +95,7 @@ public class MemberController
             : Ok(new { message = "User has been updated successfully." });
     }
 
+    [AllowAnonymous]
     [HttpGet("get-profile")]
     public async Task<ActionResult<MemberDto>> GetProfile(CancellationToken cancellationToken)
     {
@@ -108,6 +110,7 @@ public class MemberController
             : memberDto;
     }
 
+    // [AllowAnonymous]
     [HttpGet("get-by-userName/{memberUserName}")]
     public async Task<ActionResult<MemberDto>> GetByUserName(string memberUserName, CancellationToken cancellationToken)
     {
