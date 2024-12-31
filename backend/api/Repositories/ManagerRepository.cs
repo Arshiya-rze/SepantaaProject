@@ -1,5 +1,3 @@
-using api.Helpers;
-
 namespace api.Repositories;
 
 public class ManagerRepository : IManagerRepository
@@ -180,9 +178,11 @@ public class ManagerRepository : IManagerRepository
         if (appUser is null)
             return null;
 
+        int shahriyeHarMah = await CalculateMonthlyTuition(addCorseDto.TotalInstallments, addCorseDto.TotalTuition);    
+
         AddCorse addCorse;
 
-        addCorse = Mappers.ConvertAddCorseDtoToCorse(addCorseDto);
+        addCorse = Mappers.ConvertAddCorseDtoToCorse(addCorseDto, shahriyeHarMah);
 
         if (addCorse is not null)
         {
@@ -229,5 +229,12 @@ public class ManagerRepository : IManagerRepository
 
     //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     // }
+    public async Task<int> CalculateMonthlyTuition(int totalInstallments, int totalTuition)
+    {
+        if (totalInstallments <= 0)
+            return totalTuition;
+
+        return totalTuition / totalInstallments;
+    }
 
 }

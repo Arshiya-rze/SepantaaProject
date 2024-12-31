@@ -2,15 +2,17 @@ namespace api.DTOs;
 
 public record AddCorseDto(
     // string UserName,
-    string Dars,
-    int TedadeKoleGhesdHa,
-    int Shahriye
+    string Lesson,
+    int TotalInstallments,
+    int TotalTuition
+    // int TuitionPerMonth
 );
 
 public class ShowCorseDto
 {
     // public string UserName { get; init; }
-    public string Dars { get; init; }
-    public int TedadeKoleGhesdHa { get; init; }
-    public int Shahriye { get; init; }
+    public string Lesson { get; init; }
+    public int TotalInstallments { get; init; }
+    public int TotalTuition { get; init; }
+    public int TuitionPerMonth { get; init; }
 };

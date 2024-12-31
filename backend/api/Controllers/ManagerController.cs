@@ -56,7 +56,7 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
 
         AddCorse? addCorse = await _managerRepository.AddCorseAsync(managerInput, targetStudentUserName, cancellationToken);
 
-        return !string.IsNullOrEmpty(managerInput.Dars)
+        return !string.IsNullOrEmpty(managerInput.Lesson)
             ? Ok(addCorse)
             : BadRequest("add-corse failed try again.");
     }

@@ -75,13 +75,14 @@ public static class Mappers
         };
     }
 
-    public static AddCorse ConvertAddCorseDtoToCorse(AddCorseDto managerInput)
+    public static AddCorse ConvertAddCorseDtoToCorse(AddCorseDto managerInput, int shahriyeHarMah)
     {
         return new AddCorse(
             // UserName: managerInput.UserName,
-            Dars: managerInput.Dars,
-            TedadeKoleGhesdHa: managerInput.TedadeKoleGhesdHa,
-            Shahriye: managerInput.Shahriye
+            Lesson: managerInput.Lesson,
+            TotalInstallments: managerInput.TotalInstallments,
+            TotalTuition: managerInput.TotalTuition,
+            TuitionPerMonth: shahriyeHarMah
         );
     }
 }
