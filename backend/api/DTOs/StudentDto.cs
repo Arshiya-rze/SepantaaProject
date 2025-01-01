@@ -17,6 +17,10 @@ public class ShowStudentStatusDto
     public string AbsentOrPresent { get; init; }
 }
 
-public record StudentLessonUpdateDto (
-    List<String> Lessons
+public record LessonDto (
+    List<Lesson> Lessons
+);
+
+public record AddLessonDto (
+    string Lesson
 );

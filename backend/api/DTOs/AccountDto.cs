@@ -17,7 +17,7 @@ public record RegisterDto(
     // DateOnly DateOfBirth, //"1-1-1"
     DateOnly DateOfBirth, // Prevent from 1/1/1
     string Gender,
-    List<string> Lessons
+    List<Lesson> Lessons
 );
 
 public record LoginDto(

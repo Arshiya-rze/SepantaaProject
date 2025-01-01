@@ -133,7 +133,7 @@ public class ManagerRepository : IManagerRepository
         return loggedInDto;
     }
 
-    public async Task<AppUser?> GetByIdAsync(ObjectId userId, CancellationToken cancellationToken)
+    public async Task<AppUser?> GetByIdAsync(ObjectId? userId, CancellationToken cancellationToken)
     {
         AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
             => doc.Id == userId).SingleOrDefaultAsync(cancellationToken);
@@ -230,7 +230,7 @@ public class ManagerRepository : IManagerRepository
     //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     // }
 
-    public async Task<UpdateResult?> UpdateStudentLessonAsync(StudentLessonUpdateDto studentLessonUpdateDto, string? hashedUserId, string targetStudentUserName, CancellationToken cancellationToken)
+    public async Task<UpdateResult?> UpdateStudentLessonAsync(LessonDto studentLessonUpdateDto, string? hashedUserId, string targetStudentUserName, CancellationToken cancellationToken)
     {
         // AppUser? targetAppUser = await _collectionAppUser.Find<AppUser>(doc =>
         //     doc.UserName == targetStudentUserName).FirstOrDefaultAsync(cancellationToken);
@@ -247,6 +247,36 @@ public class ManagerRepository : IManagerRepository
 
         return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == targetStudentId, updateStudent, null, cancellationToken);
     }
+
+    public async Task<Lesson> AddLessonAsync(AddLessonDto addLessonDto, string targetUserName, CancellationToken cancellationToken)
+    {
+        ObjectId? memberId = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.UserName == targetUserName)
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+        if (memberId is null) 
+            return null;
+
+        AppUser? appUser = await GetByIdAsync(memberId, cancellationToken);
+        if (appUser is null)
+            return null;
+
+            // LessonDto lessonDto1;
+
+        Lesson lesson;
+
+        lesson = Mappers.ConvertLessonDtoToLesson(addLessonDto);
+
+        appUser.Lessons.Add(lesson);    
+
+        var updatedLesson = Builders<AppUser>.Update
+                .Set(doc => doc.Lessons, appUser.Lessons);
+
+        UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc => doc.Id == memberId, updatedLesson, null, cancellationToken);
+
+        return lesson;
+    }
+
 
     public async Task<int> CalculateMonthlyTuition(int totalInstallments, int totalTuition)
     {

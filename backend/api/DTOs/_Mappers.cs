@@ -31,7 +31,7 @@ public static class Mappers
         };
     }
 
-    public static MemberDto ConvertAppUserToMemberDto(AppUser appUser, bool isFollowing = false)
+    public static MemberDto ConvertAppUserToMemberDto(AppUser appUser)
     {
         return new MemberDto(
             Email: appUser.Email,
@@ -83,6 +83,21 @@ public static class Mappers
             TotalInstallments: managerInput.TotalInstallments,
             TotalTuition: managerInput.TotalTuition,
             TuitionPerMonth: shahriyeHarMah
+        );
+    }
+
+    public static Lesson ConvertLessonDtoToLesson(AddLessonDto addLessonDto)
+    {
+        return new Lesson(
+            // Email: appUser.Email,
+            // UserName: appUser.UserName,
+            // Name: appUser.Name,
+            // LastName: appUser.LastName,
+            // PhoneNum: appUser.PhoneNum,
+            // Gender: appUser.Gender,
+            MemberLesson: addLessonDto.Lesson
+            // Age:  CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
+            // corses: appUser.addCorses
         );
     }
 }

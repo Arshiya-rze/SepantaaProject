@@ -21,15 +21,6 @@ public class TeacherRepository : ITeacherRepository
         _tokenService = tokenService;
     }
     #endregion Vars and Constructor
-    // public async Task<AppUser?> GetByIdAsync(ObjectId studentId, CancellationToken cancellationToken)
-    // {
-    //     AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
-    //         => doc.Id == studentId).SingleOrDefaultAsync(cancellationToken);
-
-    //     if (appUser is null) return null;
-
-    //     return appUser;
-    // }
 
     public async Task<ObjectId?> GetObjectIdByUserNameAsync(string studentUserName, CancellationToken cancellationToken)
     {
@@ -121,7 +112,7 @@ public class TeacherRepository : ITeacherRepository
         // return await PagedList<AppUser>.CreatePagedListAsync(appUsers, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     }
 
-    public async Task<List<string?>> GetLessonAsync(string hashedUserId, string token, CancellationToken cancellationToken)
+    public async Task<List<Lesson?>> GetLessonAsync(string hashedUserId, string token, CancellationToken cancellationToken)
     {
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
 
@@ -129,7 +120,7 @@ public class TeacherRepository : ITeacherRepository
             return null;
 
         // AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser => appUser.Id == userId).FirstOrDefaultAsync(cancellationToken);
-        List<string> appUser = await _collectionAppUser.AsQueryable()
+        List<Lesson> appUser = await _collectionAppUser.AsQueryable()
         .Where(appUser => appUser.Id == userId)
         .Select(appUser => appUser.Lessons)
         .FirstOrDefaultAsync(cancellationToken);

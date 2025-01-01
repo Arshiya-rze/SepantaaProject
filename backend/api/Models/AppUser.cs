@@ -17,7 +17,8 @@ public class AppUser : MongoIdentityUser<ObjectId>
     public string LastName { get; init; }
     public string? PhoneNum { get; init; } = string.Empty;
     public string Gender { get; init; }
-    public List<string> Lessons { get; init; }
+    // public List<string> Lessons { get; init; }
+    public List<Lesson> Lessons { get; init; } = [];
     public List<AddCorse> addCorses { get; init; } = [];
     public List<string> appRoles { get; init; }
 }

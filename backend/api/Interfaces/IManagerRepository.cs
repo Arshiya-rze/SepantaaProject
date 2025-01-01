@@ -11,5 +11,6 @@ public interface IManagerRepository
     public Task<AddCorse?> AddCorseAsync(AddCorseDto managerInput, string targetStudentUserName, CancellationToken cancellationToken);
     public Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync();
     // public Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken);
-    public Task<UpdateResult?> UpdateStudentLessonAsync(StudentLessonUpdateDto studentLessonUpdateDto, string? hashedUserId, string targetStudentUserName, CancellationToken cancellationToken);
+    public Task<UpdateResult?> UpdateStudentLessonAsync(LessonDto studentLessonUpdateDto, string? hashedUserId, string targetStudentUserName, CancellationToken cancellationToken);
+    public Task<Lesson> AddLessonAsync(AddLessonDto addLessonDto, string targetUserName, CancellationToken cancellationToken);
 }
