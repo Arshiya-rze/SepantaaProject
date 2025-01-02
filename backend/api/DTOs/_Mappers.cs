@@ -16,7 +16,7 @@ public static class Mappers
             PhoneNum = adminInput.PhoneNum,
             Gender = adminInput.Gender.ToLower(),
             Lessons = adminInput.Lessons
-        };
+        }; 
     }
 
     public static LoggedInDto ConvertAppUserToLoggedInDto(AppUser appUser, string tokenValue)
