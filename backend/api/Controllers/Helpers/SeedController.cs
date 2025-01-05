@@ -24,6 +24,8 @@ public class SeedController : BaseApiController
     [HttpPost]
     public async Task<ActionResult> CreateDummyMembers()
     {
+            
+
         #region If databaseExists
         // Stop if database already exists using its status
         // https://stackoverflow.com/a/53803908/3944285

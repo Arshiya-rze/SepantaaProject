@@ -186,10 +186,19 @@ public class ManagerRepository : IManagerRepository
 
         if (addCorse is not null)
         {
-            appUser.addCorses.Add(addCorse);
+             Course course = new(
+                  courseId: Guid.NewGuid(),
+                  lesson: CourseType.PROGRAMMING,
+                  NumberOfPayments: 4,
+                  paiedNumber: 1,
+                  PaidRemainder: 3,
+                  totalTuition: 8_000_000,
+                  tuitionPerMonth: 2_000_000,
+                  TuitionRemainder: 3
+            );          
 
             var updatedAppUser = Builders<AppUser>.Update
-                .Set(doc => doc.addCorses, appUser.addCorses);
+                .Inc(doc => doc.EnrolledCourses.SelectMany(c => c.CourseId).totalTuition, -25000000);
 
             UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc =>
                 doc.Id == studentId, updatedAppUser, null, cancellationToken);
