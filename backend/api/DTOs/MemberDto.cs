@@ -7,5 +7,5 @@ public record MemberDto(
     string Gender,
     List<Lesson> Lessons,
     int Age,
-    List<AddCorse> corses
+    List<EnrolledCourse> Payments
 );

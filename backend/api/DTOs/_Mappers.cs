@@ -42,7 +42,7 @@ public static class Mappers
             Gender: appUser.Gender,
             Lessons: appUser.Lessons,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-            corses: appUser.addCorses
+            Payments: appUser.EnrolledCourses
         );
     }
     public static UserWithRoleDto ConvertAppUserToUserWithRoleDto(AppUser appUser)
@@ -75,15 +75,31 @@ public static class Mappers
         };
     }
 
-    public static AddCorse ConvertAddCorseDtoToCorse(AddCorseDto managerInput, int shahriyeHarMah)
+    public static Course ConvertAddCourseDtoToCourse(AddCourseDto managerInput, List<ObjectId> professorId)
     {
-        return new AddCorse(
-            // UserName: managerInput.UserName,
+        return new Course(
             Lesson: managerInput.Lesson,
-            TotalInstallments: managerInput.TotalInstallments,
+            ProfessorsId: professorId,
+            CourseHours: managerInput.CourseHours,
             TotalTuition: managerInput.TotalTuition,
-            TuitionPerMonth: shahriyeHarMah
+            TotalDays: managerInput.TotalDays,
+            StartTime: managerInput.StartTime,
+            EndTime: managerInput.EndTime
         );
+    }
+
+    public static ShowCourseDto ConvertCourseToShowCourseDto(Course course, AppUser appUser)
+    {
+        return new ShowCourseDto
+        {
+            Lesson = course.Lesson,
+            ProfessorsId = [appUser.Id],
+            CourseHours = course.CourseHours,
+            TotalTuition = course.TotalTuition,
+            TotalDays = course.TotalDays,
+            StartTime = course.StartTime,
+            EndTime = course.EndTime
+        };
     }
 
     public static Lesson ConvertLessonDtoToLesson(AddLessonDto addLessonDto)

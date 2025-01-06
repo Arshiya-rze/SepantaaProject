@@ -1,18 +1,23 @@
 namespace api.DTOs;
 
-public record AddCorseDto(
-    // string UserName,
-    string Lesson,
-    int TotalInstallments,
-    int TotalTuition
-    // int TuitionPerMonth
+public record AddCourseDto(
+    List<Enum> Lesson,
+    List<ObjectId> ProfessorsId,
+    int CourseHours, //128h
+    int TotalTuition, //6_000_000t
+    string TotalDays,
+    DateTime StartTime, //1 mars 2025
+    DateTime EndTime // 3 julay 2025
 );
 
-public class ShowCorseDto
+public class ShowCourseDto
 {
-    // public string UserName { get; init; }
-    public string Lesson { get; init; }
-    public int TotalInstallments { get; init; }
+    public ObjectId Id { get; init; }
+    public List<Enum> Lesson { get; init; }
+    public List<ObjectId> ProfessorsId { get; init;}
+    public int CourseHours { get; init; }
     public int TotalTuition { get; init; }
-    public int TuitionPerMonth { get; init; }
+    public string TotalDays { get; init; }
+    public DateTime StartTime { get; init; }
+    public DateTime EndTime { get; init; }
 };

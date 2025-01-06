@@ -167,48 +167,7 @@ public class ManagerRepository : IManagerRepository
         return await _collectionAppUser.DeleteOneAsync<AppUser>(appUser => appUser.Id == userId, null, cancellationToken);
     }
 
-    public async Task<AddCorse?> AddCorseAsync(AddCorseDto addCorseDto, string targetStudentUserName, CancellationToken cancellationToken)
-    {
-        ObjectId studentId = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.UserName == targetStudentUserName)
-            .Select(doc => doc.Id)
-            .FirstOrDefaultAsync();
-
-        AppUser? appUser = await GetByIdAsync(studentId, cancellationToken);
-        if (appUser is null)
-            return null;
-
-        int shahriyeHarMah = await CalculateMonthlyTuition(addCorseDto.TotalInstallments, addCorseDto.TotalTuition);    
-
-        AddCorse addCorse;
-
-        addCorse = Mappers.ConvertAddCorseDtoToCorse(addCorseDto, shahriyeHarMah);
-
-        if (addCorse is not null)
-        {
-             Course course = new(
-                  courseId: Guid.NewGuid(),
-                  lesson: CourseType.PROGRAMMING,
-                  NumberOfPayments: 4,
-                  paiedNumber: 1,
-                  PaidRemainder: 3,
-                  totalTuition: 8_000_000,
-                  tuitionPerMonth: 2_000_000,
-                  TuitionRemainder: 3
-            );          
-
-            var updatedAppUser = Builders<AppUser>.Update
-                .Inc(doc => doc.EnrolledCourses.SelectMany(c => c.CourseId).totalTuition, -25000000);
-
-            UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc =>
-                doc.Id == studentId, updatedAppUser, null, cancellationToken);
-
-            if (result is not null)
-                return addCorse;
-        }
-
-        return null;
-    }
+    
 
     public async Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync()
     {
@@ -289,6 +248,7 @@ public class ManagerRepository : IManagerRepository
 
     public async Task<int> CalculateMonthlyTuition(int totalInstallments, int totalTuition)
     {
+        // int shahriyeHarMah = await CalculateMonthlyTuition(addCorseDto.TotalInstallments, addCorseDto.TotalTuition);    
         if (totalInstallments <= 0)
             return totalTuition;
 

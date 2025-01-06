@@ -48,18 +48,7 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    [HttpPost("add-corse/{targetStudentUserName}")]
-    public async Task<ActionResult<AddCorse>> AddCorse(AddCorseDto managerInput, string targetStudentUserName, CancellationToken cancellationToken)
-    {
-        if (targetStudentUserName is null)
-            return null;
-
-        AddCorse? addCorse = await _managerRepository.AddCorseAsync(managerInput, targetStudentUserName, cancellationToken);
-
-        return !string.IsNullOrEmpty(managerInput.Lesson)
-            ? Ok(addCorse)
-            : BadRequest("add-corse failed try again.");
-    }
+    
 
     [HttpPut("delete-member/{targetMemberUserName}")]
     public async Task<ActionResult> Delete(string targetMemberUserName, CancellationToken cancellationToken)
