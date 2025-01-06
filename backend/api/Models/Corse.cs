@@ -13,10 +13,10 @@ public record AddCorse
 public record Course(
     [Optional][property: BsonId, BsonRepresentation(BsonType.ObjectId)] ObjectId Id,
     Enum Lesson, // English
-    List<ObjectId> ProfessorsId,
-    int CourseHours,
-    DateTime StartTime,
-    DateTime EndTime
+    List<ObjectId> ProfessorsId, //132342344
+    int CourseHours, //128h
+    DateTime StartTime, //1 mars 2025
+    DateTime EndTime // 3 julay 2025
 );
 
 public record EnrolledCourse(
