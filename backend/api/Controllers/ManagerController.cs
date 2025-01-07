@@ -48,7 +48,8 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    
+    // [HttpPost("add-enrolledCourse")]
+    // public async Task<ActionResult<>>
 
     [HttpPut("delete-member/{targetMemberUserName}")]
     public async Task<ActionResult> Delete(string targetMemberUserName, CancellationToken cancellationToken)
