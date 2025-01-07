@@ -198,52 +198,52 @@ public class ManagerRepository : IManagerRepository
     //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     // }
 
-    public async Task<UpdateResult?> UpdateStudentLessonAsync(LessonDto studentLessonUpdateDto, string? hashedUserId, string targetStudentUserName, CancellationToken cancellationToken)
-    {
-        // AppUser? targetAppUser = await _collectionAppUser.Find<AppUser>(doc =>
-        //     doc.UserName == targetStudentUserName).FirstOrDefaultAsync(cancellationToken);
-        ObjectId? targetStudentId = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.UserName == targetStudentUserName)
-            .Select(doc => doc.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+    // public async Task<UpdateResult?> UpdateStudentLessonAsync(LessonDto studentLessonUpdateDto, string? hashedUserId, string targetStudentUserName, CancellationToken cancellationToken)
+    // {
+    //     // AppUser? targetAppUser = await _collectionAppUser.Find<AppUser>(doc =>
+    //     //     doc.UserName == targetStudentUserName).FirstOrDefaultAsync(cancellationToken);
+    //     ObjectId? targetStudentId = await _collectionAppUser.AsQueryable()
+    //         .Where(doc => doc.UserName == targetStudentUserName)
+    //         .Select(doc => doc.Id)
+    //         .FirstOrDefaultAsync(cancellationToken);
 
-        if(targetStudentId is null) return null;
+    //     if(targetStudentId is null) return null;
 
-        UpdateDefinition<AppUser> updateStudent = Builders<AppUser>.Update
-            .Set(appUser => appUser.Lessons, studentLessonUpdateDto.Lessons);
+    //     UpdateDefinition<AppUser> updateStudent = Builders<AppUser>.Update
+    //         .Set(appUser => appUser.Lessons, studentLessonUpdateDto.Lessons);
 
 
-        return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == targetStudentId, updateStudent, null, cancellationToken);
-    }
+    //     return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == targetStudentId, updateStudent, null, cancellationToken);
+    // }
 
-    public async Task<Lesson> AddLessonAsync(AddLessonDto addLessonDto, string targetUserName, CancellationToken cancellationToken)
-    {
-        ObjectId? memberId = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.UserName == targetUserName)
-            .Select(doc => doc.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-        if (memberId is null) 
-            return null;
+    // public async Task<Lesson> AddLessonAsync(AddLessonDto addLessonDto, string targetUserName, CancellationToken cancellationToken)
+    // {
+    //     ObjectId? memberId = await _collectionAppUser.AsQueryable()
+    //         .Where(doc => doc.UserName == targetUserName)
+    //         .Select(doc => doc.Id)
+    //         .FirstOrDefaultAsync(cancellationToken);
+    //     if (memberId is null) 
+    //         return null;
 
-        AppUser? appUser = await GetByIdAsync(memberId, cancellationToken);
-        if (appUser is null)
-            return null;
+    //     AppUser? appUser = await GetByIdAsync(memberId, cancellationToken);
+    //     if (appUser is null)
+    //         return null;
 
-            // LessonDto lessonDto1;
+    //         // LessonDto lessonDto1;
 
-        Lesson lesson;
+    //     Lesson lesson;
 
-        lesson = Mappers.ConvertLessonDtoToLesson(addLessonDto);
+    //     lesson = Mappers.ConvertLessonDtoToLesson(addLessonDto);
 
-        appUser.Lessons.Add(lesson);    
+    //     appUser.Lessons.Add(lesson);    
 
-        var updatedLesson = Builders<AppUser>.Update
-                .Set(doc => doc.Lessons, appUser.Lessons);
+    //     var updatedLesson = Builders<AppUser>.Update
+    //             .Set(doc => doc.Lessons, appUser.Lessons);
 
-        UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc => doc.Id == memberId, updatedLesson, null, cancellationToken);
+    //     UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc => doc.Id == memberId, updatedLesson, null, cancellationToken);
 
-        return lesson;
-    }
+    //     return lesson;
+    // }
 
 
     public async Task<int> CalculateMonthlyTuition(int totalInstallments, int totalTuition)

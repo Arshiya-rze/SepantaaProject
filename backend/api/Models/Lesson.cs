@@ -4,6 +4,6 @@ namespace api.Models;
 //     string StudentLesson,
 //     string TeacherLesson
 // );
-public record Lesson (
-    string MemberLesson
-);
+// public record Lesson (
+//     string MemberLesson
+// );

@@ -13,6 +13,7 @@ public static class RepositoryServiceExtensions
         services.AddScoped<IAdminRepository, AdminRepository>();
         services.AddScoped<IManagerRepository, ManagerRepository>();
         services.AddScoped<ISecretaryRepository, SecretaryRepository>();
+        services.AddScoped<ICourseRepository, CourseRepository>();
 
         #endregion Dependency Injections
 

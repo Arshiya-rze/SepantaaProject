@@ -97,26 +97,26 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         return !users.Any() ? NoContent() : Ok(users);
     }
 
-    [HttpPut("update-lesson/{targetStudentUserName}")]
-    public async Task<ActionResult> UpdateStudentLesson(LessonDto studentLessonUpdateDto, string targetStudentUserName, CancellationToken cancellationToken)
-    {
-        UpdateResult? updateResult = await _managerRepository.UpdateStudentLessonAsync(studentLessonUpdateDto, User.GetHashedUserId(), targetStudentUserName, cancellationToken);
+    // [HttpPut("update-lesson/{targetStudentUserName}")]
+    // public async Task<ActionResult> UpdateStudentLesson(LessonDto studentLessonUpdateDto, string targetStudentUserName, CancellationToken cancellationToken)
+    // {
+    //     UpdateResult? updateResult = await _managerRepository.UpdateStudentLessonAsync(studentLessonUpdateDto, User.GetHashedUserId(), targetStudentUserName, cancellationToken);
 
-        return updateResult is null || !updateResult.IsModifiedCountAvailable
-            ? BadRequest("Update failed. Try again later.")
-            : Ok(new { message = "Student Lesson has been updated successfully." });
-    }
+    //     return updateResult is null || !updateResult.IsModifiedCountAvailable
+    //         ? BadRequest("Update failed. Try again later.")
+    //         : Ok(new { message = "Student Lesson has been updated successfully." });
+    // }
 
-    [HttpPost("add-lesson/{targetUserName}")]
-    public async Task<ActionResult<Lesson>> AddLesson(AddLessonDto addLessonDto, string targetUserName, CancellationToken cancellationToken)
-    {
-        if (addLessonDto is null)
-            return BadRequest("Lesson is empty.");
+    // [HttpPost("add-lesson/{targetUserName}")]
+    // public async Task<ActionResult<Lesson>> AddLesson(AddLessonDto addLessonDto, string targetUserName, CancellationToken cancellationToken)
+    // {
+    //     if (addLessonDto is null)
+    //         return BadRequest("Lesson is empty.");
 
-        Lesson? lesson = await _managerRepository.AddLessonAsync(addLessonDto, targetUserName, cancellationToken);
+    //     Lesson? lesson = await _managerRepository.AddLessonAsync(addLessonDto, targetUserName, cancellationToken);
 
-        return lesson is null
-            ? BadRequest("somthing went wrong please try again")
-            : lesson;
-    }
+    //     return lesson is null
+    //         ? BadRequest("somthing went wrong please try again")
+    //         : lesson;
+    // }
 }

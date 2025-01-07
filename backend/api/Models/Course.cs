@@ -5,8 +5,8 @@ namespace api.Models;
 [CollectionName("courses")]
 public record Course(
     [Optional][property: BsonId, BsonRepresentation(BsonType.ObjectId)] ObjectId Id,
-    List<Enum> Lesson, // English
-    List<ObjectId> ProfessorsId, //132342344
+    List<string> Lesson, // English
+    ObjectId ProfessorsId, //132342344
     int CourseHours, //128h
     int TotalTuition, //6_000_000t
     string TotalDays,
@@ -14,7 +14,7 @@ public record Course(
     DateTime EndTime // 3 julay 2025
 );
 
-enum CourseType 
+enum Lesson 
 {
     PROGRAMMING,
     MATH,

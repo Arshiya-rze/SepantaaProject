@@ -75,7 +75,7 @@ public static class Mappers
         };
     }
 
-    public static Course ConvertAddCourseDtoToCourse(AddCourseDto managerInput, List<ObjectId> professorId)
+    public static Course ConvertAddCourseDtoToCourse(AddCourseDto managerInput, ObjectId professorId)
     {
         return new Course(
             Lesson: managerInput.Lesson,
@@ -88,12 +88,12 @@ public static class Mappers
         );
     }
 
-    public static ShowCourseDto ConvertCourseToShowCourseDto(Course course, AppUser appUser)
+    public static ShowCourseDto ConvertCourseToShowCourseDto(Course course, ObjectId professorId)
     {
         return new ShowCourseDto
         {
             Lesson = course.Lesson,
-            ProfessorsId = [appUser.Id],
+            ProfessorsId = professorId,
             CourseHours = course.CourseHours,
             TotalTuition = course.TotalTuition,
             TotalDays = course.TotalDays,
@@ -102,18 +102,18 @@ public static class Mappers
         };
     }
 
-    public static Lesson ConvertLessonDtoToLesson(AddLessonDto addLessonDto)
-    {
-        return new Lesson(
-            // Email: appUser.Email,
-            // UserName: appUser.UserName,
-            // Name: appUser.Name,
-            // LastName: appUser.LastName,
-            // PhoneNum: appUser.PhoneNum,
-            // Gender: appUser.Gender,
-            MemberLesson: addLessonDto.Lesson
-            // Age:  CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-            // corses: appUser.addCorses
-        );
-    }
+    // public static Lesson ConvertLessonDtoToLesson(AddLessonDto addLessonDto)
+    // {
+    //     return new Lesson(
+    //         // Email: appUser.Email,
+    //         // UserName: appUser.UserName,
+    //         // Name: appUser.Name,
+    //         // LastName: appUser.LastName,
+    //         // PhoneNum: appUser.PhoneNum,
+    //         // Gender: appUser.Gender,
+    //         MemberLesson: addLessonDto.Lesson
+    //         // Age:  CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
+    //         // corses: appUser.addCorses
+    //     );
+    // }
 }

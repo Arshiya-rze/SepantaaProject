@@ -5,7 +5,7 @@ public record MemberDto(
     string LastName,
     string? PhoneNum,
     string Gender,
-    List<Lesson> Lessons,
+    List<string> Lessons,
     int Age,
     List<EnrolledCourse> Payments
 );
