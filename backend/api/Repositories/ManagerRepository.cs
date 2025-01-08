@@ -155,7 +155,7 @@ public class ManagerRepository : IManagerRepository
         return ValidationsExtensions.ValidateObjectId(userId);
     }
 
-    public async Task<EnrolledCourse> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, CancellationToken cancellationToken)
+    public async Task<EnrolledCourse?> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, CancellationToken cancellationToken)
     {
         AppUser? appUser = await _collectionAppUser.Find(doc =>
             doc.NormalizedUserName == targetUserName.ToUpper()).FirstOrDefaultAsync(cancellationToken);
@@ -171,7 +171,7 @@ public class ManagerRepository : IManagerRepository
         //     .Select(doc => doc.Id)
         //     .FirstOrDefaultAsync();
         Course? course = await _collectionCourse.Find(doc =>
-            doc.Lesson == appUser.Lessons).FirstOrDefaultAsync(cancellationToken);
+            doc.Id == appUser.Lessons).FirstOrDefaultAsync(cancellationToken);
 
         if (course is null)
             return null;
@@ -181,7 +181,6 @@ public class ManagerRepository : IManagerRepository
         int calculateTuitionReminder = await CalculateTuitionReminder(addEnrolledCourseDto, course);
         int calculateTuitionPerMonth = await CalculateTuitionPerMonth(addEnrolledCourseDto, course);
 
-        
         EnrolledCourse? enrolledCourse = Mappers.ConvertAddEnrolledCourseDtoToEnrolledCourse(addEnrolledCourseDto, course, calculatePaiedReminder, calculateCourseTotalTuition, calculateTuitionReminder, calculateTuitionPerMonth);
 
         if (enrolledCourse is null)
@@ -209,8 +208,6 @@ public class ManagerRepository : IManagerRepository
 
         return await _collectionAppUser.DeleteOneAsync<AppUser>(appUser => appUser.Id == userId, null, cancellationToken);
     }
-
-    
 
     public async Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync()
     {
@@ -320,33 +317,24 @@ public class ManagerRepository : IManagerRepository
 
     //     // return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedEnrolledCourse, null, cancellationToken);
     // }
-    public async Task<int> CalculatePaiedReminder(AddEnrolledCourseDto addEnrolledCourseDto)
-    {
-        int paiedReminderCalc = addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaiedNumber;
+    // TODO: DoIt
+    // public async Task<int> CalculatePaiedReminder(AddEnrolledCourseDto addEnrolledCourseDto) =>
+    //     addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaiedNumber;
 
-        return paiedReminderCalc;
-    }
-    public async Task<int> CalculateCourseTotalTuition(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
-    {
-        int courseTotalTuitionCalc = course.TotalTuition;
-
-        return courseTotalTuitionCalc;
-    }
-    public async Task<int> CalculateTuitionReminder(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
+    private int CalculateTuitionReminder(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
     {
         // int courseTotalTuitionCalc = course.TotalTuition;
 
-        int tuitionReminderCalc = course.TotalTuition - addEnrolledCourseDto.PaiedTuition;
+        int tuitionReminderCalc = course.Tuition - addEnrolledCourseDto.PaiedTuition;
 
         return tuitionReminderCalc;
     }
-    public async Task<int> CalculateTuitionPerMonth(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
+    private int CalculateTuitionPerMonth(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
     {
         // int courseTotalTuitionCalc = course.TotalTuition;
 
-        int tuitionPerMonthCalc = course.TotalTuition / addEnrolledCourseDto.NumberOfPayments ;
+        int tuitionPerMonthCalc = course.Tuition / addEnrolledCourseDto.NumberOfPayments ;
         
         return tuitionPerMonthCalc;
     }
-
 }

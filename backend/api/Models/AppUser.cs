@@ -11,15 +11,11 @@ public class AppUser : MongoIdentityUser<ObjectId>
 {
     public int Schema { get; init; } = 2;
     public string? IdentifierHash { get; init; }
-    // public string? JtiValue { get; init; }
     public DateOnly DateOfBirth { get; init; }
     public string Name { get; init; }
     public string LastName { get; init; }
     public string? PhoneNum { get; init; } = string.Empty;
     public string Gender { get; init; }
-    // public List<string> Lessons { get; init; }
-    // public List<Lesson> Lessons { get; init; } = [];
-    public List<string> Lessons { get; init; }
     public List<EnrolledCourse> EnrolledCourses { get; init; } = [];
     public List<string> appRoles { get; init; }
 }

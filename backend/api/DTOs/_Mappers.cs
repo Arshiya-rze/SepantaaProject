@@ -79,7 +79,7 @@ public static class Mappers
     {
         return new Course(
             Lesson: managerInput.Lesson,
-            ProfessorsId: professorId,
+            ProfessorId: professorId,
             CourseHours: managerInput.CourseHours,
             TotalTuition: managerInput.TotalTuition,
             TotalDays: managerInput.TotalDays,
@@ -92,13 +92,13 @@ public static class Mappers
     {
         return new ShowCourseDto
         {
-            Lesson = course.Lesson,
+            Lesson = course.Title,
             ProfessorsId = professorId,
-            CourseHours = course.CourseHours,
-            TotalTuition = course.TotalTuition,
-            TotalDays = course.TotalDays,
-            StartTime = course.StartTime,
-            EndTime = course.EndTime
+            CourseHours = course.Hours,
+            TotalTuition = course.Tuition,
+            TotalDays = course.Days,
+            StartTime = course.Start,
+            EndTime = course.End
         };
     }
 
@@ -110,12 +110,12 @@ public static class Mappers
     {
         return new EnrolledCourse(
             CourseId: course.Id, //13213213ddfdf
-            CourseTotalTuition: calculateCourseTotalTuition, //6_000_000
+            CourseTuition: course.Tuition, //6_000_000
             NumberOfPayments: managerInput.NumberOfPayments, //4
-            PaiedNumber: managerInput.PaiedNumber, //0
-            PaidRemainder: calculatePaiedReminder, // 4 =>methodi ke sakhte mishe dar repo
-            TuitionPerMonth: calculateTuitionPerMonth, //2_000_000
-            PaiedTuition: managerInput.PaiedTuition, //0
+            PaiedNumber: 0, // TODO: calculate paiedNumber in backend 
+            NumberOfPaymentsLeft: calculatePaiedReminder, // 4 =>methodi ke sakhte mishe dar repo
+            PaymentAmount: calculateTuitionPerMonth, //2_000_000
+            PaiedAmount: managerInput.PaiedTuition, //0
             TuitionRemainder: calculateTuitionReminder //6_000_000
         );
     }
