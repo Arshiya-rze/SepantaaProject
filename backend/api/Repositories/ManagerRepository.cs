@@ -4,6 +4,7 @@ public class ManagerRepository : IManagerRepository
 {
     #region Vars and Constructor
     private readonly IMongoCollection<AppUser>? _collectionAppUser;
+    private readonly IMongoCollection<Course>? _collectionCourse;
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
     private readonly IMongoClient _client; // used for Session
@@ -13,6 +14,7 @@ public class ManagerRepository : IManagerRepository
         _client = client; // used for Session
         var database = client.GetDatabase(dbSettings.DatabaseName);
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
+        _collectionCourse = database.GetCollection<Course>(AppVariablesExtensions.collectionCourses);
 
         _userManager = userManager;
         _tokenService = tokenService;
@@ -142,15 +144,47 @@ public class ManagerRepository : IManagerRepository
 
         return appUser;
     }
-    // public async Task<ObjectId?> GetObjectIdByUserNameAsync(string userName, CancellationToken cancellationToken)
-    // {
-    //     ObjectId? userId = await _collectionAppUser.AsQueryable<AppUser>()
-    //         .Where(appUser => appUser.NormalizedUserName == userName.ToUpper())
-    //         .Select(item => item.Id)
-    //         .SingleOrDefaultAsync(cancellationToken);
+   
+    public async Task<ObjectId?> GetObjectIdByUserNameAsync(string userName, CancellationToken cancellationToken)
+    {
+        ObjectId? userId = await _collectionAppUser.AsQueryable<AppUser>()
+            .Where(appUser => appUser.NormalizedUserName == userName.ToUpper())
+            .Select(item => item.Id)
+            .SingleOrDefaultAsync(cancellationToken);
 
-    //     return ValidationsExtensions.ValidateObjectId(userId);
-    // }
+        return ValidationsExtensions.ValidateObjectId(userId);
+    }
+
+    public async Task<EnrolledCourse> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, CancellationToken cancellationToken)
+    {
+        AppUser? appUser = await _collectionAppUser.Find(doc =>
+            doc.UserName == targetUserName).FirstOrDefaultAsync(cancellationToken);
+        
+        if (appUser is null)
+            return null;
+        
+        ObjectId? userId = await GetObjectIdByUserNameAsync(targetUserName, cancellationToken);
+
+
+        // ObjectId? courseId = await _collectionCourse.AsQueryable()
+        //     .Where(doc => doc.Lesson == appUser.Lessons)
+        //     .Select(doc => doc.Id)
+        //     .FirstOrDefaultAsync();
+        Course? course = await _collectionCourse.Find(doc =>
+            doc.Lesson == appUser.Lessons).FirstOrDefaultAsync(cancellationToken);
+
+        if (course is null)
+            return null;
+        
+        List<int> calculateEnrolledCourse = await CalculatePayments(addEnrolledCourseDto, course);
+        
+        if (calculateEnrolledCourse is not null)
+        {
+           return Mappers.ConvertAddEnrolledCourseDtoToEnrolledCourse(addEnrolledCourseDto, course, calculateEnrolledCourse);
+        }
+
+        return null;
+    }
 
     public async Task<DeleteResult?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken)
     {
@@ -246,12 +280,35 @@ public class ManagerRepository : IManagerRepository
     // }
 
 
-    public async Task<int> CalculateMonthlyTuition(int totalInstallments, int totalTuition)
+    public async Task<List<int>> CalculatePayments(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
     {
-        // int shahriyeHarMah = await CalculateMonthlyTuition(addCorseDto.TotalInstallments, addCorseDto.TotalTuition);    
-        if (totalInstallments <= 0)
-            return totalTuition;
+        int paiedReminderCalc = addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaiedNumber;
+        int courseTotalTuitionCalc = course.TotalTuition;
+        int tuitionReminderCalc = courseTotalTuitionCalc - addEnrolledCourseDto.PaiedTuition;
+        int tuitionPerMonthCalc = addEnrolledCourseDto.NumberOfPayments / courseTotalTuitionCalc;
 
-        return totalTuition / totalInstallments;
+        List<int> calculation = [];
+
+
+        calculation.AddRange(new List<int>{
+            paiedReminderCalc,
+            courseTotalTuitionCalc,
+            tuitionPerMonthCalc,
+            tuitionReminderCalc
+        });
+
+        return calculation;
+          // int paiedReminderCalc = addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaiedNumber;
+        // int courseTotalTuitionCalc = course.TotalTuition;
+        // int tuitionPerMonthCalc = addEnrolledCourseDto.NumberOfPayments / courseTotalTuitionCalc;
+        // int tuitionReminderCalc = courseTotalTuitionCalc - addEnrolledCourseDto.PaiedTuition;
+
+        // UpdateDefinition<EnrolledCourse> updatedEnrolledCourse = Builders<EnrolledCourse>.Update
+        //     .Set(doc => doc.PaidRemainder, paiedReminderCalc)
+        //     .Set(doc => doc.CourseTotalTuition, courseTotalTuitionCalc)
+        //     .Set(doc => doc.TuitionPerMonth, tuitionPerMonthCalc)
+        //     .Set(doc => doc.TuitionRemainder, tuitionReminderCalc);
+
+        // return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedEnrolledCourse, null, cancellationToken);
     }
 }

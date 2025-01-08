@@ -28,8 +28,8 @@ public record EnrolledCourse(
     int PaiedNumber, //1
     int PaidRemainder, //3
     int TuitionPerMonth, //2_000_000
-    int TuitionRemainder, //6_000_000
-    int PaiedTuition //2_000_000
+    int PaiedTuition, //2_000_000
+    int TuitionRemainder //6_000_000
 );
 // PaiedTuition = 2_000_000 => update => paiedNumber +1, numberOfPau - paeidNum = paiedRemin 3, 2_000_000 - CourseTotalTuition = tuitionReminder  
 
