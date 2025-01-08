@@ -102,17 +102,21 @@ public static class Mappers
         };
     }
 
-    public static EnrolledCourse ConvertAddEnrolledCourseDtoToEnrolledCourse(AddEnrolledCourseDto managerInput, Course course, List<int> calculateEnrolled)
+    public static EnrolledCourse ConvertAddEnrolledCourseDtoToEnrolledCourse
+        (AddEnrolledCourseDto managerInput, Course course, 
+            int calculatePaiedReminder, int calculateCourseTotalTuition, 
+            int calculateTuitionReminder, int calculateTuitionPerMonth
+        ) 
     {
         return new EnrolledCourse(
             CourseId: course.Id, //13213213ddfdf
-            CourseTotalTuition: course.TotalTuition, //6_000_000
+            CourseTotalTuition: calculateCourseTotalTuition, //6_000_000
             NumberOfPayments: managerInput.NumberOfPayments, //4
             PaiedNumber: managerInput.PaiedNumber, //0
-            PaidRemainder: calculateEnrolled, // 4 =>methodi ke sakhte mishe dar repo
-            TuitionPerMonth: calculateEnrolled, //2_000_000
+            PaidRemainder: calculatePaiedReminder, // 4 =>methodi ke sakhte mishe dar repo
+            TuitionPerMonth: calculateTuitionPerMonth, //2_000_000
             PaiedTuition: managerInput.PaiedTuition, //0
-            TuitionRemainder: calculateEnrolled //6_000_000
+            TuitionRemainder: calculateTuitionReminder //6_000_000
         );
     }
 

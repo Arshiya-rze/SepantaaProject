@@ -176,14 +176,13 @@ public class ManagerRepository : IManagerRepository
         if (course is null)
             return null;
         
-        List<int> calculateEnrolledCourse = await CalculatePayments(addEnrolledCourseDto, course);
-        
-        if (calculateEnrolledCourse is not null)
-        {
-           return Mappers.ConvertAddEnrolledCourseDtoToEnrolledCourse(addEnrolledCourseDto, course, calculateEnrolledCourse);
-        }
+        int calculatePaiedReminder = await CalculatePaiedReminder(addEnrolledCourseDto);
+        int calculateCourseTotalTuition = await CalculateCourseTotalTuition(addEnrolledCourseDto, course);
+        int calculateTuitionReminder = await CalculateTuitionReminder(addEnrolledCourseDto, course);
+        int calculateTuitionPerMonth = await CalculateTuitionPerMonth(addEnrolledCourseDto, course);
 
-        return null;
+        
+        return Mappers.ConvertAddEnrolledCourseDtoToEnrolledCourse(addEnrolledCourseDto, course, calculatePaiedReminder, calculateCourseTotalTuition, calculateTuitionReminder, calculateTuitionPerMonth);
     }
 
     public async Task<DeleteResult?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken)
@@ -280,35 +279,64 @@ public class ManagerRepository : IManagerRepository
     // }
 
 
-    public async Task<List<int>> CalculatePayments(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
+    // public async Task<List<int>> CalculatePayments(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
+    // {
+    //     int paiedReminderCalc = addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaiedNumber;
+    //     // int courseTotalTuitionCalc = course.TotalTuition;
+    //     // int tuitionReminderCalc = courseTotalTuitionCalc - addEnrolledCourseDto.PaiedTuition;
+    //     // int tuitionPerMonthCalc = addEnrolledCourseDto.NumberOfPayments / courseTotalTuitionCalc;
+
+    //     List<int> calculation = [];
+
+
+    //     calculation.AddRange(new List<int>{
+    //         paiedReminderCalc,
+    //         courseTotalTuitionCalc,
+    //         tuitionPerMonthCalc,
+    //         tuitionReminderCalc
+    //     });
+
+    //     return calculation;
+    //       // int paiedReminderCalc = addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaiedNumber;
+    //     // int courseTotalTuitionCalc = course.TotalTuition;
+    //     // int tuitionPerMonthCalc = addEnrolledCourseDto.NumberOfPayments / courseTotalTuitionCalc;
+    //     // int tuitionReminderCalc = courseTotalTuitionCalc - addEnrolledCourseDto.PaiedTuition;
+
+    //     // UpdateDefinition<EnrolledCourse> updatedEnrolledCourse = Builders<EnrolledCourse>.Update
+    //     //     .Set(doc => doc.PaidRemainder, paiedReminderCalc)
+    //     //     .Set(doc => doc.CourseTotalTuition, courseTotalTuitionCalc)
+    //     //     .Set(doc => doc.TuitionPerMonth, tuitionPerMonthCalc)
+    //     //     .Set(doc => doc.TuitionRemainder, tuitionReminderCalc);
+
+    //     // return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedEnrolledCourse, null, cancellationToken);
+    // }
+    public async Task<int> CalculatePaiedReminder(AddEnrolledCourseDto addEnrolledCourseDto)
     {
         int paiedReminderCalc = addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaiedNumber;
-        int courseTotalTuitionCalc = course.TotalTuition;
-        int tuitionReminderCalc = courseTotalTuitionCalc - addEnrolledCourseDto.PaiedTuition;
-        int tuitionPerMonthCalc = addEnrolledCourseDto.NumberOfPayments / courseTotalTuitionCalc;
 
-        List<int> calculation = [];
-
-
-        calculation.AddRange(new List<int>{
-            paiedReminderCalc,
-            courseTotalTuitionCalc,
-            tuitionPerMonthCalc,
-            tuitionReminderCalc
-        });
-
-        return calculation;
-          // int paiedReminderCalc = addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaiedNumber;
-        // int courseTotalTuitionCalc = course.TotalTuition;
-        // int tuitionPerMonthCalc = addEnrolledCourseDto.NumberOfPayments / courseTotalTuitionCalc;
-        // int tuitionReminderCalc = courseTotalTuitionCalc - addEnrolledCourseDto.PaiedTuition;
-
-        // UpdateDefinition<EnrolledCourse> updatedEnrolledCourse = Builders<EnrolledCourse>.Update
-        //     .Set(doc => doc.PaidRemainder, paiedReminderCalc)
-        //     .Set(doc => doc.CourseTotalTuition, courseTotalTuitionCalc)
-        //     .Set(doc => doc.TuitionPerMonth, tuitionPerMonthCalc)
-        //     .Set(doc => doc.TuitionRemainder, tuitionReminderCalc);
-
-        // return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedEnrolledCourse, null, cancellationToken);
+        return paiedReminderCalc;
     }
+    public async Task<int> CalculateCourseTotalTuition(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
+    {
+        int courseTotalTuitionCalc = course.TotalTuition;
+
+        return courseTotalTuitionCalc;
+    }
+    public async Task<int> CalculateTuitionReminder(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
+    {
+        // int courseTotalTuitionCalc = course.TotalTuition;
+
+        int tuitionReminderCalc = course.TotalTuition - addEnrolledCourseDto.PaiedTuition;
+
+        return tuitionReminderCalc;
+    }
+    public async Task<int> CalculateTuitionPerMonth(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
+    {
+        // int courseTotalTuitionCalc = course.TotalTuition;
+
+        int tuitionPerMonthCalc = course.TotalTuition / addEnrolledCourseDto.NumberOfPayments ;
+        
+        return tuitionPerMonthCalc;
+    }
+
 }
