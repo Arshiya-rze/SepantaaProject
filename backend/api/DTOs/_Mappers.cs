@@ -110,6 +110,7 @@ public static class Mappers
         ) 
     {
         return new EnrolledCourse(
+            Id: Guid.NewGuid(),
             CourseId: course.Id, //13213213ddfdf
             CourseTuition: course.Tuition, //6_000_000
             Title: managerInput.Title.ToUpper(),
@@ -122,6 +123,26 @@ public static class Mappers
             Payments: []
         );
     }
+
+    // public static EnrolledCourse ConvertEnrolledCourseToShowEnrolledDto
+    //     (
+    //         UpdateEnrolledDto updateEnrolledDto, EnrolledCourse targetEnrolledCourse,
+    //         int num1, int num2, int num3
+    //     ) 
+    // {
+    //     return new List<EnrolledCourse>(
+    //         CourseId: targetEnrolledCourse.CourseId, 
+    //         CourseTuition: targetEnrolledCourse.CourseTuition, 
+    //         Title: targetEnrolledCourse.Title,
+    //         NumberOfPayments: targetEnrolledCourse.NumberOfPayments,
+    //         PaidNumber: num1, 
+    //         NumberOfPaymentsLeft: num2, 
+    //         PaymentPerMonth: targetEnrolledCourse.PaymentPerMonth,
+    //         PaidAmount: updateEnrolledDto.paidAmount, 
+    //         TuitionRemainder: num3, 
+    //         Payments: []
+    //     );
+    // }
 
 
     // public static Lesson ConvertLessonDtoToLesson(AddLessonDto addLessonDto)

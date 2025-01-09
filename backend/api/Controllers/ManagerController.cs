@@ -108,14 +108,14 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         return !users.Any() ? NoContent() : Ok(users);
     }
 
-    // [HttpPut("update-lesson/{targetStudentUserName}")]
-    // public async Task<ActionResult> UpdateStudentLesson(LessonDto studentLessonUpdateDto, string targetStudentUserName, CancellationToken cancellationToken)
+    // [HttpPut("update-enrolledCourse/{targetUserName}")]
+    // public async Task<ActionResult> UpdateEnrolledCourse(UpdateEnrolledDto updateEnrolledDto, string targetUserName, CancellationToken cancellationToken)
     // {
-    //     UpdateResult? updateResult = await _managerRepository.UpdateStudentLessonAsync(studentLessonUpdateDto, User.GetHashedUserId(), targetStudentUserName, cancellationToken);
+    //     UpdateResult? updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetUserName, cancellationToken);
 
     //     return updateResult is null || !updateResult.IsModifiedCountAvailable
     //         ? BadRequest("Update failed. Try again later.")
-    //         : Ok(new { message = "Student Lesson has been updated successfully." });
+    //         : Ok(new { message = "EnrolledCourse updated successfully" });
     // }
 
     // [HttpPost("add-lesson/{targetUserName}")]
