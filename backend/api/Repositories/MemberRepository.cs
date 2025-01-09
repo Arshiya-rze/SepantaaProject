@@ -111,8 +111,9 @@ public class MemberRepository : IMemberRepository
         if(targetAppUser is null)
             return null;
 
+        // TODO: inja ma ghbalan ba Lesson dashtim dars ro yeki mikardim hala on Lesson dar EnrolledHast
         List<AppUser>? targetAppUsers = _collectionAppUser.Find<AppUser>(
-            doc => doc.Lessons == targetAppUser.Lessons).ToList(cancellationToken);
+            doc => doc.EnrolledCourses == targetAppUser.EnrolledCourses).ToList(cancellationToken);
 
         if (targetAppUsers is null)
             return null;

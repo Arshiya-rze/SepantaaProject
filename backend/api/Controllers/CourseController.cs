@@ -6,8 +6,8 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
     [HttpPost("add-course")]
     public async Task<ActionResult<ShowCourseDto>> AddCourse(AddCourseDto managerInput, CancellationToken cancellationToken)
     {
-        if (managerInput.Lesson is null)
-            return  BadRequest("Lesson is empty please set value");
+        if (managerInput.Title is null)
+            return BadRequest("Title Is Empty Please Set Value");
 
         ShowCourseDto? showCourseDto = await _courseRepository.AddCourseAsync(managerInput, cancellationToken);
 

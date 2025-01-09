@@ -155,44 +155,44 @@ public class ManagerRepository : IManagerRepository
         return ValidationsExtensions.ValidateObjectId(userId);
     }
 
-    public async Task<EnrolledCourse?> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, CancellationToken cancellationToken)
-    {
-        AppUser? appUser = await _collectionAppUser.Find(doc =>
-            doc.NormalizedUserName == targetUserName.ToUpper()).FirstOrDefaultAsync(cancellationToken);
+    // public async Task<EnrolledCourse?> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, CancellationToken cancellationToken)
+    // {
+    //     AppUser? appUser = await _collectionAppUser.Find(doc =>
+    //         doc.NormalizedUserName == targetUserName.ToUpper()).FirstOrDefaultAsync(cancellationToken);
         
-        if (appUser is null)
-            return null;
+    //     if (appUser is null)
+    //         return null;
         
-        ObjectId? userId = await GetObjectIdByUserNameAsync(targetUserName, cancellationToken);
+    //     ObjectId? userId = await GetObjectIdByUserNameAsync(targetUserName, cancellationToken);
 
 
-        // ObjectId? courseId = await _collectionCourse.AsQueryable()
-        //     .Where(doc => doc.Lesson == appUser.Lessons)
-        //     .Select(doc => doc.Id)
-        //     .FirstOrDefaultAsync();
-        Course? course = await _collectionCourse.Find(doc =>
-            doc.Id == appUser.Lessons).FirstOrDefaultAsync(cancellationToken);
+    //     // ObjectId? courseId = await _collectionCourse.AsQueryable()
+    //     //     .Where(doc => doc.Lesson == appUser.Lessons)
+    //     //     .Select(doc => doc.Id)
+    //     //     .FirstOrDefaultAsync();
+    //     Course? course = await _collectionCourse.Find(doc =>
+    //         doc.Id == appUser.Lessons).FirstOrDefaultAsync(cancellationToken);
 
-        if (course is null)
-            return null;
+    //     if (course is null)
+    //         return null;
         
-        int calculatePaiedReminder = await CalculatePaiedReminder(addEnrolledCourseDto);
-        int calculateCourseTotalTuition = await CalculateCourseTotalTuition(addEnrolledCourseDto, course);
-        int calculateTuitionReminder = await CalculateTuitionReminder(addEnrolledCourseDto, course);
-        int calculateTuitionPerMonth = await CalculateTuitionPerMonth(addEnrolledCourseDto, course);
+    //     int calculatePaiedReminder = await CalculatePaiedReminder(addEnrolledCourseDto);
+    //     int calculateCourseTotalTuition = await CalculateCourseTotalTuition(addEnrolledCourseDto, course);
+    //     int calculateTuitionReminder = await CalculateTuitionReminder(addEnrolledCourseDto, course);
+    //     int calculateTuitionPerMonth = await CalculateTuitionPerMonth(addEnrolledCourseDto, course);
 
-        EnrolledCourse? enrolledCourse = Mappers.ConvertAddEnrolledCourseDtoToEnrolledCourse(addEnrolledCourseDto, course, calculatePaiedReminder, calculateCourseTotalTuition, calculateTuitionReminder, calculateTuitionPerMonth);
+    //     EnrolledCourse? enrolledCourse = Mappers.ConvertAddEnrolledCourseDtoToEnrolledCourse(addEnrolledCourseDto, course, calculatePaiedReminder, calculateCourseTotalTuition, calculateTuitionReminder, calculateTuitionPerMonth);
 
-        if (enrolledCourse is null)
-            return null;
+    //     if (enrolledCourse is null)
+    //         return null;
 
-        var updatedEnrolledCourse = Builders<AppUser>.Update
-            .AddToSet(doc => doc.EnrolledCourses, enrolledCourse);
+    //     var updatedEnrolledCourse = Builders<AppUser>.Update
+    //         .AddToSet(doc => doc.EnrolledCourses, enrolledCourse);
 
-        UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc => doc.Id == userId, updatedEnrolledCourse, null, cancellationToken);
+    //     UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc => doc.Id == userId, updatedEnrolledCourse, null, cancellationToken);
 
-        return enrolledCourse;
-    }
+    //     return enrolledCourse;
+    // }
 
     public async Task<DeleteResult?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken)
     {

@@ -92,18 +92,20 @@ public class TeacherRepository : ITeacherRepository
             return null;
 
         // IMongoQueryable<AppUser> query = _collectionAppUser.Find<AppUser>(
-        //     doc => doc.Lessons == loggedInTargetLessons).ToListAsync(cancellationToken);    
-        List<AppUser>? targetAppUsers = _collectionAppUser.Find<AppUser>(
-            doc => doc.Lessons == targetAppUser.Lessons).ToList(cancellationToken);
+        //     doc => doc.Lessons == loggedInTargetLessons).ToListAsync(cancellationToken);
+        // TODO: injaa ham ba Lesson migrereftim ke ihalaa bayad dorost she    
+        // List<AppUser>? targetAppUsers = _collectionAppUser.Find<AppUser>(
+        //     doc => doc.Lessons == targetAppUser.Lessons).ToList(cancellationToken);
 
         // IMongoQueryable<AppUser> appUsers = _collectionAppUser.AsQueryable()
         // .Where(doc => doc.Lessons == targetAppUsers)
         // .AnyAsync(cancellationToken);   
 
-        if (targetAppUsers is null)
-            return null;
+        // if (targetAppUsers is null)
+        //     return null;
 
-        return targetAppUsers;
+        // return targetAppUsers;
+        return null;
 
         // IMongoQueryable<AppUser> query = _collectionAppUser.Find<AppUser>(
         //     doc => doc.Lesson == loggedInUserLesson).ToList(cancellationToken);

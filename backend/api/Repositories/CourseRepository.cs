@@ -20,19 +20,21 @@ public class CourseRepository : ICourseRepository
     }
     #endregion Vars and Constructor
 
-    public async Task<ObjectId> GetObjectIdByLessonAsync(List<string> lesson, CancellationToken cancellationToken)
-    {
-        ObjectId teacherId = await _collectionAppUser.AsQueryable<AppUser>()
-            .Where(appUser => appUser.Lessons == lesson)
-            .Select(item => item.Id)
-            .SingleOrDefaultAsync(cancellationToken);
+    // TODO: inja hamba Lessson migreftim ke dg nadarim bayd dorost she
+    // public async Task<ObjectId> GetObjectIdByLessonAsync(List<string> lesson, CancellationToken cancellationToken)
+    // {
+    //     ObjectId teacherId = await _collectionAppUser.AsQueryable<AppUser>()
+    //         .Where(appUser => appUser.EnrolledCourses == lesson)
+    //         .Select(item => item.Id)
+    //         .SingleOrDefaultAsync(cancellationToken);
 
-        // return ValidationsExtensions.ValidateListObjectId(teacherId);
-        return teacherId;
-    }
+    //     // return ValidationsExtensions.ValidateListObjectId(teacherId);
+    //     return teacherId;
+    // }
+    
     public async Task<ShowCourseDto> AddCourseAsync(AddCourseDto managerInput, CancellationToken cancellationToken)
     {
-        ObjectId teacherId = await GetObjectIdByLessonAsync(managerInput.Lesson, cancellationToken);
+        // ObjectId teacherId = await GetObjectIdByLessonAsync(managerInput.Lesson, cancellationToken);
 
         // ObjectId teacherId = await _collectionCourse.AsQueryable()
         //     .Where(doc => doc.Lesson == managerInput.Lesson)
@@ -45,7 +47,7 @@ public class CourseRepository : ICourseRepository
         // if (appUser is null)
         //     return null;
 
-        Course? course = Mappers.ConvertAddCourseDtoToCourse(managerInput, teacherId);
+        Course? course = Mappers.ConvertAddCourseDtoToCourse(managerInput);
 
         if (_collectionCourse is not null)
         {
@@ -54,7 +56,7 @@ public class CourseRepository : ICourseRepository
 
         if (ObjectId.Equals != null)
         {
-            ShowCourseDto showCourseDto = Mappers.ConvertCourseToShowCourseDto(course, teacherId);
+            ShowCourseDto showCourseDto = Mappers.ConvertCourseToShowCourseDto(course);
 
             return showCourseDto;
         }

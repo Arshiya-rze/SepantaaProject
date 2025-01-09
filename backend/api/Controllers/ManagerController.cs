@@ -48,18 +48,18 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    [HttpPost("add-enrolledCourse/{targetUserName}")]
-    public async Task<ActionResult<EnrolledCourse>> AddEnrolledCourse(AddEnrolledCourseDto managerInput, string targetUserName, CancellationToken cancellationToken)
-    {
-        if (targetUserName is null)
-            return BadRequest("userName is not foud!");
+    // [HttpPost("add-enrolledCourse/{targetUserName}")]
+    // public async Task<ActionResult<EnrolledCourse>> AddEnrolledCourse(AddEnrolledCourseDto managerInput, string targetUserName, CancellationToken cancellationToken)
+    // {
+    //     if (targetUserName is null)
+    //         return BadRequest("userName is not foud!");
         
-        EnrolledCourse? enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, cancellationToken);
+    //     EnrolledCourse? enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, cancellationToken);
 
-        return enrolledCourse is not null
-            ? Ok(enrolledCourse)
-            : BadRequest("add enrolledCourse failed");
-    }
+    //     return enrolledCourse is not null
+    //         ? Ok(enrolledCourse)
+    //         : BadRequest("add enrolledCourse failed");
+    // }
 
     [HttpPut("delete-member/{targetMemberUserName}")] 
     public async Task<ActionResult> Delete(string targetMemberUserName, CancellationToken cancellationToken)

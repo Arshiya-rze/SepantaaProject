@@ -14,8 +14,8 @@ public static class Mappers
             Name = adminInput.Name.Trim(),
             LastName = adminInput.LastName.Trim(),
             PhoneNum = adminInput.PhoneNum,
-            Gender = adminInput.Gender.ToLower(),
-            Lessons = adminInput.Lessons
+            Gender = adminInput.Gender.ToLower()
+            //  = adminInput.Lessons
         }; 
     }
 
@@ -40,7 +40,7 @@ public static class Mappers
             LastName: appUser.LastName,
             PhoneNum: appUser.PhoneNum,
             Gender: appUser.Gender,
-            Lessons: appUser.Lessons,
+            // Lessons: appUser.Lessons,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
             Payments: appUser.EnrolledCourses
         );
@@ -75,50 +75,50 @@ public static class Mappers
         };
     }
 
-    public static Course ConvertAddCourseDtoToCourse(AddCourseDto managerInput, ObjectId professorId)
+    public static Course ConvertAddCourseDtoToCourse(AddCourseDto managerInput)
     {
         return new Course(
-            Lesson: managerInput.Lesson,
-            ProfessorId: professorId,
-            CourseHours: managerInput.CourseHours,
-            TotalTuition: managerInput.TotalTuition,
-            TotalDays: managerInput.TotalDays,
-            StartTime: managerInput.StartTime,
-            EndTime: managerInput.EndTime
+            Title: managerInput.Title.ToUpper(),
+            ProfessorsIds: [],
+            Hours: managerInput.Hours,
+            Tuition: managerInput.Tuition,
+            Days: managerInput.Days,
+            Start: managerInput.Start,
+            End: managerInput.End
         );
     }
 
-    public static ShowCourseDto ConvertCourseToShowCourseDto(Course course, ObjectId professorId)
+    public static ShowCourseDto ConvertCourseToShowCourseDto(Course course)
     {
         return new ShowCourseDto
         {
-            Lesson = course.Title,
-            ProfessorsId = professorId,
-            CourseHours = course.Hours,
-            TotalTuition = course.Tuition,
-            TotalDays = course.Days,
-            StartTime = course.Start,
-            EndTime = course.End
+            Title = course.Title,
+            ProfessorsId = course.ProfessorsIds,
+            Hourse = course.Hours,
+            Tuition = course.Tuition,
+            Days = course.Days,
+            Start = course.Start,
+            End = course.End
         };
     }
 
-    public static EnrolledCourse ConvertAddEnrolledCourseDtoToEnrolledCourse
-        (AddEnrolledCourseDto managerInput, Course course, 
-            int calculatePaiedReminder, int calculateCourseTotalTuition, 
-            int calculateTuitionReminder, int calculateTuitionPerMonth
-        ) 
-    {
-        return new EnrolledCourse(
-            CourseId: course.Id, //13213213ddfdf
-            CourseTuition: course.Tuition, //6_000_000
-            NumberOfPayments: managerInput.NumberOfPayments, //4
-            PaiedNumber: 0, // TODO: calculate paiedNumber in backend 
-            NumberOfPaymentsLeft: calculatePaiedReminder, // 4 =>methodi ke sakhte mishe dar repo
-            PaymentAmount: calculateTuitionPerMonth, //2_000_000
-            PaiedAmount: managerInput.PaiedTuition, //0
-            TuitionRemainder: calculateTuitionReminder //6_000_000
-        );
-    }
+    // public static EnrolledCourse ConvertAddEnrolledCourseDtoToEnrolledCourse
+    //     (AddEnrolledCourseDto managerInput, Course course, 
+    //         int calculatePaiedReminder, int calculateCourseTotalTuition, 
+    //         int calculateTuitionReminder, int calculateTuitionPerMonth
+    //     ) 
+    // {
+    //     return new EnrolledCourse(
+    //         CourseId: course.Id, //13213213ddfdf
+    //         CourseTuition: course.Tuition, //6_000_000
+    //         NumberOfPayments: managerInput.NumberOfPayments, //4
+    //         PaiedNumber: 0, // TODO: calculate paiedNumber in backend 
+    //         NumberOfPaymentsLeft: calculatePaiedReminder, // 4 =>methodi ke sakhte mishe dar repo
+    //         PaymentAmount: calculateTuitionPerMonth, //2_000_000
+    //         PaiedAmount: managerInput.PaiedTuition, //0
+    //         TuitionRemainder: calculateTuitionReminder //6_000_000
+    //     );
+    // }
 
 
     // public static Lesson ConvertLessonDtoToLesson(AddLessonDto addLessonDto)
