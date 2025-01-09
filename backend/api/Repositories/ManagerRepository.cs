@@ -155,44 +155,45 @@ public class ManagerRepository : IManagerRepository
         return ValidationsExtensions.ValidateObjectId(userId);
     }
 
-    // public async Task<EnrolledCourse?> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, CancellationToken cancellationToken)
-    // {
-    //     AppUser? appUser = await _collectionAppUser.Find(doc =>
-    //         doc.NormalizedUserName == targetUserName.ToUpper()).FirstOrDefaultAsync(cancellationToken);
+    public async Task<EnrolledCourse?> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, CancellationToken cancellationToken)
+    {
+        // appUser => a1
+        AppUser? appUser = await _collectionAppUser.Find(doc =>
+            doc.NormalizedUserName == targetUserName.ToUpper()).FirstOrDefaultAsync(cancellationToken);
         
-    //     if (appUser is null)
-    //         return null;
+        if (appUser is null)
+            return null;
         
-    //     ObjectId? userId = await GetObjectIdByUserNameAsync(targetUserName, cancellationToken);
+        // ObjectId? userId = await GetObjectIdByUserNameAsync(targetUserName, cancellationToken);
 
 
-    //     // ObjectId? courseId = await _collectionCourse.AsQueryable()
-    //     //     .Where(doc => doc.Lesson == appUser.Lessons)
-    //     //     .Select(doc => doc.Id)
-    //     //     .FirstOrDefaultAsync();
-    //     Course? course = await _collectionCourse.Find(doc =>
-    //         doc.Id == appUser.Lessons).FirstOrDefaultAsync(cancellationToken);
+        // ObjectId? courseId = await _collectionCourse.AsQueryable()
+        //     .Where(doc => doc.Lesson == appUser.Lessons)
+        //     .Select(doc => doc.Id)
+        //     .FirstOrDefaultAsync();
+        Course? course = await _collectionCourse.Find(doc =>
+            doc.Title == appUser.Titles).FirstOrDefaultAsync(cancellationToken);
 
-    //     if (course is null)
-    //         return null;
+        if (course is null)
+            return null;
+
+
+        // int numberOfPaymentsLeftCalc  = addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaidNumber;
+        int paymentPerMonthCalc = course.Tuition / addEnrolledCourseDto.NumberOfPayments ;
+        int tuitionReminderCalc = course.Tuition - addEnrolledCourseDto.PaidAmount;
         
-    //     int calculatePaiedReminder = await CalculatePaiedReminder(addEnrolledCourseDto);
-    //     int calculateCourseTotalTuition = await CalculateCourseTotalTuition(addEnrolledCourseDto, course);
-    //     int calculateTuitionReminder = await CalculateTuitionReminder(addEnrolledCourseDto, course);
-    //     int calculateTuitionPerMonth = await CalculateTuitionPerMonth(addEnrolledCourseDto, course);
+        EnrolledCourse? enrolledCourse = Mappers.ConvertAddEnrolledCourseDtoToEnrolledCourse(addEnrolledCourseDto, course, paymentPerMonthCalc, tuitionReminderCalc);
 
-    //     EnrolledCourse? enrolledCourse = Mappers.ConvertAddEnrolledCourseDtoToEnrolledCourse(addEnrolledCourseDto, course, calculatePaiedReminder, calculateCourseTotalTuition, calculateTuitionReminder, calculateTuitionPerMonth);
+        if (enrolledCourse is null)
+            return null;
 
-    //     if (enrolledCourse is null)
-    //         return null;
+        var updatedEnrolledCourse = Builders<AppUser>.Update
+            .AddToSet(doc => doc.EnrolledCourses, enrolledCourse);
 
-    //     var updatedEnrolledCourse = Builders<AppUser>.Update
-    //         .AddToSet(doc => doc.EnrolledCourses, enrolledCourse);
+        UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc => doc.Id == appUser.Id, updatedEnrolledCourse, null, cancellationToken);
 
-    //     UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc => doc.Id == userId, updatedEnrolledCourse, null, cancellationToken);
-
-    //     return enrolledCourse;
-    // }
+        return enrolledCourse;
+    }
 
     public async Task<DeleteResult?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken)
     {
@@ -317,24 +318,5 @@ public class ManagerRepository : IManagerRepository
 
     //     // return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedEnrolledCourse, null, cancellationToken);
     // }
-    // TODO: DoIt
-    // public async Task<int> CalculatePaiedReminder(AddEnrolledCourseDto addEnrolledCourseDto) =>
-    //     addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaiedNumber;
 
-    private int CalculateTuitionReminder(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
-    {
-        // int courseTotalTuitionCalc = course.TotalTuition;
-
-        int tuitionReminderCalc = course.Tuition - addEnrolledCourseDto.PaiedTuition;
-
-        return tuitionReminderCalc;
-    }
-    private int CalculateTuitionPerMonth(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
-    {
-        // int courseTotalTuitionCalc = course.TotalTuition;
-
-        int tuitionPerMonthCalc = course.Tuition / addEnrolledCourseDto.NumberOfPayments ;
-        
-        return tuitionPerMonthCalc;
-    }
 }

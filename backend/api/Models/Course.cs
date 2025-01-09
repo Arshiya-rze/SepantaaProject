@@ -5,7 +5,7 @@ namespace api.Models;
 [CollectionName("courses")]
 public record Course(
     [Optional][property: BsonId, BsonRepresentation(BsonType.ObjectId)] ObjectId Id,
-    string Title, // English
+    List<string> Title, // English
     List<ObjectId> ProfessorsIds, //132342344
     int Hours, //128h
     int Tuition, //6_000_000t
@@ -25,11 +25,12 @@ public record EnrolledCourse(
     ObjectId CourseId,
     int CourseTuition, //6_000_000t
     int NumberOfPayments, //4
-    int PaiedNumber, //1
+    int PaidNumber, //1
     int NumberOfPaymentsLeft, //3
-    int PaymentAmount, //2_000_000
-    int PaiedAmount, //2_000_000
+    int PaymentPerMonth, //2_000_000
+    int PaidAmount, //2_000_000
     int TuitionRemainder, //6_000_000
+    string Title,
     List<Payment> Payments
 );
 

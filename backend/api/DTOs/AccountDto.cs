@@ -16,8 +16,8 @@ public record RegisterDto(
     string? PhoneNum,
     // DateOnly DateOfBirth, //"1-1-1"
     DateOnly DateOfBirth, // Prevent from 1/1/1
-    string Gender
-    // List<string> Lessons
+    string Gender,
+    List<string> Titles
 );
 
 public record LoginDto(
