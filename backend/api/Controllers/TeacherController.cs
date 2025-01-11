@@ -52,25 +52,25 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         return memberDtos;
     }
 
-    // [HttpGet("get-lessons")]
-    // public async Task<ActionResult<List<Lesson>>> GetLesson(CancellationToken cancellationToken)
-    // {
-    //     string? token = null; 
+    [HttpGet("get-titles")]
+    public async Task<ActionResult<List<EnrolledCourse>>> GetTitle(CancellationToken cancellationToken)
+    {
+        string? token = null; 
         
-    //     bool isTokenValid = HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
+        bool isTokenValid = HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
 
-    //     if (isTokenValid)
-    //         token = authHeader.ToString().Split(' ').Last();
+        if (isTokenValid)
+            token = authHeader.ToString().Split(' ').Last();
 
-    //     if (string.IsNullOrEmpty(token))
-    //         return Unauthorized("Token is expired or invalid. Login again.");
+        if (string.IsNullOrEmpty(token))
+            return Unauthorized("Token is expired or invalid. Login again.");
 
-    //     string? hashedUserId = User.GetHashedUserId();
-    //     if (string.IsNullOrEmpty(hashedUserId))
-    //         return BadRequest("No user was found with this user Id.");
+        string? hashedUserId = User.GetHashedUserId();
+        if (string.IsNullOrEmpty(hashedUserId))
+            return BadRequest("No user was found with this user Id.");
 
-    //     List<Lesson>? lessons = await _teacherRepository.GetLessonAsync(hashedUserId, token, cancellationToken);
+        List<EnrolledCourse>? enrolledCourses = await _teacherRepository.GetTitleAsync(hashedUserId, token, cancellationToken);
 
-    //     return lessons is null ? Unauthorized("User is logged out or unauthorized. Login again.") : lessons;
-    // }
+        return enrolledCourses is null ? Unauthorized("User is logged out or unauthorized. Login again.") : enrolledCourses;
+    }
 }

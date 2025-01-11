@@ -114,22 +114,22 @@ public class TeacherRepository : ITeacherRepository
         // return await PagedList<AppUser>.CreatePagedListAsync(appUsers, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     }
 
-    // public async Task<List<Lesson?>> GetLessonAsync(string hashedUserId, string token, CancellationToken cancellationToken)
-    // {
-    //     ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
+    public async Task<List<EnrolledCourse?>> GetTitleAsync(string hashedUserId, string token, CancellationToken cancellationToken)
+    {
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
 
-    //     if (userId is null)
-    //         return null;
+        if (userId is null)
+            return null;
 
-    //     // AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser => appUser.Id == userId).FirstOrDefaultAsync(cancellationToken);
-    //     List<Lesson> appUser = await _collectionAppUser.AsQueryable()
-    //     .Where(appUser => appUser.Id == userId)
-    //     .Select(appUser => appUser.Lessons)
-    //     .FirstOrDefaultAsync(cancellationToken);
+        // AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser => appUser.Id == userId).FirstOrDefaultAsync(cancellationToken);
+        List<EnrolledCourse> enrolledCourses = await _collectionAppUser.AsQueryable()
+        .Where(appUser => appUser.Id == userId)
+        .Select(appUser => appUser.EnrolledCourses)
+        .FirstOrDefaultAsync(cancellationToken);
 
-    //     return appUser is null
-    //         ? null
-    //         // : Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-    //         : appUser;
-    // }
+        return enrolledCourses is null
+            ? null
+            // : Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+            : enrolledCourses;
+    }
 }
