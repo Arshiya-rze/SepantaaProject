@@ -7,12 +7,14 @@ public record Course(
     [Optional][property: BsonId, BsonRepresentation(BsonType.ObjectId)] ObjectId Id,
     string Title, // English
     List<ObjectId> ProfessorsIds, //132342344
-    int Hours, //128h
     int Tuition, //6_000_000t
-    int Days,
+    int Hours, //128h
+    int HoursPerClass,
+    int Days, // Cal in API
     DateTime Start, //1 mars 2025
-    DateTime End // 3 julay 2025
+    bool IsStarted
 );
+
 
 // enum TitleType 
 // {
@@ -31,13 +33,12 @@ public record EnrolledCourse(
     int PaymentPerMonth, //2_000_000
     int PaidAmount, //2_000_000
     int TuitionRemainder, //6_000_000
-    string Title,
     List<Payment> Payments
 );
 
 public record Payment(
     Guid Id,
-    ObjectId Course,
+    ObjectId CourseId,
     int Amount,
     DateTime PaidOn,
     Enum Method //aberbank / naghdi

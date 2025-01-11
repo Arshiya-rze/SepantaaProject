@@ -1,3 +1,4 @@
+
 namespace api.Repositories;
 
 public class CourseRepository : ICourseRepository
@@ -63,4 +64,23 @@ public class CourseRepository : ICourseRepository
 
         return null;
     }
+
+    public async Task<IEnumerable<ShowCourseDto>> GetAllAsync(CancellationToken cancellationToken)
+    {
+
+      IEnumerable<Course> courses =  await _collectionCourse
+            .Find<Course>(new BsonDocument())
+            .ToListAsync(cancellationToken);
+
+        if(courses.Count() == 0) return [];
+
+        List<ShowCourseDto> courseDtos = [];
+
+        foreach (Course course in courses)
+        {
+            courseDtos.Add(Mappers.ConvertCourseToShowCourseDto(course));
+        }
+
+        return courseDtos;
+    } 
 }

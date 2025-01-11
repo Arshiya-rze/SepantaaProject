@@ -1,7 +1,7 @@
 namespace api.DTOs;
 
 public record AddEnrolledCourseDto(
-    string Title,
+    // string Title,
     int NumberOfPayments, //4
     int PaidAmount //2_000_000
     // int PaidNumber, //0
@@ -17,7 +17,7 @@ public class ShowEnrolledCourseDto
     public int PaymentPerMonth { get; init; }
     public int PaiedAmount { get; init; }
     public int TuitionRemainder { get; init; }
-    public string Title { get; init; }
+    // public string Title { get; init; }
 };
 
 public record UpdateEnrolledDto(

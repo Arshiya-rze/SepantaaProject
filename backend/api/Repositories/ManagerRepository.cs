@@ -171,12 +171,11 @@ public class ManagerRepository : IManagerRepository
         //     .Select(doc => doc.Id)
         //     .FirstOrDefaultAsync();
         Course? course = await _collectionCourse.Find(doc =>
-            doc.Title == addEnrolledCourseDto.Title.ToUpper()).FirstOrDefaultAsync(cancellationToken);
+            doc.Title == "addEnrolledCourseDto.Title.ToUpper()").FirstOrDefaultAsync(cancellationToken);
+
 
         if (course is null)
             return null;
-
-
         // int numberOfPaymentsLeftCalc  = addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaidNumber;
         
         if (addEnrolledCourseDto.PaidAmount > 0)

@@ -82,11 +82,12 @@ public static class Mappers
         return new Course(
             Title: managerInput.Title.ToUpper(),
             ProfessorsIds: [],
-            Hours: managerInput.Hours,
             Tuition: managerInput.Tuition,
+            Hours: managerInput.Hours,
+            HoursPerClass: 0, // TODO: Calc in backend
             Days: managerInput.Days,
             Start: managerInput.Start,
-            End: managerInput.End
+            IsActive: true
         );
     }
 
@@ -94,13 +95,13 @@ public static class Mappers
     {
         return new ShowCourseDto
         {
+            Id = course.Id.ToString(),
             Title = course.Title,
             ProfessorsId = course.ProfessorsIds,
             Hourse = course.Hours,
             Tuition = course.Tuition,
             Days = course.Days,
-            Start = course.Start,
-            End = course.End
+            Start = course.Start
         };
     }
 
@@ -113,7 +114,6 @@ public static class Mappers
             // Id: Guid.NewGuid(),
             CourseId: course.Id, //13213213ddfdf
             CourseTuition: course.Tuition, //6_000_000
-            Title: managerInput.Title.ToUpper(),
             NumberOfPayments: managerInput.NumberOfPayments, //4
             PaidNumber: paidNumberCalc, // TODO: calculate paiedNumber in backend 
             NumberOfPaymentsLeft: managerInput.NumberOfPayments, // 4 =>methodi ke sakhte mishe dar repo

@@ -24,8 +24,6 @@ global using System.Security.Claims;
 // global using api.Middleware;
 // global using api.Models.Helpers;
 global using System.Text.Json;
-global using System.Net;
-global using System.Text.Json;
 // global using api.Models.Errors;
 global using Microsoft.AspNetCore.Identity;
 global using MongoDB.Bson.Serialization.Attributes;

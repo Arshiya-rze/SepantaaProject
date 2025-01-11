@@ -12,9 +12,9 @@ public record AddCourseDto(
 
 public class ShowCourseDto
 {
-    public ObjectId Id { get; init; }
-    public string Title { get; init; }
-    public List<ObjectId> ProfessorsId { get; init;}
+    public string Id { get; init; } = string.Empty;
+    public string Title { get; init; }  = string.Empty;
+    public List<ObjectId> ProfessorsId { get; init;} = [];
     public int Hourse { get; init; }
     public int Tuition { get; init; }
     public int Days { get; init; }
