@@ -15,7 +15,7 @@ public static class Mappers
             LastName = adminInput.LastName.Trim(),
             PhoneNum = adminInput.PhoneNum,
             Gender = adminInput.Gender.ToLower(),
-            Titles = adminInput.Titles
+            // Titles = adminInput.Titles
         }; 
     }
 
@@ -40,7 +40,7 @@ public static class Mappers
             LastName: appUser.LastName,
             PhoneNum: appUser.PhoneNum,
             Gender: appUser.Gender,
-            Titles: appUser.Titles,
+            // Titles: appUser.Titles,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
             EnrolledCourses: appUser.EnrolledCourses
         );
@@ -80,7 +80,7 @@ public static class Mappers
     public static Course ConvertAddCourseDtoToCourse(AddCourseDto managerInput)
     {
         return new Course(
-            Title: managerInput.Title,
+            Title: managerInput.Title.ToUpper(),
             ProfessorsIds: [],
             Hours: managerInput.Hours,
             Tuition: managerInput.Tuition,
@@ -110,7 +110,7 @@ public static class Mappers
         ) 
     {
         return new EnrolledCourse(
-            Id: Guid.NewGuid(),
+            // Id: Guid.NewGuid(),
             CourseId: course.Id, //13213213ddfdf
             CourseTuition: course.Tuition, //6_000_000
             Title: managerInput.Title.ToUpper(),

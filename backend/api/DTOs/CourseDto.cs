@@ -1,7 +1,7 @@
 namespace api.DTOs;
 
 public record AddCourseDto(
-    List<string> Title,
+    string Title,
     // ObjectId ProfessorsId,
     int Hours, //128h
     int Tuition, //6_000_000t
@@ -13,7 +13,7 @@ public record AddCourseDto(
 public class ShowCourseDto
 {
     public ObjectId Id { get; init; }
-    public List<string> Title { get; init; }
+    public string Title { get; init; }
     public List<ObjectId> ProfessorsId { get; init;}
     public int Hourse { get; init; }
     public int Tuition { get; init; }

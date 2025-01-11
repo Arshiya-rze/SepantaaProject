@@ -171,7 +171,7 @@ public class ManagerRepository : IManagerRepository
         //     .Select(doc => doc.Id)
         //     .FirstOrDefaultAsync();
         Course? course = await _collectionCourse.Find(doc =>
-            doc.Title == appUser.Titles).FirstOrDefaultAsync(cancellationToken);
+            doc.Title == addEnrolledCourseDto.Title.ToUpper()).FirstOrDefaultAsync(cancellationToken);
 
         if (course is null)
             return null;
@@ -258,6 +258,9 @@ public class ManagerRepository : IManagerRepository
     //     // if (updateEnrolledDto >= targetEnrolledCourse) {
 
     //     // }
+    //     // AppUser appUser = await _collectionAppUser.Find<AppUser>(doc => 
+    //     //     doc.NormalizedUserName == targetUserName.ToUpper()).FirstOrDefaultAsync();
+
     //     int paidNumberCalc = +1;
     //     int numberOfPaymentsLeft = -1;
     //     int tuitionRemainder = -updateEnrolledDto.paidAmount ;

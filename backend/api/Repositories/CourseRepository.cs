@@ -21,16 +21,16 @@ public class CourseRepository : ICourseRepository
     #endregion Vars and Constructor
 
     // TODO: inja hamba Lessson migreftim ke dg nadarim bayd dorost she
-    public async Task<ObjectId> GetObjectIdByLessonAsync(List<string> titles, CancellationToken cancellationToken)
-    {
-        ObjectId teacherId = await _collectionAppUser.AsQueryable<AppUser>()
-            .Where(appUser => appUser.Titles == titles)
-            .Select(item => item.Id)
-            .SingleOrDefaultAsync(cancellationToken);
+    // public async Task<ObjectId> GetObjectIdByLessonAsync(List<string> titles, CancellationToken cancellationToken)
+    // {
+    //     ObjectId teacherId = await _collectionAppUser.AsQueryable<AppUser>()
+    //         .Where(appUser => appUser.Titles == titles)
+    //         .Select(item => item.Id)
+    //         .SingleOrDefaultAsync(cancellationToken);
 
-        // return ValidationsExtensions.ValidateListObjectId(teacherId);
-        return teacherId;
-    }
+    //     // return ValidationsExtensions.ValidateListObjectId(teacherId);
+    //     return teacherId;
+    // }
     
     public async Task<ShowCourseDto> AddCourseAsync(AddCourseDto managerInput, CancellationToken cancellationToken)
     {
