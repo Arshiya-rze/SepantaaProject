@@ -84,10 +84,10 @@ public static class Mappers
             ProfessorsIds: [],
             Tuition: managerInput.Tuition,
             Hours: managerInput.Hours,
-            HoursPerClass: 0, // TODO: Calc in backend
-            Days: managerInput.Days,
+            HoursPerClass: managerInput.HoursPerClass, // TODO: Calc in backend
+            Days: 0,
             Start: managerInput.Start,
-            IsActive: true
+            IsStarted: true
         );
     }
 
@@ -98,10 +98,12 @@ public static class Mappers
             Id = course.Id.ToString(),
             Title = course.Title,
             ProfessorsId = course.ProfessorsIds,
-            Hourse = course.Hours,
             Tuition = course.Tuition,
-            Days = course.Days,
-            Start = course.Start
+            Hourse = course.Hours,
+            HoursPerClass = course.HoursPerClass,
+            Days = 0,
+            Start = course.Start,
+            IsStarted = course.IsStarted
         };
     }
 

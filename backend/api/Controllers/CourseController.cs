@@ -16,6 +16,7 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
             : BadRequest("add-course failed try again.");
     }
 
+    [HttpGet]
     public async Task<ActionResult<IEnumerable<ShowCourseDto>>> GetAll(CancellationToken cancellationToken) 
     {
         IEnumerable<ShowCourseDto> sCD = await _courseRepository.GetAllAsync(cancellationToken);
@@ -23,5 +24,15 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
         if(sCD.Count() == 0) return NoContent();
 
         return Ok(sCD);
+    }
+
+    [HttpPut("update/{targetCourseId}")]
+    public async Task<ActionResult> UpdateCourse(UpdateCourseDto updateCourseDto, ObjectId targetCourseId, CancellationToken cancellationToken)
+    {
+        UpdateResult? updateResult = await _courseRepository.UpdateCourseAsync(updateCourseDto, targetCourseId, cancellationToken);
+
+        return updateResult is null || !updateResult.IsModifiedCountAvailable
+            ? BadRequest("Update failed. Try again later.")
+            : Ok(new { message = "Course has been updated successfully." });
     }
 }

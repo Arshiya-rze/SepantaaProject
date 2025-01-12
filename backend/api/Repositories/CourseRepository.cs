@@ -83,4 +83,27 @@ public class CourseRepository : ICourseRepository
 
         return courseDtos;
     } 
+
+    public async Task<UpdateResult?> UpdateCourseAsync(UpdateCourseDto updateCourseDto, ObjectId targetCourseId, CancellationToken cancellationToken)
+    {
+        if (targetCourseId == null) return null;
+        // if (string.IsNullOrEmpty(hashedUserId)) return null;
+        // ObjectId? targetCourse = await _collectionCourse.AsQueryable()
+        //     .Where(doc => doc.Id == targetCourseId)
+        //     .Select(doc => doc.Id)
+        //     .FirstOrDefaultAsync(cancellationToken);   
+
+        UpdateDefinition<Course> updateCourse = Builders<Course>.Update
+        .Set(doc => doc.Title, updateCourseDto.Title)
+        .Set(doc => doc.ProfessorsIds, updateCourseDto.ProfessorsId)
+        .Set(doc => doc.Tuition, updateCourseDto.Tuition)
+        .Set(doc => doc.Hours, updateCourseDto.Hours)
+        .Set(doc => doc.HoursPerClass, updateCourseDto.HoursPerClass)
+        .Set(doc => doc.Days, updateCourseDto.Days)
+        .Set(doc => doc.Start, updateCourseDto.Start)
+        .Set(doc => doc.IsStarted, updateCourseDto.IsStarted);
+
+        return await _collectionCourse.UpdateOneAsync<Course>(doc => doc.Id == targetCourseId, updateCourse, null, cancellationToken);
+    }
+
 }
