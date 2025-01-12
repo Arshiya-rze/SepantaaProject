@@ -20,6 +20,6 @@ public class ShowEnrolledCourseDto
     // public string Title { get; init; }
 };
 
-public record UpdateEnrolledDto(
-    int PaidAmount
-);
+public class UpdateEnrolledDto{
+    public int PaidAmount { get; init; }
+}

@@ -173,7 +173,6 @@ public class ManagerRepository : IManagerRepository
         Course? course = await _collectionCourse.Find(doc =>
             doc.Id == targetCoursId).FirstOrDefaultAsync(cancellationToken);
 
-
         if (course is null)
             return null;
         // int numberOfPaymentsLeftCalc  = addEnrolledCourseDto.NumberOfPayments - addEnrolledCourseDto.PaidNumber;
@@ -264,77 +263,72 @@ public class ManagerRepository : IManagerRepository
     //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     // }
 
-    // public async Task<UpdateResult?> UpdateEnrolledCourseAsync(UpdateEnrolledDto updateEnrolledDto, string targetUserName, CancellationToken cancellationToken)
-    // {
-    //     ObjectId? appUserId = await _collectionAppUser.AsQueryable()
-    //         .Where(doc => doc.NormalizedUserName == targetUserName.ToUpper())
-    //         .Select(doc => doc.Id)
-    //         .FirstOrDefaultAsync(cancellationToken);
+    public async Task<UpdateResult?> UpdateEnrolledCourseAsync(UpdateEnrolledDto updateEnrolledDto, string targetUserName, ObjectId targetCoursId, CancellationToken cancellationToken)
+    {
+            var filter = Builders<AppUser>.Filter.And(
+                Builders<AppUser>.Filter.Eq(doc => doc.NormalizedUserName, targetUserName),
+                Builders<AppUser>.Filter.ElemMatch(doc => doc.EnrolledCourses, ec => ec.CourseId == targetCoursId) 
+            ); 
+
+            if (filter is null) 
+                return null;
+            
+            var update = Builders<AppUser>.Update 
+                .Set(u => u.EnrolledCourses[-1].PaidAmount, updateEnrolledDto.PaidAmount); 
+                // .Set("EnrolledCourses.$[e1em].PaidAmount", updateEnrolledDto.PaidAmount);
+            
+            if (update is null) 
+                return null;
+            
+            var result = await _collectionAppUser.UpdateOneAsync(filter, update); 
+            
+            if (result.ModifiedCount == 0) 
+            {
+                 throw new Exception("No matching course found for the user."); 
+            }
+
+            return result;
+
         
-    //     if(appUserId is null)
-    //         return null;
+        // ObjectId? appUserId = await _collectionAppUser.AsQueryable()
+        //     .Where(doc => doc.NormalizedUserName == targetUserName.ToUpper())
+        //     .Select(doc => doc.Id)
+        //     .FirstOrDefaultAsync(cancellationToken);
+        
+        // if(appUserId is null)
+        //     return null;
 
-    //     List<EnrolledCourse> targetEnrolledCourse = await _collectionAppUser.AsQueryable()
-    //         .Where(appUser => appUser.Id == appUserId) 
-    //         .Select(appUser => appUser.EnrolledCourses) 
-    //         .FirstOrDefaultAsync(cancellationToken); 
+        // List<EnrolledCourse> targetEnrolledCourse = await _collectionAppUser.AsQueryable()
+        //     .Where(appUser => appUser.Id == appUserId) 
+        //     .Select(appUser => appUser.EnrolledCourses) 
+        //     .FirstOrDefaultAsync(cancellationToken); 
 
-    //     if (targetEnrolledCourse is null) return null; 
+        // if (targetEnrolledCourse is null) return null; 
 
-    //     // if (updateEnrolledDto >= targetEnrolledCourse) {
+        // // if (updateEnrolledDto >= targetEnrolledCourse) {
 
-    //     // }
-    //     // AppUser appUser = await _collectionAppUser.Find<AppUser>(doc => 
-    //     //     doc.NormalizedUserName == targetUserName.ToUpper()).FirstOrDefaultAsync();
+        // // }
+        // // AppUser appUser = await _collectionAppUser.Find<AppUser>(doc => 
+        // //     doc.NormalizedUserName == targetUserName.ToUpper()).FirstOrDefaultAsync();
 
-    //     int paidNumberCalc = +1;
-    //     int numberOfPaymentsLeft = -1;
-    //     int tuitionRemainder = -updateEnrolledDto.paidAmount ;
+        // int paidNumberCalc = +1;
+        // int numberOfPaymentsLeft = -1;
+        // int tuitionRemainder = -updateEnrolledDto.paidAmount ;
 
-    //     List<EnrolledCourse> enrolledCourse = Mappers.ConvertEnrolledCourseToShowEnrolledDto(updateEnrolledDto, targetEnrolledCourse, paidNumberCalc, numberOfPaymentsLeft, tuitionRemainder);
+        // List<EnrolledCourse> enrolledCourse = Mappers.ConvertEnrolledCourseToShowEnrolledDto(updateEnrolledDto, targetEnrolledCourse, paidNumberCalc, numberOfPaymentsLeft, tuitionRemainder);
 
-    //     // bool isDeleteSuccess = await _photoService.DeletePhotoFromDisk(photo);
-    //     // if (!isDeleteSuccess)
-    //     // {
-    //     //     _logger.LogError("Delete from disk failed.");
-    //     //     return null;
-    //     // }
+        // // bool isDeleteSuccess = await _photoService.DeletePhotoFromDisk(photo);
+        // // if (!isDeleteSuccess)
+        // // {
+        // //     _logger.LogError("Delete from disk failed.");
+        // //     return null;
+        // // }
 
-    //     var update = Builders<AppUser>.Update
-    //         .Set(appUser => appUser.EnrolledCourses, enrolledCourse);
+        // var update = Builders<AppUser>.Update
+        //     .Set(appUser => appUser.EnrolledCourses, enrolledCourse);
 
-    //     return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == appUserId, update, null, cancellationToken);
-    // }
-
-    // public async Task<Lesson> AddLessonAsync(AddLessonDto addLessonDto, string targetUserName, CancellationToken cancellationToken)
-    // {
-    //     ObjectId? memberId = await _collectionAppUser.AsQueryable()
-    //         .Where(doc => doc.UserName == targetUserName)
-    //         .Select(doc => doc.Id)
-    //         .FirstOrDefaultAsync(cancellationToken);
-    //     if (memberId is null) 
-    //         return null;
-
-    //     AppUser? appUser = await GetByIdAsync(memberId, cancellationToken);
-    //     if (appUser is null)
-    //         return null;
-
-    //         // LessonDto lessonDto1;
-
-    //     Lesson lesson;
-
-    //     lesson = Mappers.ConvertLessonDtoToLesson(addLessonDto);
-
-    //     appUser.Lessons.Add(lesson);    
-
-    //     var updatedLesson = Builders<AppUser>.Update
-    //             .Set(doc => doc.Lessons, appUser.Lessons);
-
-    //     UpdateResult result = await _collectionAppUser.UpdateOneAsync<AppUser>(doc => doc.Id == memberId, updatedLesson, null, cancellationToken);
-
-    //     return lesson;
-    // }
-
+        // return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == appUserId, update, null, cancellationToken);
+    }
 
     // public async Task<List<int>> CalculatePayments(AddEnrolledCourseDto addEnrolledCourseDto, Course course)
     // {
