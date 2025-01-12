@@ -21,14 +21,25 @@ public class ShowCourseDto
     public bool IsStarted { get; init; }
 };
 
-public record UpdateCourseDto(
-    string? Title,
-    List<ObjectId>? ProfessorsId,
-    int? Tuition,
-    int? Hours, 
-    int? HoursPerClass,
-    int? Days,
-    DateTime? Start,
-    DateTime? End ,
-    bool? IsStarted
-);
+public class UpdateCourseDto
+{
+    public string? Title { get; init; }  = string.Empty;
+    public List<ObjectId>? ProfessorsIds { get; init;} = [];
+    public int? Tuition { get; init; }
+    public int? Hours { get; init; }
+    public int? HoursPerClass { get; init; }
+    // public int Days { get; init; }
+    public DateTime? Start { get; init; }
+    public bool? IsStarted { get; init; }
+};
+
+// public record UpdateCourseDto(
+//     string? Title,
+//     List<ObjectId>? ProfessorsIds,
+//     int? Tuition,
+//     int? Hours, 
+//     int? HoursPerClass,
+//     // int? Days,
+//     DateTime? Start,
+//     bool? IsStarted
+// );

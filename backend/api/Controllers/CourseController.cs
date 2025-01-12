@@ -55,9 +55,9 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
     [HttpPut("update/{targetCourseId}")]
     public async Task<ActionResult> UpdateCourse(UpdateCourseDto updateCourseDto, ObjectId targetCourseId, CancellationToken cancellationToken)
     {
-        UpdateResult? updateResult = await _courseRepository.UpdateCourseAsync(updateCourseDto, targetCourseId, cancellationToken);
+        UpdateDefinition<Course>? updateResult = await _courseRepository.UpdateCourseAsync(updateCourseDto, targetCourseId, cancellationToken);
 
-        return updateResult is null || !updateResult.IsModifiedCountAvailable
+        return updateResult is null 
             ? BadRequest("Update failed. Try again later.")
             : Ok(new { message = "Course has been updated successfully." });
     }

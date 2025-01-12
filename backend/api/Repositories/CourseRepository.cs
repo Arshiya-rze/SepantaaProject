@@ -65,25 +65,82 @@ public class CourseRepository : ICourseRepository
             paginationParams.PageSize, cancellationToken);
     }
      
-    public async Task<UpdateResult?> UpdateCourseAsync(UpdateCourseDto updateCourseDto, ObjectId targetCourseId, CancellationToken cancellationToken)
+    public async Task<UpdateDefinition<Course>?> UpdateCourseAsync(UpdateCourseDto updateCourseDto, ObjectId targetCourseId, CancellationToken cancellationToken)
     {
-        if (targetCourseId == null) return null;
-        // if (string.IsNullOrEmpty(hashedUserId)) return null;
-        // ObjectId? targetCourse = await _collectionCourse.AsQueryable()
-        //     .Where(doc => doc.Id == targetCourseId)
-        //     .Select(doc => doc.Id)
-        //     .FirstOrDefaultAsync(cancellationToken);   
+        Course? course = await _collectionCourse.Find<Course>(doc => 
+            doc.Id == targetCourseId).FirstOrDefaultAsync(cancellationToken);
 
-        UpdateDefinition<Course> updateCourse = Builders<Course>.Update
-        .Set(doc => doc.Title, updateCourseDto.Title)
-        .Set(doc => doc.ProfessorsIds, updateCourseDto.ProfessorsId)
-        .Set(doc => doc.Tuition, updateCourseDto.Tuition)
-        .Set(doc => doc.Hours, updateCourseDto.Hours)
-        .Set(doc => doc.HoursPerClass, updateCourseDto.HoursPerClass)
-        .Set(doc => doc.Days, updateCourseDto.Days)
-        .Set(doc => doc.Start, updateCourseDto.Start)
-        .Set(doc => doc.IsStarted, updateCourseDto.IsStarted);
+        if (course is null)
+            return null;
 
-        return await _collectionCourse.UpdateOneAsync<Course>(doc => doc.Id == targetCourseId, updateCourse, null, cancellationToken);
+        var updates = new List<UpdateDefinition<Course>>(); 
+
+        if (!string.IsNullOrEmpty(updateCourseDto.Title))
+        {
+            updates.Add(Builders<Course>.Update.Set(c => c.Title, updateCourseDto.Title.ToUpper()));
+        }
+        if (updateCourseDto.ProfessorsIds is not null)
+        {
+            updates.Add(Builders<Course>.Update.Set(c => c.ProfessorsIds, updateCourseDto.ProfessorsIds));
+        }
+        if (updateCourseDto.Tuition.HasValue)
+        {
+            updates.Add(Builders<Course>.Update.Set(c => c.Tuition, updateCourseDto.Tuition)); 
+        } 
+        if (updateCourseDto.Hours.HasValue)
+        {
+            updates.Add(Builders<Course>.Update.Set(c => c.Hours, updateCourseDto.Hours)); 
+        }
+        if (updateCourseDto.HoursPerClass.HasValue)
+        {
+            updates.Add(Builders<Course>.Update.Set(c => c.HoursPerClass, updateCourseDto.HoursPerClass)); 
+        }
+        if (updateCourseDto.Start.HasValue)
+        {
+            updates.Add(Builders<Course>.Update.Set(c => c.Start, updateCourseDto.Start)); 
+        }
+        if (updateCourseDto.IsStarted.HasValue)
+        {
+            updates.Add(Builders<Course>.Update.Set(c => c.IsStarted, updateCourseDto.IsStarted)); 
+        }
+        if (updateCourseDto.Hours.HasValue || updateCourseDto.HoursPerClass.HasValue)
+        {
+            if (updateCourseDto.Hours.HasValue && !updateCourseDto.HoursPerClass.HasValue)
+            {
+                int? daysCalc = updateCourseDto.Hours / course.HoursPerClass;
+                updates.Add(Builders<Course>.Update.Set(c => c.Days, daysCalc)); 
+            }
+            if(!updateCourseDto.Hours.HasValue && updateCourseDto.HoursPerClass.HasValue)
+            {
+                int? daysCalc = course.Hours / updateCourseDto.HoursPerClass;
+                updates.Add(Builders<Course>.Update.Set(c => c.Days, daysCalc)); 
+            }
+            if (updateCourseDto.Hours.HasValue && updateCourseDto.HoursPerClass.HasValue)
+            {
+                int? daysCalc = updateCourseDto.Hours / updateCourseDto.HoursPerClass;
+                updates.Add(Builders<Course>.Update.Set(c => c.Days, daysCalc)); 
+            }
+        }   
+
+        var combinedUpdates = Builders<Course>.Update.Combine(updates); await _collectionCourse.UpdateOneAsync( c => c.Id == targetCourseId, combinedUpdates );
+        return combinedUpdates;
+        // if (targetCourseId == null) return null;
+        // // if (string.IsNullOrEmpty(hashedUserId)) return null;
+        // // ObjectId? targetCourse = await _collectionCourse.AsQueryable()
+        // //     .Where(doc => doc.Id == targetCourseId)
+        // //     .Select(doc => doc.Id)
+        // //     .FirstOrDefaultAsync(cancellationToken);   
+
+        // UpdateDefinition<Course> updateCourse = Builders<Course>.Update
+        // .Set(doc => doc.Title, updateCourseDto.Title)
+        // .Set(doc => doc.ProfessorsIds, updateCourseDto.ProfessorsId)
+        // .Set(doc => doc.Tuition, updateCourseDto.Tuition)
+        // .Set(doc => doc.Hours, updateCourseDto.Hours)
+        // .Set(doc => doc.HoursPerClass, updateCourseDto.HoursPerClass)
+        // .Set(doc => doc.Days, updateCourseDto.Days)
+        // .Set(doc => doc.Start, updateCourseDto.Start)
+        // .Set(doc => doc.IsStarted, updateCourseDto.IsStarted);
+
+        // return await _collectionCourse.UpdateOneAsync<Course>(doc => doc.Id == targetCourseId, updateCourse, null, cancellationToken);
     }
 }
