@@ -21,5 +21,5 @@ public class ShowEnrolledCourseDto
 };
 
 public record UpdateEnrolledDto(
-    int paidAmount
+    int PaidAmount
 );

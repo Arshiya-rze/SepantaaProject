@@ -48,13 +48,13 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    [HttpPost("add-enrolledCourse/{targetUserName}")]
-    public async Task<ActionResult<EnrolledCourse>> AddEnrolledCourse(AddEnrolledCourseDto managerInput, string targetUserName, CancellationToken cancellationToken)
+    [HttpPost("add-enrolledCourse/{targetUserName}/{targetCoursId}")]
+    public async Task<ActionResult<EnrolledCourse>> AddEnrolledCourse(AddEnrolledCourseDto managerInput, string targetUserName, ObjectId targetCoursId, CancellationToken cancellationToken)
     {
         if (targetUserName is null)
             return BadRequest("userName is not foud!");
         
-        EnrolledCourse? enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, cancellationToken);
+        EnrolledCourse? enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, targetCoursId, cancellationToken);
 
         return enrolledCourse is not null
             ? Ok(enrolledCourse)

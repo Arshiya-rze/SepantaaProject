@@ -155,7 +155,7 @@ public class ManagerRepository : IManagerRepository
         return ValidationsExtensions.ValidateObjectId(userId);
     }
 
-    public async Task<EnrolledCourse?> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, CancellationToken cancellationToken)
+    public async Task<EnrolledCourse?> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, ObjectId targetCoursId, CancellationToken cancellationToken)
     {
         // appUser => a1
         AppUser? appUser = await _collectionAppUser.Find(doc =>
@@ -171,7 +171,7 @@ public class ManagerRepository : IManagerRepository
         //     .Select(doc => doc.Id)
         //     .FirstOrDefaultAsync();
         Course? course = await _collectionCourse.Find(doc =>
-            doc.Title == "addEnrolledCourseDto.Title.ToUpper()").FirstOrDefaultAsync(cancellationToken);
+            doc.Id == targetCoursId).FirstOrDefaultAsync(cancellationToken);
 
 
         if (course is null)
