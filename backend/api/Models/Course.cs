@@ -11,7 +11,7 @@ public record Course(
     int Hours, //128h
     int HoursPerClass,
     int Days, // Cal in API
-    DateTime Start, //1 mars 2025
+    DateTime Start, //TODO: Rename to StartOn //  1 mars 2025
     bool IsStarted
 );
 
@@ -35,6 +35,14 @@ public record EnrolledCourse(
     int TuitionRemainder, //6_000_000
     List<Payment> Payments
 );
+
+/*
+    _collection.AsQuarable<AppUser>()
+        .Where(aU => aU.Id == idIn)
+        .SelectMany(aU => aU.EnrolledCourse)
+        .Where(c => c.Id == courseIdIn)
+        .FirstOrDefaule(cancellationToken);
+*/
 
 public record Payment(
     Guid Id,

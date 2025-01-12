@@ -265,29 +265,29 @@ public class ManagerRepository : IManagerRepository
 
     public async Task<UpdateResult?> UpdateEnrolledCourseAsync(UpdateEnrolledDto updateEnrolledDto, string targetUserName, ObjectId targetCoursId, CancellationToken cancellationToken)
     {
-            var filter = Builders<AppUser>.Filter.And(
-                Builders<AppUser>.Filter.Eq(doc => doc.NormalizedUserName, targetUserName),
-                Builders<AppUser>.Filter.ElemMatch(doc => doc.EnrolledCourses, ec => ec.CourseId == targetCoursId) 
-            ); 
+        var filter = Builders<AppUser>.Filter.And(
+            Builders<AppUser>.Filter.Eq(doc => doc.NormalizedUserName, targetUserName),
+            Builders<AppUser>.Filter.ElemMatch(doc => doc.EnrolledCourses, ec => ec.CourseId == targetCoursId) 
+        ); 
 
-            if (filter is null) 
-                return null;
+        if (filter is null) 
+            return null;
             
-            var update = Builders<AppUser>.Update 
-                .Set(u => u.EnrolledCourses[-1].PaidAmount, updateEnrolledDto.PaidAmount); 
-                // .Set("EnrolledCourses.$[e1em].PaidAmount", updateEnrolledDto.PaidAmount);
+        var update = Builders<AppUser>.Update 
+            .Set(u => u.EnrolledCourses[-1].PaidAmount, updateEnrolledDto.PaidAmount); 
+            // .Set("EnrolledCourses.$[e1em].PaidAmount", updateEnrolledDto.PaidAmount);
             
-            if (update is null) 
-                return null;
+        if (update is null) 
+            return null;
             
-            var result = await _collectionAppUser.UpdateOneAsync(filter, update); 
+        var result = await _collectionAppUser.UpdateOneAsync(filter, update); 
             
-            if (result.ModifiedCount == 0) 
-            {
-                 throw new Exception("No matching course found for the user."); 
-            }
+        if (result.ModifiedCount == 0) 
+        {
+            throw new Exception("No matching course found for the user."); 
+        }
 
-            return result;
+        return result;
 
         
         // ObjectId? appUserId = await _collectionAppUser.AsQueryable()

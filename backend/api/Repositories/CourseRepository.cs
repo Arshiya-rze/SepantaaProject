@@ -65,65 +65,33 @@ public class CourseRepository : ICourseRepository
             paginationParams.PageSize, cancellationToken);
     }
      
-    public async Task<UpdateDefinition<Course>?> UpdateCourseAsync(UpdateCourseDto updateCourseDto, ObjectId targetCourseId, CancellationToken cancellationToken)
+    public async Task<bool> UpdateCourseAsync(
+        UpdateCourseDto updateCourseDto, ObjectId targetCourseId, 
+        CancellationToken cancellationToken)
     {
-        Course? course = await _collectionCourse.Find<Course>(doc => 
-            doc.Id == targetCourseId).FirstOrDefaultAsync(cancellationToken);
+        // int calcDays = (int)Math.Ceiling(updateCourseDto.Hours / (double)updateCourseDto.HoursPerClass);
+        ObjectId profId = 190324719021932;
 
-        if (course is null)
-            return null;
+        int calcDays = 10; // 
 
-        var updates = new List<UpdateDefinition<Course>>(); 
+        List<string> names
 
-        if (!string.IsNullOrEmpty(updateCourseDto.Title))
-        {
-            updates.Add(Builders<Course>.Update.Set(c => c.Title, updateCourseDto.Title.ToUpper()));
-        }
-        if (updateCourseDto.ProfessorsIds is not null)
-        {
-            updates.Add(Builders<Course>.Update.Set(c => c.ProfessorsIds, updateCourseDto.ProfessorsIds));
-        }
-        if (updateCourseDto.Tuition.HasValue)
-        {
-            updates.Add(Builders<Course>.Update.Set(c => c.Tuition, updateCourseDto.Tuition)); 
-        } 
-        if (updateCourseDto.Hours.HasValue)
-        {
-            updates.Add(Builders<Course>.Update.Set(c => c.Hours, updateCourseDto.Hours)); 
-        }
-        if (updateCourseDto.HoursPerClass.HasValue)
-        {
-            updates.Add(Builders<Course>.Update.Set(c => c.HoursPerClass, updateCourseDto.HoursPerClass)); 
-        }
-        if (updateCourseDto.Start.HasValue)
-        {
-            updates.Add(Builders<Course>.Update.Set(c => c.Start, updateCourseDto.Start)); 
-        }
-        if (updateCourseDto.IsStarted.HasValue)
-        {
-            updates.Add(Builders<Course>.Update.Set(c => c.IsStarted, updateCourseDto.IsStarted)); 
-        }
-        if (updateCourseDto.Hours.HasValue || updateCourseDto.HoursPerClass.HasValue)
-        {
-            if (updateCourseDto.Hours.HasValue && !updateCourseDto.HoursPerClass.HasValue)
-            {
-                int? daysCalc = updateCourseDto.Hours / course.HoursPerClass;
-                updates.Add(Builders<Course>.Update.Set(c => c.Days, daysCalc)); 
-            }
-            if(!updateCourseDto.Hours.HasValue && updateCourseDto.HoursPerClass.HasValue)
-            {
-                int? daysCalc = course.Hours / updateCourseDto.HoursPerClass;
-                updates.Add(Builders<Course>.Update.Set(c => c.Days, daysCalc)); 
-            }
-            if (updateCourseDto.Hours.HasValue && updateCourseDto.HoursPerClass.HasValue)
-            {
-                int? daysCalc = updateCourseDto.Hours / updateCourseDto.HoursPerClass;
-                updates.Add(Builders<Course>.Update.Set(c => c.Days, daysCalc)); 
-            }
-        }   
+        names.Add("Arshia");
 
-        var combinedUpdates = Builders<Course>.Update.Combine(updates); await _collectionCourse.UpdateOneAsync( c => c.Id == targetCourseId, combinedUpdates );
-        return combinedUpdates;
+        UpdateDefinition<Course> updatedCourse = Builders<Course>.Update
+            .Set(c => c.Title, updateCourseDto.Title)
+            .Set(c => c.Tuition, updateCourseDto.Tuition)
+            .Set(c => c.Hours, updateCourseDto.Hours)
+            .Set(c => c.HoursPerClass, updateCourseDto.HoursPerClass)
+            .Set(c => c.Days, calcDays)
+            .Set(c => c.Start, updateCourseDto.Start)
+            .Set(c => c.IsStarted, updateCourseDto.IsStarted);
+        
+        UpdateResult updateResult = await _collectionCourse.UpdateOneAsync(
+            doc => doc.Id == targetCourseId, updatedCourse, null, cancellationToken
+        );
+
+        return updateResult.ModifiedCount == 1;
         // if (targetCourseId == null) return null;
         // // if (string.IsNullOrEmpty(hashedUserId)) return null;
         // // ObjectId? targetCourse = await _collectionCourse.AsQueryable()

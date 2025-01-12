@@ -12,7 +12,7 @@ public class ShowCourseDto
 {
     public string Id { get; init; } = string.Empty;
     public string Title { get; init; }  = string.Empty;
-    public List<ObjectId> ProfessorsId { get; init;} = [];
+    public List<ObjectId> ProfessorsIds { get; init;} = [];
     public int Tuition { get; init; }
     public int Hourse { get; init; }
     public int HoursPerClass { get; init; }
