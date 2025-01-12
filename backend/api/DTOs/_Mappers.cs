@@ -1,5 +1,3 @@
-using AspNetCore.Identity.MongoDbCore.Models;
-
 namespace api.DTOs;
 
 public static class Mappers
@@ -77,15 +75,15 @@ public static class Mappers
         };
     }
 
-    public static Course ConvertAddCourseDtoToCourse(AddCourseDto managerInput)
+    public static Course ConvertAddCourseDtoToCourse(AddCourseDto managerInput, int daysCalc)
     {
         return new Course(
             Title: managerInput.Title.ToUpper(),
             ProfessorsIds: [],
             Tuition: managerInput.Tuition,
             Hours: managerInput.Hours,
-            HoursPerClass: managerInput.HoursPerClass, // TODO: Calc in backend
-            Days: 0,
+            HoursPerClass: managerInput.HoursPerClass,
+            Days: daysCalc,
             Start: managerInput.Start,
             IsStarted: true
         );
@@ -101,7 +99,7 @@ public static class Mappers
             Tuition = course.Tuition,
             Hourse = course.Hours,
             HoursPerClass = course.HoursPerClass,
-            Days = 0,
+            Days = course.Days,
             Start = course.Start,
             IsStarted = course.IsStarted
         };

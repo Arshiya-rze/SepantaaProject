@@ -1,4 +1,6 @@
 
+using api.Helpers;
+
 namespace api.Repositories;
 
 public class CourseRepository : ICourseRepository
@@ -35,20 +37,10 @@ public class CourseRepository : ICourseRepository
     
     public async Task<ShowCourseDto> AddCourseAsync(AddCourseDto managerInput, CancellationToken cancellationToken)
     {
-        // ObjectId teacherId = await GetObjectIdByLessonAsync(managerInput.Title, cancellationToken);
+        int daysCalc = managerInput.Hours / managerInput.HoursPerClass;
+        // if (daysCalc == 0) return null;
 
-        // ObjectId teacherId = await _collectionCourse.AsQueryable()
-        //     .Where(doc => doc.Title == managerInput.Title)
-        //     .Select(doc => doc.Id)
-        //     .AnyAsync(cancellationToken); 
-
-        // if (studentId is null) return null;
-
-        // AppUser? appUser = await GetByIdAsync(studentId.Value, cancellationToken);
-        // if (appUser is null)
-        //     return null;
-
-        Course? course = Mappers.ConvertAddCourseDtoToCourse(managerInput);
+        Course? course = Mappers.ConvertAddCourseDtoToCourse(managerInput, daysCalc);
 
         if (_collectionCourse is not null)
         {
@@ -65,25 +57,14 @@ public class CourseRepository : ICourseRepository
         return null;
     }
 
-    public async Task<IEnumerable<ShowCourseDto>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<PagedList<Course>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
     {
+        IMongoQueryable<Course> query = _collectionCourse.AsQueryable();
 
-      IEnumerable<Course> courses =  await _collectionCourse
-            .Find<Course>(new BsonDocument())
-            .ToListAsync(cancellationToken);
-
-        if(courses.Count() == 0) return [];
-
-        List<ShowCourseDto> courseDtos = [];
-
-        foreach (Course course in courses)
-        {
-            courseDtos.Add(Mappers.ConvertCourseToShowCourseDto(course));
-        }
-
-        return courseDtos;
-    } 
-
+        return await PagedList<Course>.CreatePagedListAsync(query, paginationParams.PageNumber,
+            paginationParams.PageSize, cancellationToken);
+    }
+     
     public async Task<UpdateResult?> UpdateCourseAsync(UpdateCourseDto updateCourseDto, ObjectId targetCourseId, CancellationToken cancellationToken)
     {
         if (targetCourseId == null) return null;
@@ -105,5 +86,4 @@ public class CourseRepository : ICourseRepository
 
         return await _collectionCourse.UpdateOneAsync<Course>(doc => doc.Id == targetCourseId, updateCourse, null, cancellationToken);
     }
-
 }

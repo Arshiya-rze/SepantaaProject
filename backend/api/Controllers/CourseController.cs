@@ -1,3 +1,6 @@
+using api.Helpers;
+using api.Models.Helpers;
+
 namespace api.Controllers;
 
 [Authorize(Policy = "RequiredManagerRole")]
@@ -17,13 +20,36 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ShowCourseDto>>> GetAll(CancellationToken cancellationToken) 
+    public async Task<ActionResult<IEnumerable<ShowCourseDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken) 
     {
-        IEnumerable<ShowCourseDto> sCD = await _courseRepository.GetAllAsync(cancellationToken);
+        PagedList<Course> pagedCourses = await _courseRepository.GetAllAsync(paginationParams, cancellationToken);
 
-        if(sCD.Count() == 0) return NoContent();
+        if (pagedCourses.Count == 0) 
+            return NoContent();
 
-        return Ok(sCD);
+        PaginationHeader paginationHeader = new(
+            CurrentPage: pagedCourses.CurrentPage,
+            ItemsPerPage: pagedCourses.PageSize,
+            TotalItems: pagedCourses.TotalItems,
+            TotalPages: pagedCourses.TotalPages
+        );
+
+        Response.AddPaginationHeader(paginationHeader);
+
+        // string? userIdHashed = User.GetHashedUserId();
+
+        // ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
+
+        // if (userId is null) return Unauthorized("You are unauthorized. Login again.");
+
+        List<ShowCourseDto> showCourseDtos = [];
+
+        foreach (Course course in pagedCourses)
+        {
+            showCourseDtos.Add(Mappers.ConvertCourseToShowCourseDto(course));
+        }
+
+        return showCourseDtos;
     }
 
     [HttpPut("update/{targetCourseId}")]
