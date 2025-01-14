@@ -25,7 +25,7 @@ public record Course(
 
 public record EnrolledCourse(
     // Guid Id,
-    ObjectId CourseId,
+    string CourseId,
     int CourseTuition, //6_000_000t
     int NumberOfPayments, //4
     int PaidNumber, //1
