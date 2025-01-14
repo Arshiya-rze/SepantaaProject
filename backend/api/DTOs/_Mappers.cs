@@ -107,7 +107,7 @@ public static class Mappers
 
     public static EnrolledCourse ConvertAddEnrolledCourseDtoToEnrolledCourse
         (AddEnrolledCourseDto managerInput, Course course,
-            int paymentPerMonthCalc, int tuitionReminderCalc, int paidNumberCalc
+            int paymentPerMonthCalc, int tuitionReminderCalc
         ) 
     {
         return new EnrolledCourse(
@@ -115,7 +115,7 @@ public static class Mappers
             CourseId: course.Id.ToString(), //13213213ddfdf
             CourseTuition: course.Tuition, //6_000_000
             NumberOfPayments: managerInput.NumberOfPayments, //4
-            PaidNumber: paidNumberCalc, // TODO: calculate paiedNumber in backend 
+            PaidNumber: 0, // TODO: calculate paiedNumber in backend 
             NumberOfPaymentsLeft: managerInput.NumberOfPayments, // 4 =>methodi ke sakhte mishe dar repo
             PaymentPerMonth: paymentPerMonthCalc, //2_000_000
             PaidAmount: managerInput.PaidAmount, //0

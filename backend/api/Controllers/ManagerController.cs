@@ -108,10 +108,10 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         return !users.Any() ? NoContent() : Ok(users);
     }
 
-    [HttpPut("update-enrolledCourse/{targetUserName}/{targetCoursId}")]
-    public async Task<ActionResult> UpdateEnrolledCourse(UpdateEnrolledDto updateEnrolledDto, string targetUserName, ObjectId targetCoursId, CancellationToken cancellationToken)
+    [HttpPut("update-enrolledCourse/{targetAppUserUserName}/{targetCourseId}")]
+    public async Task<ActionResult> UpdateEnrolledCourse(UpdateEnrolledDto updateEnrolledDto, string targetAppUserUserName, string targetCourseId, CancellationToken cancellationToken)
     {
-        UpdateResult? updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetUserName, targetCoursId, cancellationToken);
+        UpdateResult? updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetAppUserUserName, targetCourseId, cancellationToken);
 
         return updateResult is null || !updateResult.IsModifiedCountAvailable
             ? BadRequest("Update failed. Try again later.")

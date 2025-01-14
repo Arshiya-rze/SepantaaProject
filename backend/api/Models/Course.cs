@@ -36,14 +36,6 @@ public record EnrolledCourse(
     List<Payment> Payments
 );
 
-/*
-    _collection.AsQuarable<AppUser>()
-        .Where(aU => aU.Id == idIn)
-        .SelectMany(aU => aU.EnrolledCourse)
-        .Where(c => c.Id == courseIdIn)
-        .FirstOrDefaule(cancellationToken);
-*/
-
 public record Payment(
     Guid Id,
     ObjectId CourseId,

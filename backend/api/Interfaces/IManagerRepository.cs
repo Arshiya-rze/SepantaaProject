@@ -11,6 +11,5 @@ public interface IManagerRepository
     public Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync();
     public Task<EnrolledCourse> AddEnrolledCourseAsync(AddEnrolledCourseDto managerInput, string targetUserName, ObjectId targetCoursId, CancellationToken cancellationToken);
     // public Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken);
-    public Task<UpdateResult?> UpdateEnrolledCourseAsync(UpdateEnrolledDto updateEnrolledDto, string targetUserName, ObjectId targetCoursId, CancellationToken cancellationToken);
-    // public Task<Lesson> AddLessonAsync(AddLessonDto addLessonDto, string targetUserName, CancellationToken cancellationToken);
+    public Task<UpdateResult?> UpdateEnrolledCourseAsync(UpdateEnrolledDto updateEnrolledDto, string targetAppUserUserName, string targetCourseId, CancellationToken cancellationToken);
 }
