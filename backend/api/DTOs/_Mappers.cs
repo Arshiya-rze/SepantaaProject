@@ -95,7 +95,7 @@ public static class Mappers
         {
             Id = course.Id.ToString(),
             Title = course.Title,
-            ProfessorsId = course.ProfessorsIds,
+            ProfessorsIds = course.ProfessorsIds,
             Tuition = course.Tuition,
             Hourse = course.Hours,
             HoursPerClass = course.HoursPerClass,

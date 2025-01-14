@@ -9,7 +9,7 @@ public record Course(
     List<ObjectId> ProfessorsIds, //132342344
     int Tuition, //6_000_000t
     int Hours, //128h
-    int HoursPerClass,
+    Double HoursPerClass,
     int Days, // Cal in API
     DateTime Start, //TODO: Rename to StartOn //  1 mars 2025
     bool IsStarted

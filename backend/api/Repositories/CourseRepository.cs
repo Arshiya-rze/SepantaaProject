@@ -37,10 +37,11 @@ public class CourseRepository : ICourseRepository
     
     public async Task<ShowCourseDto> AddCourseAsync(AddCourseDto managerInput, CancellationToken cancellationToken)
     {
-        int daysCalc = managerInput.Hours / managerInput.HoursPerClass;
+        // int daysCalc = managerInput.Hours / managerInput.HoursPerClass;
+        int calcDays = (int)Math.Ceiling(managerInput.Hours / managerInput.HoursPerClass);
         // if (daysCalc == 0) return null;
 
-        Course? course = Mappers.ConvertAddCourseDtoToCourse(managerInput, daysCalc);
+        Course? course = Mappers.ConvertAddCourseDtoToCourse(managerInput, calcDays);
 
         if (_collectionCourse is not null)
         {
@@ -69,17 +70,16 @@ public class CourseRepository : ICourseRepository
         UpdateCourseDto updateCourseDto, ObjectId targetCourseId, 
         CancellationToken cancellationToken)
     {
-        // int calcDays = (int)Math.Ceiling(updateCourseDto.Hours / (double)updateCourseDto.HoursPerClass);
-        ObjectId profId = 190324719021932;
+        int? calcDays = (int)Math.Ceiling(updateCourseDto.Hours / updateCourseDto.HoursPerClass);
 
-        int calcDays = 10; // 
-
-        List<string> names
-
-        names.Add("Arshia");
+        ObjectId professorId = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.NormalizedUserName == updateCourseDto.ProfessorUserName.ToUpper())
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
 
         UpdateDefinition<Course> updatedCourse = Builders<Course>.Update
-            .Set(c => c.Title, updateCourseDto.Title)
+            .AddToSet(c => c.ProfessorsIds, professorId)
+            .Set(c => c.Title, updateCourseDto.Title?.ToUpper())
             .Set(c => c.Tuition, updateCourseDto.Tuition)
             .Set(c => c.Hours, updateCourseDto.Hours)
             .Set(c => c.HoursPerClass, updateCourseDto.HoursPerClass)
@@ -92,23 +92,5 @@ public class CourseRepository : ICourseRepository
         );
 
         return updateResult.ModifiedCount == 1;
-        // if (targetCourseId == null) return null;
-        // // if (string.IsNullOrEmpty(hashedUserId)) return null;
-        // // ObjectId? targetCourse = await _collectionCourse.AsQueryable()
-        // //     .Where(doc => doc.Id == targetCourseId)
-        // //     .Select(doc => doc.Id)
-        // //     .FirstOrDefaultAsync(cancellationToken);   
-
-        // UpdateDefinition<Course> updateCourse = Builders<Course>.Update
-        // .Set(doc => doc.Title, updateCourseDto.Title)
-        // .Set(doc => doc.ProfessorsIds, updateCourseDto.ProfessorsId)
-        // .Set(doc => doc.Tuition, updateCourseDto.Tuition)
-        // .Set(doc => doc.Hours, updateCourseDto.Hours)
-        // .Set(doc => doc.HoursPerClass, updateCourseDto.HoursPerClass)
-        // .Set(doc => doc.Days, updateCourseDto.Days)
-        // .Set(doc => doc.Start, updateCourseDto.Start)
-        // .Set(doc => doc.IsStarted, updateCourseDto.IsStarted);
-
-        // return await _collectionCourse.UpdateOneAsync<Course>(doc => doc.Id == targetCourseId, updateCourse, null, cancellationToken);
     }
 }

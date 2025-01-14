@@ -4,7 +4,7 @@ public record AddCourseDto(
     string Title,
     int Tuition, //6_000_000t
     int Hours, //128h
-    int HoursPerClass,
+    double HoursPerClass,
     DateTime Start //1 mars 2025
 );
 
@@ -15,7 +15,7 @@ public class ShowCourseDto
     public List<ObjectId> ProfessorsIds { get; init;} = [];
     public int Tuition { get; init; }
     public int Hourse { get; init; }
-    public int HoursPerClass { get; init; }
+    public double HoursPerClass { get; init; }
     public int Days { get; init; }
     public DateTime Start { get; init; }
     public bool IsStarted { get; init; }
@@ -23,14 +23,13 @@ public class ShowCourseDto
 
 public class UpdateCourseDto
 {
-    public string? Title { get; init; }  = string.Empty;
-    public List<ObjectId>? ProfessorsIds { get; init;} = [];
-    public int? Tuition { get; init; }
-    public int? Hours { get; init; }
-    public int? HoursPerClass { get; init; }
-    // public int Days { get; init; }
-    public DateTime? Start { get; init; }
-    public bool? IsStarted { get; init; }
+    public string Title { get; init; }  = string.Empty;
+    public string ProfessorUserName { get; init;} = string.Empty;
+    public int Tuition { get; init; }
+    public int Hours { get; init; }
+    public double HoursPerClass { get; init; }
+    public DateTime Start { get; init; }
+    public bool IsStarted { get; init; }
 };
 
 // public record UpdateCourseDto(
