@@ -17,6 +17,7 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.IdentityModel.Tokens;
 global using Microsoft.AspNetCore.Authorization;
 global using System.Security.Claims;
+global using api.Helpers;
 // global using image_processing.Interfaces;
 // global using image_processing.Services;
 // global using image_processing.Helpers;

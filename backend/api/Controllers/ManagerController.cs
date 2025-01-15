@@ -1,9 +1,11 @@
+using api.Models.Helpers;
+
 namespace api.Controllers;
 
 [Authorize(Policy = "RequiredManagerRole")]
 public class ManagerController(IManagerRepository _managerRepository, ITokenService _tokenService) : BaseApiController
 {
-    [HttpPost("add-secretary")]
+    [HttpPost("create-secretary")]
     public async Task<ActionResult<LoggedInDto>> CreateSecretary(RegisterDto managerInput, CancellationToken cancellationToken)
     {
         if (managerInput.Password != managerInput.ConfirmPassword)
@@ -18,7 +20,7 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    [HttpPost("add-student")]
+    [HttpPost("create-student")]
     public async Task<ActionResult<LoggedInDto>> CreateStudent(RegisterDto managerInput, CancellationToken cancellationToken)
     {
         if (managerInput.Password != managerInput.ConfirmPassword)
@@ -33,7 +35,7 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             : BadRequest("Registration has failed. Try again or contact the support.");
     }
 
-    [HttpPost("add-teacher")]
+    [HttpPost("create-teacher")]
     public async Task<ActionResult<LoggedInDto>> CreateTeacher(RegisterDto managerInput, CancellationToken cancellationToken)
     {
         if (managerInput.Password != managerInput.ConfirmPassword)
@@ -46,6 +48,47 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             : loggedInDto.Errors.Count != 0
             ? BadRequest(loggedInDto.Errors)
             : BadRequest("Registration has failed. Try again or contact the support.");
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
+    {
+        PagedList<AppUser> pagedAppUsers = await _managerRepository.GetAllAsync(paginationParams, cancellationToken);
+
+        if (pagedAppUsers.Count == 0)
+            return NoContent();
+
+        PaginationHeader paginationHeader = new(
+            CurrentPage: pagedAppUsers.CurrentPage,
+            ItemsPerPage: pagedAppUsers.PageSize,
+            TotalItems: pagedAppUsers.TotalItems,
+            TotalPages: pagedAppUsers.TotalPages
+        );
+
+        Response.AddPaginationHeader(paginationHeader);
+
+        string? userIdHashed = User.GetHashedUserId();
+
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
+
+        if (userId is null) return Unauthorized("You are unauthorized. Login again.");
+
+        List<MemberDto> memberDtos = [];
+
+        foreach (AppUser appUser in pagedAppUsers)
+        {
+            memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
+        }
+
+        return memberDtos;
+    }
+
+    [HttpGet("users-with-roles")]
+    public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> UsersWithRoles()
+    {
+        IEnumerable<UserWithRoleDto> users = await _managerRepository.GetUsersWithRolesAsync();
+
+        return !users.Any() ? NoContent() : Ok(users);
     }
 
     [HttpPost("add-enrolledCourse/{targetUserName}/{targetCoursId}")]
@@ -74,60 +117,13 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         : Ok(new { message = "Delete member successfull" });
     }
 
-    [HttpGet("users-with-roles")]
-    public async Task<ActionResult<IEnumerable<UserWithRoleDto>>> UsersWithRoles()
+    [HttpPut("update-enrolledCourse/{appUserId}/{targetCourseId}")]
+    public async Task<ActionResult> UpdateEnrolledCourse(UpdateEnrolledDto updateEnrolledDto, string appUserId, string targetCourseId, CancellationToken cancellationToken)
     {
-        // ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
-
-        // if (userId is null)
-        //     return Unauthorized("You are not logged in. Login in again.");
-
-        // paginationParams.UserId = userId;
-
-        // PagedList<AppUser> pagedAppUsers = await _managerRepository.GetAllAsync(paginationParams, cancellationToken);
-
-        // if (pagedAppUsers.Count == 0) return NoContent();
-
-        // Response.AddPaginationHeader(new(
-        //     pagedAppUsers.CurrentPage,
-        //     pagedAppUsers.PageSize,
-        //     pagedAppUsers.TotalItems,
-        //     pagedAppUsers.TotalPages
-        // ));
-
-        // List<UserWithRoleDto> userWithRoleDtos = [];
-
-        // foreach (AppUser appUser in pagedAppUsers)
-        // {
-        //     userWithRoleDtos.Add(Mappers.ConvertAppUserToUserWithRoleDto(appUser));
-        // }
-
-        // return userWithRoleDtos;
-        IEnumerable<UserWithRoleDto> users = await _managerRepository.GetUsersWithRolesAsync();
-
-        return !users.Any() ? NoContent() : Ok(users);
-    }
-
-    [HttpPut("update-enrolledCourse/{targetAppUserUserName}/{targetCourseId}")]
-    public async Task<ActionResult> UpdateEnrolledCourse(UpdateEnrolledDto updateEnrolledDto, string targetAppUserUserName, string targetCourseId, CancellationToken cancellationToken)
-    {
-        UpdateResult? updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetAppUserUserName, targetCourseId, cancellationToken);
+        UpdateResult? updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, appUserId, targetCourseId, cancellationToken);
 
         return updateResult is null || !updateResult.IsModifiedCountAvailable
             ? BadRequest("Update failed. Try again later.")
             : Ok(new { message = "EnrolledCourse updated successfully" });
     }
-
-    // [HttpPost("add-lesson/{targetUserName}")]
-    // public async Task<ActionResult<Lesson>> AddLesson(AddLessonDto addLessonDto, string targetUserName, CancellationToken cancellationToken)
-    // {
-    //     if (addLessonDto is null)
-    //         return BadRequest("Lesson is empty.");
-
-    //     Lesson? lesson = await _managerRepository.AddLessonAsync(addLessonDto, targetUserName, cancellationToken);
-
-    //     return lesson is null
-    //         ? BadRequest("somthing went wrong please try again")
-    //         : lesson;
-    // }
 }

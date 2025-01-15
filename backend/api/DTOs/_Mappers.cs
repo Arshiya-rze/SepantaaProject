@@ -38,7 +38,6 @@ public static class Mappers
             LastName: appUser.LastName,
             PhoneNum: appUser.PhoneNum,
             Gender: appUser.Gender,
-            // Titles: appUser.Titles,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
             EnrolledCourses: appUser.EnrolledCourses
         );

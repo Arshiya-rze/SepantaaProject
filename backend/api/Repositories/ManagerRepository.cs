@@ -155,6 +155,34 @@ public class ManagerRepository : IManagerRepository
         return ValidationsExtensions.ValidateObjectId(userId);
     }
 
+    public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
+    {
+        IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable();
+
+        return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    }
+
+    public async Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync()
+    {
+        List<UserWithRoleDto> usersWithRoles = [];
+
+        IEnumerable<AppUser> appUsers = _userManager.Users;
+
+        foreach (AppUser appUser in appUsers)
+        {
+            IEnumerable<string> roles = await _userManager.GetRolesAsync(appUser);
+
+            usersWithRoles.Add(
+                new UserWithRoleDto(
+                    UserName: appUser.UserName!,
+                    Roles: roles
+                )
+            );
+        }
+
+        return usersWithRoles;
+    }
+
     public async Task<EnrolledCourse?> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, ObjectId targetCoursId, CancellationToken cancellationToken)
     {
         // appUser => a1
@@ -213,65 +241,14 @@ public class ManagerRepository : IManagerRepository
         // }
     }
 
-    public async Task<DeleteResult?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken)
-    {
-        ObjectId userId = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.UserName == targetMemberUserName)
-            .Select(doc => doc.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        AppUser? appUser = await GetByIdAsync(userId, cancellationToken);
-
-        if (appUser is null)
-            return null;
-
-        return await _collectionAppUser.DeleteOneAsync<AppUser>(appUser => appUser.Id == userId, null, cancellationToken);
-    }
-
-    public async Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync()
-    {
-        List<UserWithRoleDto> usersWithRoles = [];
-
-        IEnumerable<AppUser> appUsers = _userManager.Users;
-
-        foreach (AppUser appUser in appUsers)
-        {
-            IEnumerable<string> roles = await _userManager.GetRolesAsync(appUser);
-
-            usersWithRoles.Add(
-                new UserWithRoleDto(
-                    UserName: appUser.UserName!,
-                    Roles: roles
-                )
-            );
-        }
-
-        return usersWithRoles;
-    }
-
-    // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
-    // {
-        
-    //     IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable();
-
-    //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
-    // }
-
     public async Task<UpdateResult?> UpdateEnrolledCourseAsync
-        (UpdateEnrolledDto updateEnrolledDto, string targetAppUserUserName,
+        (
+            UpdateEnrolledDto updateEnrolledDto, string appUserId,
             string targetCourseId, CancellationToken cancellationToken
         )
     {
-        ObjectId? appUserId = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.NormalizedUserName == targetAppUserUserName.ToUpper())
-            .Select(doc => doc.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-        
-        if (appUserId is null)
-            return null;
-
         EnrolledCourse? enrolledCourse = await _collectionAppUser.AsQueryable<AppUser>()
-            .Where(appUser => appUser.NormalizedUserName == targetAppUserUserName.ToUpper())
+            .Where(appUser => appUser.Id.ToString() == appUserId)
             .SelectMany(appUser => appUser.EnrolledCourses)
             .Where(doc => doc.CourseId == targetCourseId)
             .FirstOrDefaultAsync(cancellationToken);
@@ -313,28 +290,28 @@ public class ManagerRepository : IManagerRepository
                     
             // Remove the old enrolled course
             var result = await _collectionAppUser.UpdateOneAsync<AppUser>(
-                u => u.Id == appUserId, update);
+                u => u.Id.ToString() == appUserId, update);
 
             // Add the updated enrolled course
             if (result.ModifiedCount > 0)
             {
                 var pushUpdate = Builders<AppUser>.Update.Push(u => u.EnrolledCourses, newEnrolledCourse);
-                return await _collectionAppUser.UpdateOneAsync(u => u.Id == appUserId, pushUpdate);
+                return await _collectionAppUser.UpdateOneAsync(u => u.Id.ToString() == appUserId, pushUpdate);
             }
         }
 
         if (updateEnrolledDto.PaidAmount < enrolledCourse.PaymentPerMonth)
         {
-            // int calcPaidNumber = 0;
             int calcNumberOfPaymentsLeft = enrolledCourse.NumberOfPaymentsLeft - enrolledCourse.PaidNumber;
             int calcTuitionReminder = enrolledCourse.TuitionRemainder - updateEnrolledDto.PaidAmount;
+            // int calcPaidNumber = 0;
 
             Payment newPayment = new Payment(
                 Id: Guid.NewGuid(),
                 CourseId: new ObjectId(targetCourseId),
                 Amount: updateEnrolledDto.PaidAmount,
                 PaidOn: DateTime.UtcNow,
-                Method: updateEnrolledDto.Method
+                Method: updateEnrolledDto.Method.ToUpper()
             );
 
             var updatePayments = enrolledCourse.Payments.Append(newPayment).ToList();
@@ -356,67 +333,38 @@ public class ManagerRepository : IManagerRepository
                     
             // Remove the old enrolled course
             var result = await _collectionAppUser.UpdateOneAsync<AppUser>(
-                u => u.Id == appUserId, update);
+                u => u.Id.ToString() == appUserId, update);
 
             // Add the updated enrolled course
             if (result.ModifiedCount > 0)
             {
                 var pushUpdate = Builders<AppUser>.Update.Push(u => u.EnrolledCourses, newEnrolledCourse);
-                return await _collectionAppUser.UpdateOneAsync(u => u.Id == appUserId, pushUpdate);
+                return await _collectionAppUser.UpdateOneAsync(u => u.Id.ToString() == appUserId, pushUpdate);
             }
-
-            // Add the new course
-            // var update = Builders<AppUser>.Update.Push(u => u.EnrolledCourses, newEnrolledCourse);
-            // return await _collectionAppUser.UpdateOneAsync(u => u.Id == appUserId, update);
         }
-        
+
         return null;
-        
-        // EnrolledCourse? enrolledCourse = await _collectionAppUser.AsQueryable<AppUser>()
-        //     .Where(appUser => appUser.Id.ToString() == targetAppUserId)
-        //     .SelectMany(appUser => appUser.EnrolledCourses)
-        //     .Where(doc => doc.CourseId == targetCoursId)
-        //     .FirstOrDefaultAsync(cancellationToken);
-        
-        // if (enrolledCourse is null)
-        //     return null;
-
-        // if (updateEnrolledDto.PaidAmount >= enrolledCourse.PaymentPerMonth)
-        // {
-        //     int calcPaidNumber = +1;
-        //     int calcNumberOfPaymentsLeft = enrolledCourse.NumberOfPaymentsLeft - calcPaidNumber;
-        //     int calcTuitionReminder = enrolledCourse.TuitionRemainder - updateEnrolledDto.PaidAmount;
-
-        //     UpdateDefinition<EnrolledCourse> updatedEnrolledCourse = Builders<EnrolledCourse>.Update
-        //         .Set(c => c.PaidAmount, updateEnrolledDto.PaidAmount)
-        //         .Set(c => c.PaidNumber, calcPaidNumber)
-        //         .Set(c => c.NumberOfPaymentsLeft, calcNumberOfPaymentsLeft)
-        //         .Set(c => c.TuitionRemainder, calcTuitionReminder);
-            
-        //     UpdateResult updateResult = await _collectionAppUser.UpdateOneAsync(
-        //         doc => doc.Id.ToString() == targetAppUserId, updatedEnrolledCourse, null, cancellationToken
-        //     );
-
-        //     return updateResult.ModifiedCount == 1;
-        // }
-
-        // if (updateEnrolledDto.PaidAmount < enrolledCourse.PaymentPerMonth)
-        // {
-        //     // int calcPaidNumber = 0;
-        //     int calcNumberOfPaymentsLeft = enrolledCourse.NumberOfPaymentsLeft - enrolledCourse.PaidNumber;
-        //     int calcTuitionReminder = enrolledCourse.TuitionRemainder - updateEnrolledDto.PaidAmount;
-
-        //     UpdateDefinition<EnrolledCourse> updatedEnrolledCourse = Builders<EnrolledCourse>.Update
-        //         .Set(c => c.PaidAmount, updateEnrolledDto.PaidAmount)
-        //         // .Set(c => c.PaidNumber, calcPaidNumber)
-        //         .Set(c => c.NumberOfPaymentsLeft, calcNumberOfPaymentsLeft)
-        //         .Set(c => c.TuitionRemainder, calcTuitionReminder);
-            
-        //     UpdateResult updateResult = await _collectionAppUser.UpdateOneAsync(
-        //         doc => doc.Id.ToString() == targetAppUserId, updatedEnrolledCourse, null, cancellationToken
-        //     );
-
-        //     return updateResult.ModifiedCount == 1;
-        // }
     }
+
+    public async Task<DeleteResult?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken)
+    {
+        ObjectId userId = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.UserName == targetMemberUserName)
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        AppUser? appUser = await GetByIdAsync(userId, cancellationToken);
+
+        if (appUser is null)
+            return null;
+
+        return await _collectionAppUser.DeleteOneAsync<AppUser>(appUser => appUser.Id == userId, null, cancellationToken);
+    }
+    // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
+    // {
+        
+    //     IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable();
+
+    //     return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    // }
 }

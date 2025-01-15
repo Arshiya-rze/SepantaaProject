@@ -19,13 +19,6 @@ public class MemberRepository : IMemberRepository
     }
     #endregion Constructor
 
-    public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
-    {
-        IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable();
-
-        return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
-    }
-
     // public async Task<Attendence[]> FindByUserIdAsync(AttendenceParams attendenceParams, CancellationToken cancellationToken)
     // {
     //     Attendence attendence[] = await _collectionAttendence.Find<Attendence>(doc

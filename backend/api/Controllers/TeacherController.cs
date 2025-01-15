@@ -3,18 +3,6 @@ namespace api.Controllers;
 [Authorize(Policy = "RequiredTeacherRole")]   
 public class TeacherController(ITeacherRepository _teacherRepository, ITokenService _tokenService) : BaseApiController
 {
-    [HttpPost("add-attendence")]
-    public async Task<ActionResult<ShowStudentStatusDto>> Add(AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
-    {
-        if (teacherInput.UserName is null) return BadRequest("یوزرنیم خالی است.");
-
-        ShowStudentStatusDto? showStudentStatusDto = await _teacherRepository.AddAsync(teacherInput, cancellationToken);
-
-        if (teacherInput.AbsentOrPresent is null) return null;
-
-        return showStudentStatusDto;
-    }
-
     [HttpGet("get-students")]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll(CancellationToken cancellationToken)
     {
@@ -52,25 +40,37 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         return memberDtos;
     }
 
-    [HttpGet("get-titles")]
-    public async Task<ActionResult<List<EnrolledCourse>>> GetTitle(CancellationToken cancellationToken)
+    [HttpPost("add-attendence")]
+    public async Task<ActionResult<ShowStudentStatusDto>> Add(AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
     {
-        string? token = null; 
-        
-        bool isTokenValid = HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
+        if (teacherInput.UserName is null) return BadRequest("یوزرنیم خالی است.");
 
-        if (isTokenValid)
-            token = authHeader.ToString().Split(' ').Last();
+        ShowStudentStatusDto? showStudentStatusDto = await _teacherRepository.AddAsync(teacherInput, cancellationToken);
 
-        if (string.IsNullOrEmpty(token))
-            return Unauthorized("Token is expired or invalid. Login again.");
+        if (teacherInput.AbsentOrPresent is null) return null;
 
-        string? hashedUserId = User.GetHashedUserId();
-        if (string.IsNullOrEmpty(hashedUserId))
-            return BadRequest("No user was found with this user Id.");
-
-        List<EnrolledCourse>? enrolledCourses = await _teacherRepository.GetTitleAsync(hashedUserId, token, cancellationToken);
-
-        return enrolledCourses is null ? Unauthorized("User is logged out or unauthorized. Login again.") : enrolledCourses;
+        return showStudentStatusDto;
     }
+
+    // [HttpGet("get-titles")]
+    // public async Task<ActionResult<List<EnrolledCourse>>> GetTitle(CancellationToken cancellationToken)
+    // {
+    //     string? token = null; 
+        
+    //     bool isTokenValid = HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
+
+    //     if (isTokenValid)
+    //         token = authHeader.ToString().Split(' ').Last();
+
+    //     if (string.IsNullOrEmpty(token))
+    //         return Unauthorized("Token is expired or invalid. Login again.");
+
+    //     string? hashedUserId = User.GetHashedUserId();
+    //     if (string.IsNullOrEmpty(hashedUserId))
+    //         return BadRequest("No user was found with this user Id.");
+
+    //     List<EnrolledCourse>? enrolledCourses = await _teacherRepository.GetTitleAsync(hashedUserId, token, cancellationToken);
+
+    //     return enrolledCourses is null ? Unauthorized("User is logged out or unauthorized. Login again.") : enrolledCourses;
+    // }
 }
