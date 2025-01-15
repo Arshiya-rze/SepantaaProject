@@ -41,7 +41,7 @@ public record Payment(
     ObjectId CourseId,
     int Amount,
     DateTime PaidOn,
-    Enum Method //aberbank / naghdi
+    string Method //aberbank / naghdi
 );
 
 

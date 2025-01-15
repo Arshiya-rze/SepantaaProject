@@ -285,6 +285,16 @@ public class ManagerRepository : IManagerRepository
             int calcNumberOfPaymentsLeft = enrolledCourse.NumberOfPaymentsLeft - calcPaidNumber;
             int calcTuitionReminder = enrolledCourse.TuitionRemainder - updateEnrolledDto.PaidAmount;
 
+            Payment newPayment = new Payment(
+                Id: Guid.NewGuid(),
+                CourseId: new ObjectId(targetCourseId),
+                Amount: updateEnrolledDto.PaidAmount,
+                PaidOn: DateTime.UtcNow,
+                Method: updateEnrolledDto.Method.ToUpper()
+            );
+
+            var updatePayments = enrolledCourse.Payments.Append(newPayment).ToList();
+
             EnrolledCourse newEnrolledCourse = new (
                 CourseId: enrolledCourse.CourseId,
                 CourseTuition: enrolledCourse.CourseTuition,
@@ -294,7 +304,7 @@ public class ManagerRepository : IManagerRepository
                 PaymentPerMonth: enrolledCourse.PaymentPerMonth,
                 PaidAmount: updateEnrolledDto.PaidAmount,
                 TuitionRemainder: calcTuitionReminder,
-                Payments: new List<Payment>() 
+                Payments: updatePayments 
             );
 
             // Create a filter to remove the old enrolled course
@@ -319,6 +329,16 @@ public class ManagerRepository : IManagerRepository
             int calcNumberOfPaymentsLeft = enrolledCourse.NumberOfPaymentsLeft - enrolledCourse.PaidNumber;
             int calcTuitionReminder = enrolledCourse.TuitionRemainder - updateEnrolledDto.PaidAmount;
 
+            Payment newPayment = new Payment(
+                Id: Guid.NewGuid(),
+                CourseId: new ObjectId(targetCourseId),
+                Amount: updateEnrolledDto.PaidAmount,
+                PaidOn: DateTime.UtcNow,
+                Method: updateEnrolledDto.Method
+            );
+
+            var updatePayments = enrolledCourse.Payments.Append(newPayment).ToList();
+
             EnrolledCourse newEnrolledCourse = new EnrolledCourse(
                 CourseId: enrolledCourse.CourseId,
                 CourseTuition: enrolledCourse.CourseTuition,
@@ -328,7 +348,7 @@ public class ManagerRepository : IManagerRepository
                 PaymentPerMonth: enrolledCourse.PaymentPerMonth,
                 PaidAmount: updateEnrolledDto.PaidAmount,
                 TuitionRemainder: calcTuitionReminder,
-                Payments: new List<Payment>() 
+                Payments: updatePayments 
             );
             // Create a filter to remove the old enrolled course
             var filter = Builders<EnrolledCourse>.Filter.Eq(ec => ec.CourseId, targetCourseId);

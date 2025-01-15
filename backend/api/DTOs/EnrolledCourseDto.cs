@@ -22,4 +22,5 @@ public class ShowEnrolledCourseDto
 
 public class UpdateEnrolledDto{
     public int PaidAmount { get; init; }
+    public string Method { get; init; } = string.Empty;
 }
