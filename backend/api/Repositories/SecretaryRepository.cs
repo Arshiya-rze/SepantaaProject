@@ -55,16 +55,16 @@ public class SecretaryRepository : ISecretaryRepository
         return loggedInDto;
     }
 
-    public async Task<AppUser?> GetByObjectIdAsync(ObjectId studentId, CancellationToken cancellationToken)
-    {
-        AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
-            => doc.Id == studentId).SingleOrDefaultAsync(cancellationToken);
+    // public async Task<AppUser?> GetByObjectIdAsync(ObjectId studentId, CancellationToken cancellationToken)
+    // {
+    //     AppUser? appUser = await _collectionAppUser.Find<AppUser>(doc
+    //         => doc.Id == studentId).SingleOrDefaultAsync(cancellationToken);
 
-        if (appUser is null)
-            return null;
+    //     if (appUser is null)
+    //         return null;
 
-        return appUser;
-    }
+    //     return appUser;
+    // }
 
     // public async Task<AddCorse?> AddCorseAsync(AddCorseDto addCorseDto, string targetStudentUserName, CancellationToken cancellationToken)
     // {
