@@ -7,17 +7,17 @@ public class MemberController
     (IMemberRepository _memberRepository, ITokenService _tokenService) : BaseApiController
 {
     [HttpGet("get-profile")]
-    public async Task<ActionResult<MemberDto>> GetProfile(CancellationToken cancellationToken)
+    public async Task<ActionResult<ProfileDto>> GetProfile(CancellationToken cancellationToken)
     {
         string? HashedUserId = User.GetHashedUserId();
         if (string.IsNullOrEmpty(HashedUserId))
             return BadRequest("No user was found with this userId.");
 
-        MemberDto? memberDto = await _memberRepository.GetProfileAsync(HashedUserId, cancellationToken);
+        ProfileDto? profileDto = await _memberRepository.GetProfileAsync(HashedUserId, cancellationToken);
 
-        return memberDto is null
+        return profileDto is null
             ? Unauthorized("User is logged out or unauthorized. Login again.")
-            : memberDto;
+            : profileDto;
     }
 
     [HttpGet("get-attendences")]

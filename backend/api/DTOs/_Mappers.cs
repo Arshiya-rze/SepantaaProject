@@ -38,6 +38,19 @@ public static class Mappers
             LastName: appUser.LastName,
             PhoneNum: appUser.PhoneNum,
             Gender: appUser.Gender,
+            Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth)
+        );
+    }
+
+    public static ProfileDto ConvertAppUserToProfileDto(AppUser appUser)
+    {
+        return new ProfileDto(
+            Email: appUser.Email,
+            UserName: appUser.NormalizedUserName!,
+            Name: appUser.Name,
+            LastName: appUser.LastName,
+            PhoneNum: appUser.PhoneNum,
+            Gender: appUser.Gender,
             Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
             EnrolledCourses: appUser.EnrolledCourses
         );

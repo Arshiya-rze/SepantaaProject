@@ -58,7 +58,7 @@ public class MemberRepository : IMemberRepository
         return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedMember, null, cancellationToken);
     }
 
-    public async Task<MemberDto> GetProfileAsync(string HashedUserId, CancellationToken cancellationToken)
+    public async Task<ProfileDto> GetProfileAsync(string HashedUserId, CancellationToken cancellationToken)
     {
         //tabdil userId be ObjectId        
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(HashedUserId, cancellationToken);
@@ -70,7 +70,7 @@ public class MemberRepository : IMemberRepository
 
         return appUser is null
             ? null
-            : Mappers.ConvertAppUserToMemberDto(appUser);
+            : Mappers.ConvertAppUserToProfileDto(appUser);
 
     }
 
@@ -98,19 +98,25 @@ public class MemberRepository : IMemberRepository
 
         if (userId is null) return null;
 
-        AppUser? targetAppUser = await _collectionAppUser.Find<AppUser>(doc =>
-        doc.Id == userId).FirstOrDefaultAsync(cancellationToken);
-
-        if(targetAppUser is null)
+        AppUser loggedInAppUser = await _collectionAppUser.Find<AppUser>(doc =>
+            doc.Id ==  userId).FirstOrDefaultAsync(cancellationToken);
+        
+        if (loggedInAppUser is null)
             return null;
 
-        // TODO: inja ma ghbalan ba Lesson dashtim dars ro yeki mikardim hala on Lesson dar EnrolledHast
-        List<AppUser>? targetAppUsers = _collectionAppUser.Find<AppUser>(
-            doc => doc.EnrolledCourses == targetAppUser.EnrolledCourses).ToList(cancellationToken);
+        List<string> targetCourseIds = loggedInAppUser.EnrolledCourses.Select(course => course.CourseId.ToString()).ToList();
 
-        if (targetAppUsers is null)
+
+        List<AppUser> classmates = await _collectionAppUser.AsQueryable<AppUser>()
+            .Where(appUser => appUser.EnrolledCourses.Any(course => targetCourseIds.Contains(course.CourseId)) && appUser.Id != userId)
+            .ToListAsync(cancellationToken);
+
+        // List<AppUser>? targetAppUsers = _collectionAppUser.Find<AppUser>(
+        //     doc => doc.EnrolledCourses.Course == targetAppUser.EnrolledCourses.CourseId).ToList(cancellationToken);
+
+        if (classmates is null)
             return null;
 
-        return targetAppUsers;
+        return classmates;
     }
 }
