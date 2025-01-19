@@ -61,9 +61,9 @@ public class MemberController
     [HttpPut]
     public async Task<ActionResult> UpdateMember(MemberUpdateDto memberUpdateDto, CancellationToken cancellationToken)
     {
-        UpdateResult? updateResult = await _memberRepository.UpdateMemberAsync(memberUpdateDto, User.GetHashedUserId(), cancellationToken);
+        bool? updateResult = await _memberRepository.UpdateMemberAsync(memberUpdateDto, User.GetHashedUserId(), cancellationToken);
 
-        return updateResult is null || !updateResult.IsModifiedCountAvailable
+        return updateResult is false 
             ? BadRequest("Update failed. Try again later.")
             : Ok(new { message = "User has been updated successfully." });
     }
@@ -79,21 +79,6 @@ public class MemberController
 
         if (pagedAppUsers.Count == 0)
             return NoContent();
-
-        // PaginationHeader paginationHeader = new(
-        //     CurrentPage: pagedAppUsers.CurrentPage,
-        //     ItemsPerPage: pagedAppUsers.PageSize,
-        //     TotalItems: pagedAppUsers.TotalItems,
-        //     TotalPages: pagedAppUsers.TotalPages
-        // );
-
-        // Response.AddPaginationHeader(paginationHeader);
-
-        // string? userIdHashed = User.GetHashedUserId();
-
-        // string? loggedInUserLesson = await _tokenService.GetActualUserIdLessonAsync(userIdHashed, cancellationToken);
-
-        // if (loggedInUserLesson is null) return Unauthorized("You are unauthorized. Login again.");
 
         List<MemberDto> memberDtos = [];
 

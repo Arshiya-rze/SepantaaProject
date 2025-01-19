@@ -8,14 +8,16 @@ public class MemberRepository : IMemberRepository
     IMongoCollection<AppUser>? _collectionAppUser;
     IMongoCollection<Attendence>? _collectionAttendence;
     private readonly ITokenService _tokenService;
+    private readonly UserManager<AppUser> _userManager;
 
-    public MemberRepository(IMongoClient client, IMyMongoDbSettings dbSettings, ITokenService tokenService)
+    public MemberRepository(IMongoClient client, IMyMongoDbSettings dbSettings, ITokenService tokenService, UserManager<AppUser> userManager)
     {
         var database = client.GetDatabase(dbSettings.DatabaseName);
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
         _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.collectionAttendences);
 
         _tokenService = tokenService;
+        _userManager = userManager;
     }
     #endregion Constructor
 
@@ -40,22 +42,52 @@ public class MemberRepository : IMemberRepository
         return await PagedList<Attendence>.CreatePagedListAsync(query, attendenceParams.PageNumber, attendenceParams.PageSize, cancellationToken);
     }
 
-    public async Task<UpdateResult?> UpdateMemberAsync(MemberUpdateDto memberUpdateDto, string? hashedUserId, CancellationToken cancellationToken)
+    public async Task<bool?> UpdateMemberAsync(MemberUpdateDto memberUpdateDto, string? hashedUserId, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(hashedUserId)) return null;
+        if (string.IsNullOrEmpty(hashedUserId)) return false;
 
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
+        if (userId == null) return false;
 
-        if (userId is null) return null;
+        AppUser? targetAppUser = await _userManager.FindByIdAsync(userId.ToString());
+        if (targetAppUser == null) return false;
 
-        UpdateDefinition<AppUser> updatedMember = Builders<AppUser>.Update
-        .Set(appUser => appUser.Email, memberUpdateDto.Email)
-        .Set(appUser => appUser.UserName, memberUpdateDto.UserName)
-        .Set(appUser => appUser.PasswordHash, memberUpdateDto.Password)
-        .Set(appUser => appUser.PasswordHash, memberUpdateDto.ConfirmPassword);
+        targetAppUser.Email = memberUpdateDto.Email;
+        targetAppUser.UserName = memberUpdateDto.UserName;
 
+        if (!string.IsNullOrEmpty(memberUpdateDto.currentPassword) && 
+            !string.IsNullOrEmpty(memberUpdateDto.Password) && 
+            !string.IsNullOrEmpty(memberUpdateDto.ConfirmPassword))
+        {
+            //Change password if last password exist
+            IdentityResult passwordChangeResult = await _userManager.ChangePasswordAsync(targetAppUser, memberUpdateDto.currentPassword, memberUpdateDto.Password);
+            if (!passwordChangeResult.Succeeded)
+            {
+                var errors = string.Join(", ", passwordChangeResult.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Failed to change password: {errors}");
+            }
+        }
 
-        return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedMember, null, cancellationToken);
+        targetAppUser.NormalizedEmail = memberUpdateDto.Email.ToUpper();
+        targetAppUser.NormalizedUserName = memberUpdateDto.UserName.ToUpper();
+        
+        //save changes in DataBase
+        IdentityResult updateResult = await _userManager.UpdateAsync(targetAppUser);
+        return updateResult.Succeeded;
+        
+        // if (string.IsNullOrEmpty(hashedUserId)) return null;
+
+        // ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
+
+        // if (userId is null) return null;
+
+        // UpdateDefinition<AppUser> updatedMember = Builders<AppUser>.Update
+        // .Set(appUser => appUser.Email, memberUpdateDto.Email)
+        // .Set(appUser => appUser.UserName, memberUpdateDto.UserName)
+        // .Set(appUser => appUser.PasswordHash, memberUpdateDto.Password)
+        // .Set(appUser => appUser.PasswordHash, memberUpdateDto.ConfirmPassword);
+
+        // return await _collectionAppUser.UpdateOneAsync<AppUser>(appUser => appUser.Id == userId, updatedMember, null, cancellationToken);
     }
 
     public async Task<ProfileDto> GetProfileAsync(string HashedUserId, CancellationToken cancellationToken)
