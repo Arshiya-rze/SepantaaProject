@@ -12,7 +12,7 @@ public record Course(
     Double HoursPerClass,
     int Days, // Cal in API
     DateTime Start, //TODO: Rename to StartOn //  1 mars 2025
-    bool IsStarted
+    bool IsStarted  
 );
 
 

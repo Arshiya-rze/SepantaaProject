@@ -1,43 +1,30 @@
+using api.Models.Helpers;
+
 namespace api.Controllers;
 
 [Authorize(Policy = "RequiredTeacherRole")]   
 public class TeacherController(ITeacherRepository _teacherRepository, ITokenService _tokenService) : BaseApiController
 {
-    [HttpGet("get-students")]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll(CancellationToken cancellationToken)
+    [HttpGet("get-course")]
+    public async Task<ActionResult<List<Course>>> GetCourse(CancellationToken cancellationToken)
     {
-        string? userIdHashed = User.GetHashedUserId();
-
-        if (userIdHashed is null) return Unauthorized("Login again.");
+        string? token = null; 
         
-        List<AppUser> pagedAppUsers = await _teacherRepository.GetAllAsync(userIdHashed, cancellationToken);
+        bool isTokenValid = HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
 
-        if (pagedAppUsers.Count == 0)
-            return NoContent();
+        if (isTokenValid)
+            token = authHeader.ToString().Split(' ').Last();
 
-        // PaginationHeader paginationHeader = new(
-        //     CurrentPage: pagedAppUsers.CurrentPage,
-        //     ItemsPerPage: pagedAppUsers.PageSize,
-        //     TotalItems: pagedAppUsers.TotalItems,
-        //     TotalPages: pagedAppUsers.TotalPages
-        // );
+        if (string.IsNullOrEmpty(token))
+            return Unauthorized("Token is expired or invalid. Login again.");
 
-        // Response.AddPaginationHeader(paginationHeader);
+        string? hashedUserId = User.GetHashedUserId();
+        if (string.IsNullOrEmpty(hashedUserId))
+            return BadRequest("No user was found with this user Id.");
 
-        // string? userIdHashed = User.GetHashedUserId();
+        List<Course>? course = await _teacherRepository.GetCourseAsync(hashedUserId, cancellationToken);
 
-        // string? loggedInUserLesson = await _tokenService.GetActualUserIdLessonAsync(userIdHashed, cancellationToken);
-
-        // if (loggedInUserLesson is null) return Unauthorized("You are unauthorized. Login again.");
-
-        List<MemberDto> memberDtos = [];
-
-        foreach (AppUser appUser in pagedAppUsers)
-        {
-            memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
-        }
-
-        return memberDtos;
+        return course is null ? Unauthorized("User is logged out or unauthorized. Login again.") : course;
     }
 
     [HttpPost("add-attendence")]
@@ -52,25 +39,39 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         return showStudentStatusDto;
     }
 
-    // [HttpGet("get-titles")]
-    // public async Task<ActionResult<List<EnrolledCourse>>> GetTitle(CancellationToken cancellationToken)
-    // {
-    //     string? token = null; 
-        
-    //     bool isTokenValid = HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
+    [HttpGet("get-student/{targetCourseId}")]
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, ObjectId targetCourseId, CancellationToken cancellationToken)
+    {
+        string? userIdHashed = User.GetHashedUserId();
 
-    //     if (isTokenValid)
-    //         token = authHeader.ToString().Split(' ').Last();
+        if(userIdHashed is null)
+            return null;
 
-    //     if (string.IsNullOrEmpty(token))
-    //         return Unauthorized("Token is expired or invalid. Login again.");
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
 
-    //     string? hashedUserId = User.GetHashedUserId();
-    //     if (string.IsNullOrEmpty(hashedUserId))
-    //         return BadRequest("No user was found with this user Id.");
+        if (userId is null) return Unauthorized("You are unauthorized. Login again.");
 
-    //     List<EnrolledCourse>? enrolledCourses = await _teacherRepository.GetTitleAsync(hashedUserId, token, cancellationToken);
+        PagedList<AppUser> pagedAppUsers = await _teacherRepository.GetAllAsync(paginationParams, targetCourseId, userIdHashed, cancellationToken);
 
-    //     return enrolledCourses is null ? Unauthorized("User is logged out or unauthorized. Login again.") : enrolledCourses;
-    // }
+        if (pagedAppUsers.Count == 0)
+            return NoContent();
+
+        PaginationHeader paginationHeader = new(
+            CurrentPage: pagedAppUsers.CurrentPage,
+            ItemsPerPage: pagedAppUsers.PageSize,
+            TotalItems: pagedAppUsers.TotalItems,
+            TotalPages: pagedAppUsers.TotalPages
+        );
+
+        Response.AddPaginationHeader(paginationHeader);
+
+        List<MemberDto> memberDtos = [];
+
+        foreach (AppUser appUser in pagedAppUsers)
+        {
+            memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
+        }
+
+        return memberDtos;
+    }
 }

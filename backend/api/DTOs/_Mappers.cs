@@ -101,6 +101,8 @@ public static class Mappers
         );
     }
 
+    // public static Course ConvertCourseTo
+
     public static ShowCourseDto ConvertCourseToShowCourseDto(Course course)
     {
         return new ShowCourseDto

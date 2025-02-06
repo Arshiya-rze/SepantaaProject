@@ -7,6 +7,7 @@ public class TeacherRepository : ITeacherRepository
 {
     #region Vars and Constructor
     private readonly IMongoCollection<AppUser>? _collectionAppUser;
+    private readonly IMongoCollection<Course>? _collectionCourse;
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
     private readonly IMongoCollection<Attendence>? _collectionAttendence;
@@ -16,6 +17,7 @@ public class TeacherRepository : ITeacherRepository
         var database = client.GetDatabase(dbSettings.DatabaseName);
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
         _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.collectionAttendences);
+        _collectionCourse = database.GetCollection<Course>(AppVariablesExtensions.collectionCourses);
 
         _userManager = userManager;
         _tokenService = tokenService;
@@ -30,6 +32,27 @@ public class TeacherRepository : ITeacherRepository
             .SingleOrDefaultAsync(cancellationToken);
 
         return ValidationsExtensions.ValidateObjectId(studentId);
+    }
+
+    public async Task<List<Course?>> GetCourseAsync(string hashedUserId, CancellationToken cancellationToken)
+    {
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
+
+        if (userId is null)
+            return null;
+
+        List<Course>? courses = await _collectionCourse.Find<Course>(doc => 
+            doc.ProfessorsIds.Contains(userId.Value)).ToListAsync(cancellationToken);
+
+        if (courses is null)
+        {
+            return null;
+        }
+
+        return courses is null
+            ? null
+            // : Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+            : courses;
     }
 
     public async Task<ShowStudentStatusDto> AddAsync(AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
@@ -74,62 +97,17 @@ public class TeacherRepository : ITeacherRepository
 
     }
 
-    public async Task<List<AppUser>> GetAllAsync(string userIdHashed, CancellationToken cancellationToken)
-    {
-        ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
-
-        if (userId is null) return null;
-
-        // List<string>? loggedInTargetLessons = await _collectionAppUser.AsQueryable()
-        //     .Where(appUser => appUser.Id == userId)
-        //     .Select(appUser => appUser.Lessons)
-        //     .FirstOrDefaultAsync(cancellationToken);
-
-        AppUser? targetAppUser = await _collectionAppUser.Find<AppUser>(doc =>
-        doc.Id == userId).FirstOrDefaultAsync(cancellationToken);
-
-        if(targetAppUser is null)
-            return null;
-
-        // IMongoQueryable<AppUser> query = _collectionAppUser.Find<AppUser>(
-        //     doc => doc.Lessons == loggedInTargetLessons).ToListAsync(cancellationToken);
-        // TODO: injaa ham ba Lesson migrereftim ke ihalaa bayad dorost she    
-        // List<AppUser>? targetAppUsers = _collectionAppUser.Find<AppUser>(
-        //     doc => doc.Lessons == targetAppUser.Lessons).ToList(cancellationToken);
-
-        // IMongoQueryable<AppUser> appUsers = _collectionAppUser.AsQueryable()
-        // .Where(doc => doc.Lessons == targetAppUsers)
-        // .AnyAsync(cancellationToken);   
-
-        // if (targetAppUsers is null)
-        //     return null;
-
-        // return targetAppUsers;
-        return null;
-
-        // IMongoQueryable<AppUser> query = _collectionAppUser.Find<AppUser>(
-        //     doc => doc.Lesson == loggedInUserLesson).ToList(cancellationToken);
-        
-
-        // return await PagedList<AppUser>.CreatePagedListAsync(appUsers, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
-    }
-
-    public async Task<List<EnrolledCourse?>> GetTitleAsync(string hashedUserId, string token, CancellationToken cancellationToken)
+    public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, ObjectId targetCourseId, string hashedUserId, CancellationToken cancellationToken)
     {
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
-
         if (userId is null)
             return null;
 
-        // AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser => appUser.Id == userId).FirstOrDefaultAsync(cancellationToken);
-        List<EnrolledCourse> enrolledCourses = await _collectionAppUser.AsQueryable()
-        .Where(appUser => appUser.Id == userId)
-        .Select(appUser => appUser.EnrolledCourses)
-        .FirstOrDefaultAsync(cancellationToken);
+        // دریافت لیست دانش‌آموزانی که در این دوره ثبت‌نام کرده‌اند
+        IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable()
+            .Where(user => user.EnrolledCourses.Any(course => course.CourseId == targetCourseId.ToString()));
 
-        return enrolledCourses is null
-            ? null
-            // : Mappers.ConvertAppUserToLoggedInDto(appUser, token);
-            : enrolledCourses;
+        // بازگرداندن لیست صفحه‌بندی‌شده
+        return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     }
 }
