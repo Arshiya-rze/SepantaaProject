@@ -127,6 +127,7 @@ public static class Mappers
         return new EnrolledCourse(
             // Id: Guid.NewGuid(),
             CourseId: course.Id.ToString(), //13213213ddfdf
+            CourseTitle: course.Title.ToUpper(),
             CourseTuition: course.Tuition, //6_000_000
             NumberOfPayments: managerInput.NumberOfPayments, //4
             PaidNumber: 0, // TODO: calculate paiedNumber in backend 

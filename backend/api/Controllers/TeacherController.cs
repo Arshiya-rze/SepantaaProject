@@ -39,8 +39,8 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         return showStudentStatusDto;
     }
 
-    [HttpGet("get-student/{targetCourseId}")]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, ObjectId targetCourseId, CancellationToken cancellationToken)
+    [HttpGet("get-student/{targetTitle}")]
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, string targetTitle, CancellationToken cancellationToken)
     {
         string? userIdHashed = User.GetHashedUserId();
 
@@ -51,7 +51,7 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
 
         if (userId is null) return Unauthorized("You are unauthorized. Login again.");
 
-        PagedList<AppUser> pagedAppUsers = await _teacherRepository.GetAllAsync(paginationParams, targetCourseId, userIdHashed, cancellationToken);
+        PagedList<AppUser> pagedAppUsers = await _teacherRepository.GetAllAsync(paginationParams, targetTitle, userIdHashed, cancellationToken);
 
         if (pagedAppUsers.Count == 0)
             return NoContent();

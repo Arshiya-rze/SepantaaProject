@@ -274,6 +274,7 @@ public class ManagerRepository : IManagerRepository
 
             EnrolledCourse newEnrolledCourse = new (
                 CourseId: enrolledCourse.CourseId,
+                CourseTitle: enrolledCourse.CourseTitle,
                 CourseTuition: enrolledCourse.CourseTuition,
                 NumberOfPayments: enrolledCourse.NumberOfPayments,
                 PaidNumber: calcPaidNumber,
@@ -318,6 +319,7 @@ public class ManagerRepository : IManagerRepository
 
             EnrolledCourse newEnrolledCourse = new EnrolledCourse(
                 CourseId: enrolledCourse.CourseId,
+                CourseTitle: enrolledCourse.CourseTitle,
                 CourseTuition: enrolledCourse.CourseTuition,
                 NumberOfPayments: enrolledCourse.NumberOfPayments,
                 PaidNumber: enrolledCourse.PaidNumber,

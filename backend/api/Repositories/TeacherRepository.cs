@@ -97,7 +97,7 @@ public class TeacherRepository : ITeacherRepository
 
     }
 
-    public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, ObjectId targetCourseId, string hashedUserId, CancellationToken cancellationToken)
+    public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string targetTitle, string hashedUserId, CancellationToken cancellationToken)
     {
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
         if (userId is null)
@@ -105,7 +105,7 @@ public class TeacherRepository : ITeacherRepository
 
         // دریافت لیست دانش‌آموزانی که در این دوره ثبت‌نام کرده‌اند
         IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable()
-            .Where(user => user.EnrolledCourses.Any(course => course.CourseId == targetCourseId.ToString()));
+            .Where(user => user.EnrolledCourses.Any(course => course.CourseTitle == targetTitle.ToUpper()));
 
         // بازگرداندن لیست صفحه‌بندی‌شده
         return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
