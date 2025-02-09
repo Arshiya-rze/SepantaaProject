@@ -11,6 +11,7 @@ public class TeacherRepository : ITeacherRepository
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
     private readonly IMongoCollection<Attendence>? _collectionAttendence;
+    private readonly IMongoCollection<AttendenceDemo>? _collectionAttendenceDemo;
 
     public TeacherRepository(IMongoClient client, ITokenService tokenService, IMyMongoDbSettings dbSettings, UserManager<AppUser> userManager)
     {
@@ -18,6 +19,7 @@ public class TeacherRepository : ITeacherRepository
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
         _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.collectionAttendences);
         _collectionCourse = database.GetCollection<Course>(AppVariablesExtensions.collectionCourses);
+        _collectionAttendenceDemo = database.GetCollection<AttendenceDemo>(AppVariablesExtensions.collectionAttendencesDemo);
 
         _userManager = userManager;
         _tokenService = tokenService;
@@ -95,6 +97,37 @@ public class TeacherRepository : ITeacherRepository
 
         // UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
 
+    }
+
+    public async Task<ShowStudentStatusDtoDemo> AddDemoAsync(AddStudentStatusDemo teacherInput, CancellationToken cancellationToken)
+    {
+        ObjectId? studentId = await GetObjectIdByUserNameAsync(teacherInput.UserName.ToUpper(), cancellationToken);
+
+        if (studentId is null) return null;
+
+        //date-start
+        string persianDate = teacherInput.Time;
+        PersianDateTime persianDateTime = PersianDateTime.Parse(persianDate);
+
+        DateTime standardDate = persianDateTime.ToDateTime();
+
+        //date-end
+
+        AttendenceDemo? attendenceDemo = Mappers.ConvertAddStudentStatusDemoToAttendenceDemo(teacherInput, studentId.Value, standardDate);
+
+        if (_collectionAttendenceDemo is not null)
+        {
+            await _collectionAttendenceDemo.InsertOneAsync(attendenceDemo, null, cancellationToken);
+        }
+
+        if (ObjectId.Equals != null)
+        {
+            ShowStudentStatusDtoDemo showStudentStatusDtoDemo = Mappers.ConvertAttendenceDemoToShowStudentStatusDemo(attendenceDemo);
+
+            return showStudentStatusDtoDemo;
+        }
+
+        return null;
     }
 
     public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string targetTitle, string hashedUserId, CancellationToken cancellationToken)

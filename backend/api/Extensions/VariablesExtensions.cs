@@ -7,6 +7,7 @@ public static class AppVariablesExtensions
     public const string collectionUsers = "users";
     public const string collectionCourses = "courses";
     public const string collectionAttendences = "attendences";
+    public const string collectionAttendencesDemo = "attendences";
     public const string collectionFollows = "follows";
     public const string collectionExceptionLogs = "exception-logs";
 

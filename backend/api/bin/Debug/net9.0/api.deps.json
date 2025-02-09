@@ -11,7 +11,8 @@
           "AspNetCore.Identity.MongoDbCore": "6.0.0",
           "BCrypt.Net-Next": "4.0.3",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.8",
-          "MongoDB.Driver": "2.28.0"
+          "MongoDB.Driver": "2.28.0",
+          "PersianDateTime": "1.1.5082.36395"
         },
         "runtime": {
           "api.dll": {}
@@ -286,6 +287,14 @@
           }
         }
       },
+      "PersianDateTime/1.1.5082.36395": {
+        "runtime": {
+          "lib/net40/PersianDateTime.dll": {
+            "assemblyVersion": "1.1.5082.36395",
+            "fileVersion": "1.1.0.0"
+          }
+        }
+      },
       "SharpCompress/0.30.1": {
         "runtime": {
           "lib/net5.0/SharpCompress.dll": {
@@ -554,6 +563,13 @@
       "sha512": "sha512-d0uY4rI8Coz2SvALX1NImZIBnxovzLpPbKKDS51RBganZFA1Nj0a7hZd5kQKdXl0wM3rWi6uTO3AQKQox6LdcQ==",
       "path": "mongodbgenericrepository/1.6.2",
       "hashPath": "mongodbgenericrepository.1.6.2.nupkg.sha512"
+    },
+    "PersianDateTime/1.1.5082.36395": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rglVEiB5XXVpTuEH6XqM4U8z21pRKiX1KZcxfRVtLir46Rxt8NHWqw1Qdbphzy5k3dTOI3JQDsbrd7RIDaZg2w==",
+      "path": "persiandatetime/1.1.5082.36395",
+      "hashPath": "persiandatetime.1.1.5082.36395.nupkg.sha512"
     },
     "SharpCompress/0.30.1": {
       "type": "package",

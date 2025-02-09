@@ -17,6 +17,21 @@ public class ShowStudentStatusDto
     public string AbsentOrPresent { get; init; }
 }
 
+public record AddStudentStatusDemo(
+    ObjectId StudentId,
+    string UserName,
+    string Time,
+    // DateOnly Date,
+    string AbsentOrPresent
+);
+public class ShowStudentStatusDtoDemo
+{
+    // public AppUser? UserName { get; init; }
+    public ObjectId StudentId { get; init; }
+    public string UserName { get; init; }
+    public DateTime Time { get; init; }
+    public string AbsentOrPresent { get; init; }
+}
 // public record LessonDto (
 //     List<Lesson> Lessons
 // );

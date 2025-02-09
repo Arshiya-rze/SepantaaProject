@@ -74,6 +74,16 @@ public static class Mappers
             AbsentOrPresent: teacherInput.AbsentOrPresent
         );
     }
+
+    public static AttendenceDemo ConvertAddStudentStatusDemoToAttendenceDemo(AddStudentStatusDemo teacherInput, ObjectId studentId, DateTime standardDate)
+    {
+        return new AttendenceDemo(
+            StudentId: studentId,
+            UserName: teacherInput.UserName,
+            Time: standardDate,
+            AbsentOrPresent: teacherInput.AbsentOrPresent
+        );
+    }
     
     public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
     {
@@ -84,6 +94,17 @@ public static class Mappers
             DaysOfWeek = attendence.DaysOfWeek,
             Date = attendence.Date,
             AbsentOrPresent = attendence.AbsentOrPresent
+        };
+    }
+
+    public static ShowStudentStatusDtoDemo ConvertAttendenceDemoToShowStudentStatusDemo(AttendenceDemo attendenceDemo)
+    {
+        return new ShowStudentStatusDtoDemo
+        {
+            StudentId = attendenceDemo.Id,
+            UserName = attendenceDemo.UserName,
+            Time = attendenceDemo.Time,
+            AbsentOrPresent = attendenceDemo.AbsentOrPresent
         };
     }
 

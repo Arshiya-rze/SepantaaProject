@@ -39,6 +39,18 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         return showStudentStatusDto;
     }
 
+    [HttpPost("add-attendence-demo")]
+    public async Task<ActionResult<ShowStudentStatusDtoDemo>> AddDemo(AddStudentStatusDemo teacherInput, CancellationToken cancellationToken)
+    {
+        if (teacherInput.UserName is null) return BadRequest("یوزرنیم خالی است.");
+
+        ShowStudentStatusDtoDemo? showStudentStatusDtoDemo = await _teacherRepository.AddDemoAsync(teacherInput, cancellationToken);
+
+        if (teacherInput.AbsentOrPresent is null) return null;
+
+        return showStudentStatusDtoDemo;
+    }
+
     [HttpGet("get-student/{targetTitle}")]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, string targetTitle, CancellationToken cancellationToken)
     {

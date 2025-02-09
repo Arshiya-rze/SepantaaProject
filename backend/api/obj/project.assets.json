@@ -523,6 +523,19 @@
           }
         }
       },
+      "PersianDateTime/1.1.5082.36395": {
+        "type": "package",
+        "compile": {
+          "lib/net40/PersianDateTime.dll": {
+            "related": ".XML"
+          }
+        },
+        "runtime": {
+          "lib/net40/PersianDateTime.dll": {
+            "related": ".XML"
+          }
+        }
+      },
       "SharpCompress/0.30.1": {
         "type": "package",
         "compile": {
@@ -1378,6 +1391,19 @@
         "mongodbgenericrepository.nuspec"
       ]
     },
+    "PersianDateTime/1.1.5082.36395": {
+      "sha512": "rglVEiB5XXVpTuEH6XqM4U8z21pRKiX1KZcxfRVtLir46Rxt8NHWqw1Qdbphzy5k3dTOI3JQDsbrd7RIDaZg2w==",
+      "type": "package",
+      "path": "persiandatetime/1.1.5082.36395",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/PersianDateTime.XML",
+        "lib/net40/PersianDateTime.dll",
+        "persiandatetime.1.1.5082.36395.nupkg.sha512",
+        "persiandatetime.nuspec"
+      ]
+    },
     "SharpCompress/0.30.1": {
       "sha512": "XqD4TpfyYGa7QTPzaGlMVbcecKnXy4YmYLDWrU+JIj7IuRNl7DH2END+Ll7ekWIY8o3dAMWLFDE1xdhfIWD1nw==",
       "type": "package",
@@ -1667,7 +1693,8 @@
       "AspNetCore.Identity.MongoDbCore >= 6.0.0",
       "BCrypt.Net-Next >= 4.0.3",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.8",
-      "MongoDB.Driver >= 2.28.0"
+      "MongoDB.Driver >= 2.28.0",
+      "PersianDateTime >= 1.1.5082.36395"
     ]
   },
   "packageFolders": {
@@ -1728,6 +1755,10 @@
           "MongoDB.Driver": {
             "target": "Package",
             "version": "[2.28.0, )"
+          },
+          "PersianDateTime": {
+            "target": "Package",
+            "version": "[1.1.5082.36395, )"
           }
         },
         "imports": [
@@ -1752,5 +1783,17 @@
         "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'PersianDateTime 1.1.5082.36395' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
+      "libraryId": "PersianDateTime",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    }
+  ]
 }

@@ -11,3 +11,12 @@ public record Attendence (
     DateOnly Date, //25/6/1402
     string AbsentOrPresent
 );
+
+[CollectionName("attendencesDemo")]
+public record AttendenceDemo (
+    [Optional][property: BsonId, BsonRepresentation(BsonType.ObjectId)] ObjectId Id,
+    ObjectId StudentId, 
+    string UserName,
+    DateTime Time,
+    string AbsentOrPresent
+);
