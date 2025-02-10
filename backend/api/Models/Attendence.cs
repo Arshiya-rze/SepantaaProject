@@ -12,11 +12,11 @@ public record Attendence (
     string AbsentOrPresent
 );
 
-[CollectionName("attendencesDemo")]
-public record AttendenceDemo (
-    [Optional][property: BsonId, BsonRepresentation(BsonType.ObjectId)] ObjectId Id,
-    ObjectId StudentId, 
-    string UserName,
-    DateTime Time,
-    string AbsentOrPresent
-);
+// [CollectionName("attendencesDemo")]
+// public record AttendenceDemo (
+//     [Optional][property: BsonId, BsonRepresentation(BsonType.ObjectId)] ObjectId Id,
+//     ObjectId StudentId, 
+//     string UserName,
+//     DateTime Time,
+//     string AbsentOrPresent
+// );

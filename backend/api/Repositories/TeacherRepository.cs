@@ -99,36 +99,36 @@ public class TeacherRepository : ITeacherRepository
 
     }
 
-    public async Task<ShowStudentStatusDtoDemo> AddDemoAsync(AddStudentStatusDemo teacherInput, CancellationToken cancellationToken)
-    {
-        ObjectId? studentId = await GetObjectIdByUserNameAsync(teacherInput.UserName.ToUpper(), cancellationToken);
+    // public async Task<ShowStudentStatusDtoDemo> AddDemoAsync(AddStudentStatusDemo teacherInput, CancellationToken cancellationToken)
+    // {
+    //     ObjectId? studentId = await GetObjectIdByUserNameAsync(teacherInput.UserName.ToUpper(), cancellationToken);
 
-        if (studentId is null) return null;
+    //     if (studentId is null) return null;
 
-        //date-start
-        string persianDate = teacherInput.Time;
-        PersianDateTime persianDateTime = PersianDateTime.Parse(persianDate);
+    //     //date-start
+    //     string persianDate = teacherInput.Time;
+    //     PersianDateTime persianDateTime = PersianDateTime.Parse(persianDate);
 
-        DateTime standardDate = persianDateTime.ToDateTime();
+    //     DateTime standardDate = persianDateTime.ToDateTime();
 
-        //date-end
+    //     //date-end
 
-        AttendenceDemo? attendenceDemo = Mappers.ConvertAddStudentStatusDemoToAttendenceDemo(teacherInput, studentId.Value, standardDate);
+    //     AttendenceDemo? attendenceDemo = Mappers.ConvertAddStudentStatusDemoToAttendenceDemo(teacherInput, studentId.Value, standardDate);
 
-        if (_collectionAttendenceDemo is not null)
-        {
-            await _collectionAttendenceDemo.InsertOneAsync(attendenceDemo, null, cancellationToken);
-        }
+    //     if (_collectionAttendenceDemo is not null)
+    //     {
+    //         await _collectionAttendenceDemo.InsertOneAsync(attendenceDemo, null, cancellationToken);
+    //     }
 
-        if (ObjectId.Equals != null)
-        {
-            ShowStudentStatusDtoDemo showStudentStatusDtoDemo = Mappers.ConvertAttendenceDemoToShowStudentStatusDemo(attendenceDemo);
+    //     if (ObjectId.Equals != null)
+    //     {
+    //         ShowStudentStatusDtoDemo showStudentStatusDtoDemo = Mappers.ConvertAttendenceDemoToShowStudentStatusDemo(attendenceDemo);
 
-            return showStudentStatusDtoDemo;
-        }
+    //         return showStudentStatusDtoDemo;
+    //     }
 
-        return null;
-    }
+    //     return null;
+    // } 
 
     public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string targetTitle, string hashedUserId, CancellationToken cancellationToken)
     {
