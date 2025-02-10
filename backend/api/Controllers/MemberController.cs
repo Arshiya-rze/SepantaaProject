@@ -20,43 +20,43 @@ public class MemberController
             : profileDto;
     }
 
-    [HttpGet("get-attendences")]
-    public async Task<ActionResult<IEnumerable<ShowStudentStatusDto>>> GetAllAttendence([FromQuery] AttendenceParams attendenceParams, CancellationToken cancellationToken)
-    {
-        ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
+    // [HttpGet("get-attendences")]
+    // public async Task<ActionResult<IEnumerable<ShowStudentStatusDto>>> GetAllAttendence([FromQuery] AttendenceParams attendenceParams, CancellationToken cancellationToken)
+    // {
+    //     ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
 
-        if (userId is null)
-            return Unauthorized("You are not logged in. Login in again.");
+    //     if (userId is null)
+    //         return Unauthorized("You are not logged in. Login in again.");
         
-        attendenceParams.UserId = userId;
+    //     attendenceParams.UserId = userId;
 
-        PagedList<Attendence> pagedAttendences = await _memberRepository.GetAllAttendenceAsync(attendenceParams, cancellationToken);
+    //     PagedList<Attendence> pagedAttendences = await _memberRepository.GetAllAttendenceAsync(attendenceParams, cancellationToken);
 
-        if (pagedAttendences.Count == 0)
-            return NoContent();
+    //     if (pagedAttendences.Count == 0)
+    //         return NoContent();
 
-        // After that we shure to exist on Controller we must set PaginaionHeader here before Converting AppUseer to studentDto
+    //     // After that we shure to exist on Controller we must set PaginaionHeader here before Converting AppUseer to studentDto
 
-        PaginationHeader paginationHeader = new(
-            CurrentPage: pagedAttendences.CurrentPage,
-            ItemsPerPage: pagedAttendences.PageSize,
-            TotalItems: pagedAttendences.TotalItems,
-            TotalPages: pagedAttendences.TotalPages
-        );
+    //     PaginationHeader paginationHeader = new(
+    //         CurrentPage: pagedAttendences.CurrentPage,
+    //         ItemsPerPage: pagedAttendences.PageSize,
+    //         TotalItems: pagedAttendences.TotalItems,
+    //         TotalPages: pagedAttendences.TotalPages
+    //     );
 
-        Response.AddPaginationHeader(paginationHeader);
+    //     Response.AddPaginationHeader(paginationHeader);
 
-        //after setup now we can covert appUser to studentDto
+    //     //after setup now we can covert appUser to studentDto
 
-        List<ShowStudentStatusDto> showStudentStatusDtos = [];
+    //     List<ShowStudentStatusDto> showStudentStatusDtos = [];
 
-        foreach (Attendence attendence in pagedAttendences)
-        {
-            showStudentStatusDtos.Add(Mappers.ConvertAttendenceToShowStudentStatusDto(attendence));
-        }
+    //     foreach (Attendence attendence in pagedAttendences)
+    //     {
+    //         showStudentStatusDtos.Add(Mappers.ConvertAttendenceToShowStudentStatusDto(attendence));
+    //     }
 
-        return showStudentStatusDtos;
-    }
+    //     return showStudentStatusDtos;
+    // }
     
     [HttpPut]
     public async Task<ActionResult> UpdateMember(MemberUpdateDto memberUpdateDto, CancellationToken cancellationToken)

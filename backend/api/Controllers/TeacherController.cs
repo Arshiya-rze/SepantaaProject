@@ -30,13 +30,25 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
     [HttpPost("add-attendence")]
     public async Task<ActionResult<ShowStudentStatusDto>> Add(AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
     {
-        if (teacherInput.UserName is null) return BadRequest("یوزرنیم خالی است.");
+        if (string.IsNullOrEmpty(teacherInput.UserName)) 
+        
+        return BadRequest("یوزرنیم خالی است.");
 
-        ShowStudentStatusDto? showStudentStatusDto = await _teacherRepository.AddAsync(teacherInput, cancellationToken);
+        ShowStudentStatusDto showStudentStatusDto = await _teacherRepository.AddAsync(teacherInput, cancellationToken);
 
-        if (teacherInput.AbsentOrPresent is null) return null;
+        if (showStudentStatusDto is null)
+            return BadRequest("ثبت حضور و غیاب انجام نشد. دانش‌آموز یافت نشد یا قبلاً ثبت شده است.");
 
-        return showStudentStatusDto;
+        return Ok(showStudentStatusDto);
+        // if (teacherInput.UserName is null) return BadRequest("یوزرنیم خالی است.");
+
+        // ShowStudentStatusDto? showStudentStatusDto = await _teacherRepository.AddAsync(teacherInput, cancellationToken);
+
+        // // if (teacherInput.AbsentOrPresent is null) return null;
+        // if (showStudentStatusDto is null)
+        //     return BadRequest("failed!");
+
+        // return showStudentStatusDto;
     }
 
     // [HttpPost("add-attendence-demo")]

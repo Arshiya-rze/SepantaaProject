@@ -1,41 +1,36 @@
 namespace api.DTOs;
 public record AddStudentStatusDto(
-    ObjectId StudentId,
+    // ObjectId StudentId,
     string UserName,
-    string DaysOfWeek,
-    DateOnly Date,
-    string AbsentOrPresent
+    // string DaysOfWeek,
+    // DateTime Date,
+    // string AbsentOrPresent
+    bool IsPresent
 );
   
 public class ShowStudentStatusDto
 {
     // public AppUser? UserName { get; init; }
-    public ObjectId StudentId { get; init; }
-    public string UserName { get; init; }
-    public string DaysOfWeek { get; init; }
+    // public ObjectId StudentId { get; init; }
+    public string UserName { get; init; } = string.Empty;
+    // public string DaysOfWeek { get; init; }
     public DateOnly Date { get; init; }
-    public string AbsentOrPresent { get; init; }
+    // public string AbsentOrPresent { get; init; }
+    public bool IsPresent { get; init; }
 }
 
-public record AddStudentStatusDemo(
-    ObjectId StudentId,
-    string UserName,
-    string Time,
-    // DateOnly Date,
-    string AbsentOrPresent
-);
-public class ShowStudentStatusDtoDemo
-{
-    // public AppUser? UserName { get; init; }
-    public ObjectId StudentId { get; init; }
-    public string UserName { get; init; }
-    public DateTime Time { get; init; }
-    public string AbsentOrPresent { get; init; }
-}
-// public record LessonDto (
-//     List<Lesson> Lessons
+// public record AddStudentStatusDemo(
+//     ObjectId StudentId,
+//     string UserName,
+//     string Time,
+//     // DateOnly Date,
+//     string AbsentOrPresent
 // );
-
-// public record AddLessonDto (
-//     string Lesson
-// );
+// public class ShowStudentStatusDtoDemo
+// {
+//     // public AppUser? UserName { get; init; }
+//     public ObjectId StudentId { get; init; }
+//     public string UserName { get; init; }
+//     public DateTime Time { get; init; }
+//     public string AbsentOrPresent { get; init; }
+// }

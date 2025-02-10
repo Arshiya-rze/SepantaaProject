@@ -11,7 +11,7 @@ public class TeacherRepository : ITeacherRepository
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
     private readonly IMongoCollection<Attendence>? _collectionAttendence;
-    private readonly IMongoCollection<AttendenceDemo>? _collectionAttendenceDemo;
+    // private readonly IMongoCollection<AttendenceDemo>? _collectionAttendenceDemo;
 
     public TeacherRepository(IMongoClient client, ITokenService tokenService, IMyMongoDbSettings dbSettings, UserManager<AppUser> userManager)
     {
@@ -19,7 +19,7 @@ public class TeacherRepository : ITeacherRepository
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
         _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.collectionAttendences);
         _collectionCourse = database.GetCollection<Course>(AppVariablesExtensions.collectionCourses);
-        _collectionAttendenceDemo = database.GetCollection<AttendenceDemo>(AppVariablesExtensions.collectionAttendencesDemo);
+        // _collectionAttendenceDemo = database.GetCollection<AttendenceDemo>(AppVariablesExtensions.collectionAttendencesDemo);
 
         _userManager = userManager;
         _tokenService = tokenService;
@@ -59,23 +59,35 @@ public class TeacherRepository : ITeacherRepository
 
     public async Task<ShowStudentStatusDto> AddAsync(AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
     {
-        //inja ma bayad dar studentId id on student ke mikhaym ro dashte bashim
-        ObjectId? studentId = await GetObjectIdByUserNameAsync(teacherInput.UserName.ToUpper(), cancellationToken);
+        if (string.IsNullOrEmpty(teacherInput.UserName))
+            return null;
 
-        if (studentId is null) return null;
+        // 🔹 جستجو ObjectId بر اساس UserName
+        AppUser? targetAppUser = await _collectionAppUser
+            .Find(s => s.NormalizedUserName == teacherInput.UserName.ToUpper())
+            .FirstOrDefaultAsync(cancellationToken);
 
-        // AppUser? appUser = await GetByIdAsync(studentId.Value, cancellationToken);
-        // if (appUser is null)
-        //     return null;
+        if (targetAppUser is null)
+            return null;
+        
+        DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow);
 
-        // bool doeseDateExist = await _collectionAttendence.Find<Attendence>(doc =>
-        // doc.Date == studentInput.Date).AnyAsync(cancellationToken);
+        // 🔹 بررسی اینکه آیا این تاریخ قبلاً ثبت شده است؟
+        Attendence existingAttendance = await _collectionAttendence
+            .Find(a => a.StudentId == targetAppUser.Id && a.Date == currentDate)
+            .FirstOrDefaultAsync(cancellationToken);
 
-        // if (doeseDateExist)
-        //     return null;
+        if (existingAttendance is not null) 
+            return null; // اگر قبلاً حضور و غیاب ثبت شده باشد.
 
-        Attendence? attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(teacherInput, studentId.Value);
+        Attendence? attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(teacherInput, targetAppUser.Id, currentDate);
 
+        // Attendence attendence = new Attendence(
+        //     ObjectId.GenerateNewId(),
+        //     targetAppUser.Id,  // ذخیره ObjectId
+        //     DateOnly.FromDateTime(teacherInput.Date),
+        //     teacherInput.IsPresent
+        // );
         if (_collectionAttendence is not null)
         {
             await _collectionAttendence.InsertOneAsync(attendence, null, cancellationToken);
@@ -83,20 +95,20 @@ public class TeacherRepository : ITeacherRepository
 
         if (ObjectId.Equals != null)
         {
-            ShowStudentStatusDto showStudentStatusDto = Mappers.ConvertAttendenceToShowStudentStatusDto(attendence);
+            ShowStudentStatusDto showStudentStatusDto = Mappers.ConvertAttendenceToShowStudentStatusDto(attendence, teacherInput.UserName);
 
             return showStudentStatusDto;
         }
 
         return null;
 
-        // appUser.Attendences.Add(attendence);
+        // await _collectionAttendence.InsertOneAsync(attendence, cancellationToken: cancellationToken);
 
-        // var updatedStudent = Builders<AppUser>.Update
-        //     .Set(doc => doc.Attendences, appUser.Attendences);
-
-        // UpdateResult result = await _collection.UpdateOneAsync<AppUser>(doc => doc.Id == studentId, updatedStudent, null, cancellationToken);
-
+        // return new ShowStudentStatusDto(
+        //     teacherInput.UserName, // برگرداندن UserName
+        //     attendence.Date.ToDateTime(TimeOnly.MinValue),
+        //     attendence.IsPresent
+        // );
     }
 
     // public async Task<ShowStudentStatusDtoDemo> AddDemoAsync(AddStudentStatusDemo teacherInput, CancellationToken cancellationToken)

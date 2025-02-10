@@ -64,14 +64,13 @@ public static class Mappers
         );
     }
 
-    public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto teacherInput, ObjectId studentId)
+    public static Attendence ConvertAddStudentStatusDtoToAttendence(AddStudentStatusDto teacherInput, ObjectId studentId, DateOnly currentDate)
     {
         return new Attendence(
             StudentId: studentId,
-            UserName: teacherInput.UserName,
-            DaysOfWeek: teacherInput.DaysOfWeek,
-            Date: teacherInput.Date,
-            AbsentOrPresent: teacherInput.AbsentOrPresent
+            // UserName: teacherInput.UserName,
+            Date: currentDate,
+            IsPresent: teacherInput.IsPresent
         );
     }
 
@@ -85,15 +84,15 @@ public static class Mappers
     //     );
     // }
     
-    public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
+    public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence, string studentUserName)
     {
         return new ShowStudentStatusDto
         {
-            StudentId = attendence.Id,
-            UserName = attendence.UserName,
-            DaysOfWeek = attendence.DaysOfWeek,
+            // StudentId = attendence.Id,
+            UserName = studentUserName,
+            // DaysOfWeek = attendence.DaysOfWeek,
             Date = attendence.Date,
-            AbsentOrPresent = attendence.AbsentOrPresent
+            IsPresent = attendence.IsPresent
         };
     }
 
