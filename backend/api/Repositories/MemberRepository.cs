@@ -107,7 +107,14 @@ public class MemberRepository : IMemberRepository
 
         if (userId is null) return null;
 
-        AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser => appUser.Id == userId).
+        string? loggedInUserName = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.Id == userId)
+            .Select(doc => doc.NormalizedUserName)
+            .FirstOrDefaultAsync(cancellationToken);
+        if (loggedInUserName is null)
+            return null;
+
+        AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser => appUser.NormalizedUserName == loggedInUserName).
             FirstOrDefaultAsync(cancellationToken);
 
         return appUser is null
