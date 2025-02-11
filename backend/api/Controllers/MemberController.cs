@@ -95,14 +95,14 @@ public class MemberController
         return Ok(courses);
     }
     
-    [HttpGet("get-classmate")]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllClassmate(CancellationToken cancellationToken)
+    [HttpGet("get-classmate/{targetCourseTitle}")]
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllClassmate(string targetCourseTitle, CancellationToken cancellationToken)
     {
         string? userIdHashed = User.GetHashedUserId();
 
         if (userIdHashed is null) return Unauthorized("Login again.");
         
-        List<AppUser> pagedAppUsers = await _memberRepository.GetAllClassmateAsync(userIdHashed, cancellationToken);
+        List<AppUser> pagedAppUsers = await _memberRepository.GetAllClassmateAsync(targetCourseTitle, userIdHashed, cancellationToken);
 
         if (pagedAppUsers.Count == 0)
             return NoContent();

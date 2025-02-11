@@ -120,7 +120,6 @@ public class MemberRepository : IMemberRepository
         return appUser is null
             ? null
             : Mappers.ConvertAppUserToProfileDto(appUser);
-
     }
 
     public async Task<MemberDto?> GetByUserNameAsync(string memberUserName, CancellationToken cancellationToken)
@@ -172,7 +171,7 @@ public class MemberRepository : IMemberRepository
             : courses;
     }
 
-    public async Task<List<AppUser>> GetAllClassmateAsync(string userIdHashed, CancellationToken cancellationToken)
+    public async Task<List<AppUser>> GetAllClassmateAsync(string targetCourseTitle, string userIdHashed, CancellationToken cancellationToken)
     {
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
 
@@ -184,10 +183,10 @@ public class MemberRepository : IMemberRepository
         if (loggedInAppUser is null)
             return null;
 
-        List<string> targetCourseIds = loggedInAppUser.EnrolledCourses.Select(course => course.CourseId.ToString()).ToList();
+        // List<string> targetCourseIds = loggedInAppUser.EnrolledCourses.Select(course => course.CourseId.ToString()).ToList();
 
         List<AppUser> classmates = await _collectionAppUser.AsQueryable<AppUser>()
-            .Where(appUser => appUser.EnrolledCourses.Any(course => targetCourseIds.Contains(course.CourseId)) && appUser.Id != userId)
+            .Where(appUser => appUser.EnrolledCourses.Any(course => targetCourseTitle.ToUpper().Contains(course.CourseTitle)) && appUser.Id != userId)
             .ToListAsync(cancellationToken);
 
         // List<AppUser>? targetAppUsers = _collectionAppUser.Find<AppUser>(
