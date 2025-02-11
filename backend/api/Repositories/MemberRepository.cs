@@ -31,16 +31,24 @@ public class MemberRepository : IMemberRepository
     //     return appUser;
     // }
 
-    // public async Task<PagedList<Attendence>> GetAllAttendenceAsync(AttendenceParams attendenceParams, CancellationToken cancellationToken)
-    // {
-    //     // PagedList<Attendence> attendences = _collectionAttendence.Find<Attendence>(doc
-    //     // => doc.StudentId == attendenceParams.UserId).ToList(cancellationToken);
+    public async Task<PagedList<Attendence>> GetAllAttendenceAsync(AttendenceParams attendenceParams, CancellationToken cancellationToken)
+    {
+        // PagedList<Attendence> attendences = _collectionAttendence.Find<Attendence>(doc
+        // => doc.StudentId == attendenceParams.UserId).ToList(cancellationToken);
 
-    //     IMongoQueryable<Attendence>? query = _collectionAttendence.AsQueryable<Attendence>()
-    //         .Where(doc => doc.StudentId == attendenceParams.UserId);
+        // string? targetUserName = await _collectionAppUser.AsQueryable()
+        //     .Where(doc => doc.Id == attendenceParams.UserId)
+        //     .Select(doc => doc.UserName)
+        //     .FirstOrDefaultAsync(cancellationToken);
         
-    //     return await PagedList<Attendence>.CreatePagedListAsync(query, attendenceParams.PageNumber, attendenceParams.PageSize, cancellationToken);
-    // }
+        // if (targetUserName is null)
+        //     return null;
+
+        IMongoQueryable<Attendence>? query = _collectionAttendence.AsQueryable<Attendence>()
+            .Where(doc => doc.StudentId == attendenceParams.UserId);
+        
+        return await PagedList<Attendence>.CreatePagedListAsync(query, attendenceParams.PageNumber, attendenceParams.PageSize, cancellationToken);
+    }
 
     public async Task<bool?> UpdateMemberAsync(MemberUpdateDto memberUpdateDto, string? hashedUserId, CancellationToken cancellationToken)
     {

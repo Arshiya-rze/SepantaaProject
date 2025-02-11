@@ -12,7 +12,7 @@ public class ShowStudentStatusDto
 {
     // public AppUser? UserName { get; init; }
     // public ObjectId StudentId { get; init; }
-    public string UserName { get; init; } = string.Empty;
+    // public string UserName { get; init; } = string.Empty;
     // public string DaysOfWeek { get; init; }
     public DateOnly Date { get; init; }
     // public string AbsentOrPresent { get; init; }

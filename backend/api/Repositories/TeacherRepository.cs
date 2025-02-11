@@ -95,7 +95,7 @@ public class TeacherRepository : ITeacherRepository
 
         if (ObjectId.Equals != null)
         {
-            ShowStudentStatusDto showStudentStatusDto = Mappers.ConvertAttendenceToShowStudentStatusDto(attendence, teacherInput.UserName);
+            ShowStudentStatusDto showStudentStatusDto = Mappers.ConvertAttendenceToShowStudentStatusDto(attendence);
 
             return showStudentStatusDto;
         }
@@ -110,37 +110,6 @@ public class TeacherRepository : ITeacherRepository
         //     attendence.IsPresent
         // );
     }
-
-    // public async Task<ShowStudentStatusDtoDemo> AddDemoAsync(AddStudentStatusDemo teacherInput, CancellationToken cancellationToken)
-    // {
-    //     ObjectId? studentId = await GetObjectIdByUserNameAsync(teacherInput.UserName.ToUpper(), cancellationToken);
-
-    //     if (studentId is null) return null;
-
-    //     //date-start
-    //     string persianDate = teacherInput.Time;
-    //     PersianDateTime persianDateTime = PersianDateTime.Parse(persianDate);
-
-    //     DateTime standardDate = persianDateTime.ToDateTime();
-
-    //     //date-end
-
-    //     AttendenceDemo? attendenceDemo = Mappers.ConvertAddStudentStatusDemoToAttendenceDemo(teacherInput, studentId.Value, standardDate);
-
-    //     if (_collectionAttendenceDemo is not null)
-    //     {
-    //         await _collectionAttendenceDemo.InsertOneAsync(attendenceDemo, null, cancellationToken);
-    //     }
-
-    //     if (ObjectId.Equals != null)
-    //     {
-    //         ShowStudentStatusDtoDemo showStudentStatusDtoDemo = Mappers.ConvertAttendenceDemoToShowStudentStatusDemo(attendenceDemo);
-
-    //         return showStudentStatusDtoDemo;
-    //     }
-
-    //     return null;
-    // } 
 
     public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string targetTitle, string hashedUserId, CancellationToken cancellationToken)
     {

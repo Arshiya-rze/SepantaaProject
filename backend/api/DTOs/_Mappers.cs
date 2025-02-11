@@ -84,12 +84,12 @@ public static class Mappers
     //     );
     // }
     
-    public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence, string studentUserName)
+    public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
     {
         return new ShowStudentStatusDto
         {
             // StudentId = attendence.Id,
-            UserName = studentUserName,
+            // UserName = studentUserName,
             // DaysOfWeek = attendence.DaysOfWeek,
             Date = attendence.Date,
             IsPresent = attendence.IsPresent
