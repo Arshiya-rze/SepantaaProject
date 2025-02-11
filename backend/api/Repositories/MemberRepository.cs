@@ -7,6 +7,7 @@ public class MemberRepository : IMemberRepository
     #region Constructor
     IMongoCollection<AppUser>? _collectionAppUser;
     IMongoCollection<Attendence>? _collectionAttendence;
+    IMongoCollection<Course>? _collectionCourse;
     private readonly ITokenService _tokenService;
     private readonly UserManager<AppUser> _userManager;
 
@@ -15,6 +16,7 @@ public class MemberRepository : IMemberRepository
         var database = client.GetDatabase(dbSettings.DatabaseName);
         _collectionAppUser = database.GetCollection<AppUser>(AppVariablesExtensions.collectionUsers);
         _collectionAttendence = database.GetCollection<Attendence>(AppVariablesExtensions.collectionAttendences);
+        _collectionCourse = database.GetCollection<Course>(AppVariablesExtensions.collectionCourses);
 
         _tokenService = tokenService;
         _userManager = userManager;
@@ -132,6 +134,37 @@ public class MemberRepository : IMemberRepository
         return null;
     }
 
+    public async Task<List<Course?>> GetCourseAsync(string hashedUserId, CancellationToken cancellationToken)
+    {
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
+
+        if (userId is null)
+            return null;
+
+        //inja dare ye enrolleddCourse be man mide dar sorati ke man list mikham
+        List<string>? enrolledCourseIds = await _collectionAppUser.AsQueryable<AppUser>()
+            .Where(appUser => appUser.Id == userId)
+            .SelectMany(appUser => appUser.EnrolledCourses)
+            .Select(doc => doc.CourseId)
+            .ToListAsync(cancellationToken);
+            
+        if (enrolledCourseIds is null || !enrolledCourseIds.Any())
+            return null;
+
+        List<Course>? courses = await _collectionCourse.Find<Course>(doc => 
+            enrolledCourseIds.Contains(doc.Id.ToString())).ToListAsync(cancellationToken);
+
+        if (courses is null)
+        {
+            return null;
+        }
+
+        return courses is null
+            ? null
+            // : Mappers.ConvertAppUserToLoggedInDto(appUser, token);
+            : courses;
+    }
+
     public async Task<List<AppUser>> GetAllClassmateAsync(string userIdHashed, CancellationToken cancellationToken)
     {
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
@@ -145,7 +178,6 @@ public class MemberRepository : IMemberRepository
             return null;
 
         List<string> targetCourseIds = loggedInAppUser.EnrolledCourses.Select(course => course.CourseId.ToString()).ToList();
-
 
         List<AppUser> classmates = await _collectionAppUser.AsQueryable<AppUser>()
             .Where(appUser => appUser.EnrolledCourses.Any(course => targetCourseIds.Contains(course.CourseId)) && appUser.Id != userId)

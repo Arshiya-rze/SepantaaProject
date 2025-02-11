@@ -68,6 +68,33 @@ public class MemberController
             : Ok(new { message = "User has been updated successfully." });
     }
 
+    [HttpGet("get-course")]
+    public async Task<ActionResult<List<Course>>> GetCourse(CancellationToken cancellationToken)
+    {
+        string? token = null; 
+        
+        bool isTokenValid = HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
+
+        if (isTokenValid)
+            token = authHeader.ToString().Split(' ').Last();
+
+        if (string.IsNullOrEmpty(token))
+            return Unauthorized("Token is expired or invalid. Login again.");
+
+        string? hashedUserId = User.GetHashedUserId();
+        if (string.IsNullOrEmpty(hashedUserId))
+            return BadRequest("No user was found with this user Id.");
+
+        List<Course>? courses = await _memberRepository.GetCourseAsync(hashedUserId, cancellationToken);
+
+        if (courses is null || !courses.Any())
+        {
+            return NotFound("No Enrolled Courses found for the user.");
+        }
+
+        return Ok(courses);
+    }
+    
     [HttpGet("get-classmate")]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllClassmate(CancellationToken cancellationToken)
     {
