@@ -95,27 +95,27 @@ public class MemberController
         return Ok(courses);
     }
     
-    [HttpGet("get-classmate/{targetCourseTitle}")]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllClassmate(string targetCourseTitle, CancellationToken cancellationToken)
-    {
-        string? userIdHashed = User.GetHashedUserId();
+    // [HttpGet("get-classmate/{targetCourseTitle}")]
+    // public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllClassmate(string targetCourseTitle, CancellationToken cancellationToken)
+    // {
+    //     string? userIdHashed = User.GetHashedUserId();
 
-        if (userIdHashed is null) return Unauthorized("Login again.");
+    //     if (userIdHashed is null) return Unauthorized("Login again.");
         
-        List<AppUser> pagedAppUsers = await _memberRepository.GetAllClassmateAsync(targetCourseTitle, userIdHashed, cancellationToken);
+    //     List<AppUser> pagedAppUsers = await _memberRepository.GetAllClassmateAsync(targetCourseTitle, userIdHashed, cancellationToken);
 
-        if (pagedAppUsers.Count == 0)
-            return NoContent();
+    //     if (pagedAppUsers.Count == 0)
+    //         return NoContent();
 
-        List<MemberDto> memberDtos = [];
+    //     List<MemberDto> memberDtos = [];
 
-        foreach (AppUser appUser in pagedAppUsers)
-        {
-            memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
-        }
+    //     foreach (AppUser appUser in pagedAppUsers)
+    //     {
+    //         memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
+    //     }
 
-        return memberDtos;
-    }
+    //     return memberDtos;
+    // }
     
     [HttpGet("get-by-userName/{memberUserName}")]
     public async Task<ActionResult<MemberDto>> GetByUserName(string memberUserName, CancellationToken cancellationToken)

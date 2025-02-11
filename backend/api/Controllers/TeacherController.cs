@@ -51,6 +51,7 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         // return showStudentStatusDto;
     }
 
+    [AllowAnonymous]
     [HttpGet("get-student/{targetTitle}")]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, string targetTitle, CancellationToken cancellationToken)
     {

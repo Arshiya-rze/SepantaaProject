@@ -116,11 +116,17 @@ public class TeacherRepository : ITeacherRepository
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
         if (userId is null)
             return null;
+        
+        // AppUser? loggedInAppUser = await _collectionAppUser.Find<AppUser>(doc =>
+        //     doc.Id == userId).FirstOrDefaultAsync(cancellationToken);
+        
+        // if (loggedInAppUser is null)
+        //     return null;
 
         // دریافت لیست دانش‌آموزانی که در این دوره ثبت‌نام کرده‌اند
         IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable()
-            .Where(user => user.EnrolledCourses.Any(course => course.CourseTitle == targetTitle.ToUpper()));
-
+            // .Where(user => user.EnrolledCourses.Any(course => course.CourseTitle == targetTitle.ToUpper()));
+            .Where(user => user.EnrolledCourses.Any(course => course.CourseTitle == targetTitle.ToUpper() && user.Id != userId));
         // بازگرداندن لیست صفحه‌بندی‌شده
         return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     }
