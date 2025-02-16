@@ -68,12 +68,12 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
             : NotFound($"Attendence record for {targetUserName} not found");
     }
 
-    [HttpGet("absent-students")]
-    public async Task<ActionResult<List<string>>> GetAbsentStudents(CancellationToken cancellationToken)
+    [HttpGet("absent-students/{targetCourseTitle}")]
+    public async Task<ActionResult<List<string>>> GetAbsentStudents(string targetCourseTitle, CancellationToken cancellationToken)
     {
         try
         {
-            var absentStudents = await _teacherRepository.GetAbsentStudentsAsync(cancellationToken);
+            var absentStudents = await _teacherRepository.GetAbsentStudentsAsync(targetCourseTitle, cancellationToken);
             return Ok(absentStudents);  // برگشت لیست دانشجویان غایب
         }
         catch (Exception ex)

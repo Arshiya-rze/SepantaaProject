@@ -146,10 +146,15 @@ public class TeacherRepository : ITeacherRepository
         return deleteResult.DeletedCount > 0;
     }
 
-    public async Task<List<string>> GetAbsentStudentsAsync(CancellationToken cancellationToken)
+    public async Task<List<string>> GetAbsentStudentsAsync(string targetCourseTitle, CancellationToken cancellationToken)
     {
+        ObjectId targetCourseId = await _collectionCourse.AsQueryable<Course>()
+            .Where(doc => doc.Title == targetCourseTitle.ToUpper())
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
         List<ObjectId> absentStudentsIds = await _collectionAttendence.AsQueryable()
-            .Where(a => a.IsPresent == true)  // غایبین
+            .Where(a => a.CourseId == targetCourseId && a.IsPresent == true)  // غایبین
             .Select(a => a.StudentId)
             .Distinct()                        // حذف تکرار
             .ToListAsync(cancellationToken); 
@@ -157,15 +162,15 @@ public class TeacherRepository : ITeacherRepository
         if(absentStudentsIds == null || absentStudentsIds.Count == 0)
             return new List<string>(); //اگر غایب بود یک لیست خالی برمیگردونیم
 
-        List<string?> absentStudentsUserName = await _collectionAppUser.AsQueryable()
+        List<string?> absentStudentsUserNames = await _collectionAppUser.AsQueryable()
             .Where(doc => absentStudentsIds.Contains(doc.Id))
             .Select(doc => doc.NormalizedUserName)
             .ToListAsync(cancellationToken);
         
-        if (absentStudentsUserName is null)
+        if (absentStudentsUserNames is null)
             return null;
 
-        return absentStudentsUserName;
+        return absentStudentsUserNames;
     }
 
     public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string targetTitle, string hashedUserId, CancellationToken cancellationToken)
