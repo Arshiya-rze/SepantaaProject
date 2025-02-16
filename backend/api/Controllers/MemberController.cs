@@ -20,8 +20,8 @@ public class MemberController
             : profileDto;
     }
 
-    [HttpGet("get-attendences")]
-    public async Task<ActionResult<IEnumerable<ShowStudentStatusDto>>> GetAllAttendence([FromQuery] AttendenceParams attendenceParams, CancellationToken cancellationToken)
+    [HttpGet("get-attendences/{targetCourseTitle}")]
+    public async Task<ActionResult<IEnumerable<ShowStudentStatusDto>>> GetAllAttendence([FromQuery] AttendenceParams attendenceParams, string targetCourseTitle, CancellationToken cancellationToken)
     {
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
 
@@ -30,7 +30,7 @@ public class MemberController
         
         attendenceParams.UserId = userId;
 
-        PagedList<Attendence> pagedAttendences = await _memberRepository.GetAllAttendenceAsync(attendenceParams, cancellationToken);
+        PagedList<Attendence> pagedAttendences = await _memberRepository.GetAllAttendenceAsync(attendenceParams, targetCourseTitle, cancellationToken);
 
         if (pagedAttendences.Count == 0)
             return NoContent();

@@ -33,7 +33,7 @@ public class MemberRepository : IMemberRepository
     //     return appUser;
     // }
 
-    public async Task<PagedList<Attendence>> GetAllAttendenceAsync(AttendenceParams attendenceParams, CancellationToken cancellationToken)
+    public async Task<PagedList<Attendence>> GetAllAttendenceAsync(AttendenceParams attendenceParams, string targetCourseTitle, CancellationToken cancellationToken)
     {
         // PagedList<Attendence> attendences = _collectionAttendence.Find<Attendence>(doc
         // => doc.StudentId == attendenceParams.UserId).ToList(cancellationToken);
@@ -45,9 +45,16 @@ public class MemberRepository : IMemberRepository
         
         // if (targetUserName is null)
         //     return null;
+        ObjectId? targetCourseId = await _collectionCourse.AsQueryable()
+            .Where(doc => doc.Title == targetCourseTitle.ToUpper())
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        if(targetCourseId is null)
+            return null;
 
         IMongoQueryable<Attendence>? query = _collectionAttendence.AsQueryable<Attendence>()
-            .Where(doc => doc.StudentId == attendenceParams.UserId);
+            .Where(doc => doc.StudentId == attendenceParams.UserId && doc.CourseId == targetCourseId);
         
         return await PagedList<Attendence>.CreatePagedListAsync(query, attendenceParams.PageNumber, attendenceParams.PageSize, cancellationToken);
     }
