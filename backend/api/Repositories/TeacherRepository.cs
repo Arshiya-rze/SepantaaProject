@@ -129,7 +129,7 @@ public class TeacherRepository : ITeacherRepository
         // );
     }
 
-    public async Task<bool> DeleteAsync(ObjectId userId, string targetUserName, DateOnly currentDate, CancellationToken cancellationToken)
+    public async Task<bool> DeleteAsync(ObjectId userId, string targetUserName, string targetCourseTitle, DateOnly currentDate, CancellationToken cancellationToken)
     {
         ObjectId? targetUserId = await _collectionAppUser.AsQueryable()
             .Where(doc => doc.NormalizedUserName == targetUserName.ToUpper())
@@ -138,9 +138,14 @@ public class TeacherRepository : ITeacherRepository
     
         if (targetUserId is null)
             return false;
+        
+        ObjectId targetCourseId = await _collectionCourse.AsQueryable()
+            .Where(doc => doc.Title == targetCourseTitle.ToUpper())
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
 
         DeleteResult deleteResult = await _collectionAttendence.DeleteOneAsync(
-            doc => doc.StudentId == targetUserId && doc.Date == currentDate,
+            doc => doc.StudentId == targetUserId && doc.Date == currentDate && doc.CourseId == targetCourseId,
             cancellationToken);
 
         return deleteResult.DeletedCount > 0;

@@ -51,8 +51,8 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         // return showStudentStatusDto;
     }
 
-    [HttpDelete("remove-attendence/{targetUserName}")]
-    public async Task<ActionResult<Response>> Delete(string targetUserName, CancellationToken cancellationToken)
+    [HttpDelete("remove-attendence/{targetUserName}/{targetCourseTitle}")]
+    public async Task<ActionResult<Response>> Delete(string targetUserName, string targetCourseTitle, CancellationToken cancellationToken)
     {
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
 
@@ -61,7 +61,7 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
 
         DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow);
 
-        bool isDeleted = await _teacherRepository.DeleteAsync(userId.Value, targetUserName, currentDate, cancellationToken);
+        bool isDeleted = await _teacherRepository.DeleteAsync(userId.Value, targetUserName, targetCourseTitle, currentDate, cancellationToken);
 
         return isDeleted
             ? Ok(new Response(Message: $"Attendence record for {targetUserName} removed successfully"))
