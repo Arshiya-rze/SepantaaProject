@@ -15,6 +15,7 @@ public class ShowStudentStatusDto
     // public string UserName { get; init; } = string.Empty;
     // public string DaysOfWeek { get; init; }
     public DateOnly Date { get; init; }
+    public string CourseId { get; init; }
     // public string AbsentOrPresent { get; init; }
     public bool IsPresent { get; init; }
 }

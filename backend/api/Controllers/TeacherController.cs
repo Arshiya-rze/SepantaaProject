@@ -27,14 +27,14 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         return course is null ? Unauthorized("User is logged out or unauthorized. Login again.") : course;
     }
 
-    [HttpPost("add-attendence")]
-    public async Task<ActionResult<ShowStudentStatusDto>> Add(AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
+    [HttpPost("add-attendence/{targetCourseTitle}")]
+    public async Task<ActionResult<ShowStudentStatusDto>> Add(AddStudentStatusDto teacherInput, string targetCourseTitle, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(teacherInput.UserName)) 
         
         return BadRequest("یوزرنیم خالی است.");
 
-        ShowStudentStatusDto showStudentStatusDto = await _teacherRepository.AddAsync(teacherInput, cancellationToken);
+        ShowStudentStatusDto showStudentStatusDto = await _teacherRepository.AddAsync(teacherInput, targetCourseTitle, cancellationToken);
 
         if (showStudentStatusDto is null)
             return BadRequest("ثبت حضور و غیاب انجام نشد. دانش‌آموز یافت نشد یا قبلاً ثبت شده است.");

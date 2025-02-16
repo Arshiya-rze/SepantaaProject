@@ -57,7 +57,7 @@ public class TeacherRepository : ITeacherRepository
             : courses;
     }
 
-    public async Task<ShowStudentStatusDto> AddAsync(AddStudentStatusDto teacherInput, CancellationToken cancellationToken)
+    public async Task<ShowStudentStatusDto> AddAsync(AddStudentStatusDto teacherInput, string courseTitle, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(teacherInput.UserName))
             return null;
@@ -80,10 +80,25 @@ public class TeacherRepository : ITeacherRepository
         // if (existingAttendance is not null) 
         //     return null; 
 
+        ObjectId targetCourseId = await _collectionCourse.AsQueryable<Course>()
+            .Where(doc => doc.Title == courseTitle.ToUpper())
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        // if (targetCourseId is null)
+        //     return null;
+        
         if(teacherInput.IsPresent == false)
             return null;
 
-        Attendence? attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(teacherInput, targetAppUser.Id, currentDate);
+        Attendence existingAttendence = await _collectionAttendence
+            .Find(doc => doc.StudentId == targetAppUser.Id && doc.Date == currentDate && doc.CourseId == targetCourseId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if(existingAttendence != null)
+            return null;
+
+        Attendence? attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(teacherInput, targetAppUser.Id, targetCourseId, currentDate);
 
         // Attendence attendence = new Attendence(
         //     ObjectId.GenerateNewId(),
@@ -133,14 +148,17 @@ public class TeacherRepository : ITeacherRepository
 
     public async Task<List<string>> GetAbsentStudentsAsync(CancellationToken cancellationToken)
     {
-        ObjectId absentStudentsId = await _collectionAttendence.AsQueryable()
+        List<ObjectId> absentStudentsIds = await _collectionAttendence.AsQueryable()
             .Where(a => a.IsPresent == true)  // غایبین
             .Select(a => a.StudentId)
             .Distinct()                        // حذف تکرار
-            .FirstOrDefaultAsync(cancellationToken); 
+            .ToListAsync(cancellationToken); 
+        
+        if(absentStudentsIds == null || absentStudentsIds.Count == 0)
+            return new List<string>(); //اگر غایب بود یک لیست خالی برمیگردونیم
 
-        List<string> absentStudentsUserName = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.Id == absentStudentsId)
+        List<string?> absentStudentsUserName = await _collectionAppUser.AsQueryable()
+            .Where(doc => absentStudentsIds.Contains(doc.Id))
             .Select(doc => doc.NormalizedUserName)
             .ToListAsync(cancellationToken);
         
