@@ -131,6 +131,25 @@ public class TeacherRepository : ITeacherRepository
         return deleteResult.DeletedCount > 0;
     }
 
+    public async Task<List<string>> GetAbsentStudentsAsync(CancellationToken cancellationToken)
+    {
+        ObjectId absentStudentsId = await _collectionAttendence.AsQueryable()
+            .Where(a => a.IsPresent == true)  // غایبین
+            .Select(a => a.StudentId)
+            .Distinct()                        // حذف تکرار
+            .FirstOrDefaultAsync(cancellationToken); 
+
+        List<string> absentStudentsUserName = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.Id == absentStudentsId)
+            .Select(doc => doc.NormalizedUserName)
+            .ToListAsync(cancellationToken);
+        
+        if (absentStudentsUserName is null)
+            return null;
+
+        return absentStudentsUserName;
+    }
+
     public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string targetTitle, string hashedUserId, CancellationToken cancellationToken)
     {
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);

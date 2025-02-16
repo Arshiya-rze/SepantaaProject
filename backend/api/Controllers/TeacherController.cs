@@ -68,6 +68,20 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
             : NotFound($"Attendence record for {targetUserName} not found");
     }
 
+    [HttpGet("absent-students")]
+    public async Task<ActionResult<List<string>>> GetAbsentStudents(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var absentStudents = await _teacherRepository.GetAbsentStudentsAsync(cancellationToken);
+            return Ok(absentStudents);  // برگشت لیست دانشجویان غایب
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"خطا در دریافت لیست غایبین: {ex.Message}");
+        }
+    }
+
     [AllowAnonymous]
     [HttpGet("get-student/{targetTitle}")]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, string targetTitle, CancellationToken cancellationToken)
