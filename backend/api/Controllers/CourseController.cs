@@ -18,7 +18,8 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
             ? Ok(showCourseDto)
             : BadRequest("add-course failed try again.");
     }
-
+    
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ShowCourseDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken) 
     {

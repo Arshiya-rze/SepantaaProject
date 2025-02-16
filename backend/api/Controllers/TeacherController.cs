@@ -51,6 +51,23 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         // return showStudentStatusDto;
     }
 
+    [HttpDelete("remove-attendence/{targetUserName}")]
+    public async Task<ActionResult<Response>> Delete(string targetUserName, CancellationToken cancellationToken)
+    {
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(User.GetHashedUserId(), cancellationToken);
+
+        if (userId is null)
+            return Unauthorized("You are not logged in. Login in again.");
+
+        DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        bool isDeleted = await _teacherRepository.DeleteAsync(userId.Value, targetUserName, currentDate, cancellationToken);
+
+        return isDeleted
+            ? Ok(new Response(Message: $"Attendence record for {targetUserName} removed successfully"))
+            : NotFound($"Attendence record for {targetUserName} not found");
+    }
+
     [AllowAnonymous]
     [HttpGet("get-student/{targetTitle}")]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, string targetTitle, CancellationToken cancellationToken)

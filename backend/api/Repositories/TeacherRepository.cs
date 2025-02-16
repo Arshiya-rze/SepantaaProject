@@ -73,12 +73,15 @@ public class TeacherRepository : ITeacherRepository
         DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow);
 
         // 🔹 بررسی اینکه آیا این تاریخ قبلاً ثبت شده است؟
-        Attendence existingAttendance = await _collectionAttendence
-            .Find(a => a.StudentId == targetAppUser.Id && a.Date == currentDate)
-            .FirstOrDefaultAsync(cancellationToken);
+        // Attendence existingAttendance = await _collectionAttendence
+        //     .Find(a => a.StudentId == targetAppUser.Id && a.Date == currentDate)
+        //     .FirstOrDefaultAsync(cancellationToken);
+        
+        // if (existingAttendance is not null) 
+        //     return null; 
 
-        if (existingAttendance is not null) 
-            return null; // اگر قبلاً حضور و غیاب ثبت شده باشد.
+        if(teacherInput.IsPresent == false)
+            return null;
 
         Attendence? attendence = Mappers.ConvertAddStudentStatusDtoToAttendence(teacherInput, targetAppUser.Id, currentDate);
 
@@ -109,6 +112,23 @@ public class TeacherRepository : ITeacherRepository
         //     attendence.Date.ToDateTime(TimeOnly.MinValue),
         //     attendence.IsPresent
         // );
+    }
+
+    public async Task<bool> DeleteAsync(ObjectId userId, string targetUserName, DateOnly currentDate, CancellationToken cancellationToken)
+    {
+        ObjectId? targetUserId = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.NormalizedUserName == targetUserName.ToUpper())
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+    
+        if (targetUserId is null)
+            return false;
+
+        DeleteResult deleteResult = await _collectionAttendence.DeleteOneAsync(
+            doc => doc.StudentId == targetUserId && doc.Date == currentDate,
+            cancellationToken);
+
+        return deleteResult.DeletedCount > 0;
     }
 
     public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string targetTitle, string hashedUserId, CancellationToken cancellationToken)
