@@ -250,7 +250,7 @@ public class ManagerRepository : IManagerRepository
         EnrolledCourse? enrolledCourse = await _collectionAppUser.AsQueryable<AppUser>()
             .Where(appUser => appUser.Id.ToString() == appUserId)
             .SelectMany(appUser => appUser.EnrolledCourses)
-            .Where(doc => doc.CourseId == targetCourseId)
+            .Where(doc => doc.CourseId.ToString() == targetCourseId)
             .FirstOrDefaultAsync(cancellationToken);
         
         if (enrolledCourse is null)
@@ -286,7 +286,7 @@ public class ManagerRepository : IManagerRepository
             );
 
             // Create a filter to remove the old enrolled course
-            var filter = Builders<EnrolledCourse>.Filter.Eq(ec => ec.CourseId, targetCourseId);
+            var filter = Builders<EnrolledCourse>.Filter.Eq(ec => ec.CourseId.ToString(), targetCourseId);
             var update = Builders<AppUser>.Update.PullFilter(u => u.EnrolledCourses, filter);
                     
             // Remove the old enrolled course
@@ -330,7 +330,7 @@ public class ManagerRepository : IManagerRepository
                 Payments: updatePayments 
             );
             // Create a filter to remove the old enrolled course
-            var filter = Builders<EnrolledCourse>.Filter.Eq(ec => ec.CourseId, targetCourseId);
+            var filter = Builders<EnrolledCourse>.Filter.Eq(ec => ec.CourseId.ToString(), targetCourseId);
             var update = Builders<AppUser>.Update.PullFilter(u => u.EnrolledCourses, filter);
                     
             // Remove the old enrolled course

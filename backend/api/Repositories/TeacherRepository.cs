@@ -88,7 +88,7 @@ public class TeacherRepository : ITeacherRepository
         // if (targetCourseId is null)
         //     return null;
         
-        if(teacherInput.IsPresent == false)
+        if(teacherInput.IsAbsent == false)
             return null;
 
         Attendence existingAttendence = await _collectionAttendence
@@ -151,32 +151,32 @@ public class TeacherRepository : ITeacherRepository
         return deleteResult.DeletedCount > 0;
     }
 
-    public async Task<List<string>> GetAbsentStudentsAsync(string targetCourseTitle, CancellationToken cancellationToken)
-    {
-        ObjectId targetCourseId = await _collectionCourse.AsQueryable<Course>()
-            .Where(doc => doc.Title == targetCourseTitle.ToUpper())
-            .Select(doc => doc.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+    // public async Task<List<string>> GetAbsentStudentsAsync(string targetCourseTitle, CancellationToken cancellationToken)
+    // {
+    //     ObjectId targetCourseId = await _collectionCourse.AsQueryable<Course>()
+    //         .Where(doc => doc.Title == targetCourseTitle.ToUpper())
+    //         .Select(doc => doc.Id)
+    //         .FirstOrDefaultAsync(cancellationToken);
 
-        List<ObjectId> absentStudentsIds = await _collectionAttendence.AsQueryable()
-            .Where(a => a.CourseId == targetCourseId && a.IsPresent == true)  // غایبین
-            .Select(a => a.StudentId)
-            .Distinct()                        // حذف تکرار
-            .ToListAsync(cancellationToken); 
+    //     List<ObjectId> absentStudentsIds = await _collectionAttendence.AsQueryable()
+    //         .Where(a => a.CourseId == targetCourseId && a.IsPresent == true)  // غایبین
+    //         .Select(a => a.StudentId)
+    //         .Distinct()                        // حذف تکرار
+    //         .ToListAsync(cancellationToken); 
         
-        if(absentStudentsIds == null || absentStudentsIds.Count == 0)
-            return new List<string>(); //اگر غایب بود یک لیست خالی برمیگردونیم
+    //     if(absentStudentsIds == null || absentStudentsIds.Count == 0)
+    //         return new List<string>(); //اگر غایب بود یک لیست خالی برمیگردونیم
 
-        List<string?> absentStudentsUserNames = await _collectionAppUser.AsQueryable()
-            .Where(doc => absentStudentsIds.Contains(doc.Id))
-            .Select(doc => doc.NormalizedUserName)
-            .ToListAsync(cancellationToken);
+    //     List<string?> absentStudentsUserNames = await _collectionAppUser.AsQueryable()
+    //         .Where(doc => absentStudentsIds.Contains(doc.Id))
+    //         .Select(doc => doc.NormalizedUserName)
+    //         .ToListAsync(cancellationToken);
         
-        if (absentStudentsUserNames is null)
-            return null;
+    //     if (absentStudentsUserNames is null)
+    //         return null;
 
-        return absentStudentsUserNames;
-    }
+    //     return absentStudentsUserNames;
+    // }
 
     public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, string targetTitle, string hashedUserId, CancellationToken cancellationToken)
     {
@@ -184,17 +184,25 @@ public class TeacherRepository : ITeacherRepository
         if (userId is null)
             return null;
         
-        // AppUser? loggedInAppUser = await _collectionAppUser.Find<AppUser>(doc =>
-        //     doc.Id == userId).FirstOrDefaultAsync(cancellationToken);
-        
-        // if (loggedInAppUser is null)
-        //     return null;
-
-        // دریافت لیست دانش‌آموزانی که در این دوره ثبت‌نام کرده‌اند
         IMongoQueryable<AppUser> query = _collectionAppUser.AsQueryable()
             // .Where(user => user.EnrolledCourses.Any(course => course.CourseTitle == targetTitle.ToUpper()));
             .Where(user => user.EnrolledCourses.Any(course => course.CourseTitle == targetTitle.ToUpper() && user.Id != userId));
         // بازگرداندن لیست صفحه‌بندی‌شده
         return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    }
+
+    public async Task<bool> CheckIsAbsentAsync(List<ObjectId> studentIds, ObjectId courseId, CancellationToken cancellationToken)
+    {
+        // تاریخ امروز (میلادی یا شمسی طبق نیاز شما)
+        DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow); // تاریخ امروز میلادی
+
+        // جستجو در کالکشن Attendence برای تمامی دانشجویان و تاریخ امروز
+        // bool attendence = await _collectionAttendence.AsQueryable()
+        //     .Where(a => studentIds.Contains(a.StudentId) && a.CourseId == courseId && a.Date == currentDate)
+        //     .FirstOrDefaultAsync(cancellationToken);
+
+        return await _collectionAttendence.Find<Attendence>(
+            a => studentIds.Contains(a.StudentId) && a.CourseId == courseId && a.Date == currentDate
+        ).AnyAsync(cancellationToken);
     }
 }

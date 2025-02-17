@@ -5,7 +5,7 @@ public record AddStudentStatusDto(
     // string DaysOfWeek,
     // DateTime Date,
     // string AbsentOrPresent
-    bool IsPresent
+    bool IsAbsent
 );
   
 public class ShowStudentStatusDto
@@ -17,7 +17,7 @@ public class ShowStudentStatusDto
     public DateOnly Date { get; init; }
     public string CourseId { get; init; }
     // public string AbsentOrPresent { get; init; }
-    public bool IsPresent { get; init; }
+    // public bool IsPresent { get; init; }
 }
 
 // public record AddStudentStatusDemo(

@@ -117,14 +117,14 @@ public class MemberController
     //     return memberDtos;
     // }
     
-    [HttpGet("get-by-userName/{memberUserName}")]
-    public async Task<ActionResult<MemberDto>> GetByUserName(string memberUserName, CancellationToken cancellationToken)
-    {
-        MemberDto? memberDto = await _memberRepository.GetByUserNameAsync(memberUserName, cancellationToken);
+    // [HttpGet("get-by-userName/{memberUserName}")]
+    // public async Task<ActionResult<MemberDto>> GetByUserName(string memberUserName, CancellationToken cancellationToken)
+    // {
+    //     MemberDto? memberDto = await _memberRepository.GetByUserNameAsync(memberUserName, cancellationToken);
 
-        if (memberDto is null)
-            return NotFound("No user with this userName address");
+    //     if (memberDto is null)
+    //         return NotFound("No user with this userName address");
 
-        return memberDto;
-    }
+    //     return memberDto;
+    // }
 }

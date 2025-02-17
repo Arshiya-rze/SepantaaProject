@@ -72,12 +72,17 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
 
         if (userId is null) return Unauthorized("You are unauthorized. Login again.");
+        
 
         List<MemberDto> memberDtos = [];
-
+        
+        // bool IsAbsent;
+        //inja dasti daram false midam chon manager niyaz be isAbsent student ha nadare
         foreach (AppUser appUser in pagedAppUsers)
         {
-            memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
+            bool isAbsent = false;
+
+            memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser, isAbsent));
         }
 
         return memberDtos;

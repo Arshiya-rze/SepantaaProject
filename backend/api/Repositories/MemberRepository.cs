@@ -129,23 +129,23 @@ public class MemberRepository : IMemberRepository
             : Mappers.ConvertAppUserToProfileDto(appUser);
     }
 
-    public async Task<MemberDto?> GetByUserNameAsync(string memberUserName, CancellationToken cancellationToken)
-    {
-        // ObjectId memberId = await _collectionAppUser.AsQueryable()
-        // .Where(appUser => appUser.NormalizedUserName == memberUserName)
-        // .Select(appUser => appUser.Id)
-        // .FirstOrDefaultAsync(cancellationToken);
+    // public async Task<MemberDto?> GetByUserNameAsync(string memberUserName, CancellationToken cancellationToken)
+    // {
+    //     // ObjectId memberId = await _collectionAppUser.AsQueryable()
+    //     // .Where(appUser => appUser.NormalizedUserName == memberUserName)
+    //     // .Select(appUser => appUser.Id)
+    //     // .FirstOrDefaultAsync(cancellationToken);
 
-        AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser =>
-                appUser.NormalizedUserName == memberUserName).FirstOrDefaultAsync(cancellationToken);
+    //     AppUser appUser = await _collectionAppUser.Find<AppUser>(appUser =>
+    //             appUser.NormalizedUserName == memberUserName).FirstOrDefaultAsync(cancellationToken);
 
-        if (appUser.ToString() is not null)
-        {
-            return Mappers.ConvertAppUserToMemberDto(appUser);
-        }
+    //     if (appUser.ToString() is not null)
+    //     {
+    //         return Mappers.ConvertAppUserToMemberDto(appUser);
+    //     }
 
-        return null;
-    }
+    //     return null;
+    // }
 
     public async Task<List<Course?>> GetCourseAsync(string hashedUserId, CancellationToken cancellationToken)
     {
@@ -158,7 +158,7 @@ public class MemberRepository : IMemberRepository
         List<string>? enrolledCourseIds = await _collectionAppUser.AsQueryable<AppUser>()
             .Where(appUser => appUser.Id == userId)
             .SelectMany(appUser => appUser.EnrolledCourses)
-            .Select(doc => doc.CourseId)
+            .Select(doc => doc.CourseId.ToString())
             .ToListAsync(cancellationToken);
             
         if (enrolledCourseIds is null || !enrolledCourseIds.Any())

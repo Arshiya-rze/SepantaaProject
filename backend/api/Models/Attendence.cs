@@ -9,8 +9,8 @@ public record Attendence (
     ObjectId CourseId,
     // string UserName,
     // string DaysOfWeek, //shanbe //1shanbe
-    DateOnly Date, //25/6/1402
-    bool IsPresent
+    DateOnly Date //25/6/1402
+    // bool IsPresent
 );
 
 // [CollectionName("attendencesDemo")]

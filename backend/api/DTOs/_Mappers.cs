@@ -29,7 +29,7 @@ public static class Mappers
         };
     }
 
-    public static MemberDto ConvertAppUserToMemberDto(AppUser appUser)
+    public static MemberDto ConvertAppUserToMemberDto(AppUser appUser, bool isAbsent)
     {
         return new MemberDto(
             Email: appUser.Email,
@@ -38,7 +38,8 @@ public static class Mappers
             LastName: appUser.LastName,
             PhoneNum: appUser.PhoneNum,
             Gender: appUser.Gender,
-            Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth)
+            Age: CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
+            IsAbsent: isAbsent
         );
     }
 
@@ -70,21 +71,11 @@ public static class Mappers
             StudentId: studentId,
             CourseId: courseId,
             // UserName: teacherInput.UserName,
-            Date: currentDate,
-            IsPresent: teacherInput.IsPresent
+            Date: currentDate
+            // IsPresent: teacherInput.IsPresent
         );
     }
 
-    // public static AttendenceDemo ConvertAddStudentStatusDemoToAttendenceDemo(AddStudentStatusDemo teacherInput, ObjectId studentId, DateTime standardDate)
-    // {
-    //     return new AttendenceDemo(
-    //         StudentId: studentId,
-    //         UserName: teacherInput.UserName,
-    //         Time: standardDate,
-    //         AbsentOrPresent: teacherInput.AbsentOrPresent
-    //     );
-    // }
-    
     public static ShowStudentStatusDto ConvertAttendenceToShowStudentStatusDto(Attendence attendence)
     {
         return new ShowStudentStatusDto
@@ -93,8 +84,8 @@ public static class Mappers
             // UserName = studentUserName,
             // DaysOfWeek = attendence.DaysOfWeek,
             Date = attendence.Date,
-            CourseId = attendence.CourseId.ToString(),
-            IsPresent = attendence.IsPresent
+            CourseId = attendence.CourseId.ToString()
+            // IsPresent = attendence.IsPresent
         };
     }
 
@@ -148,7 +139,7 @@ public static class Mappers
     {
         return new EnrolledCourse(
             // Id: Guid.NewGuid(),
-            CourseId: course.Id.ToString(), //13213213ddfdf
+            CourseId: course.Id, //13213213ddfdf
             CourseTitle: course.Title.ToUpper(),
             CourseTuition: course.Tuition, //6_000_000
             NumberOfPayments: managerInput.NumberOfPayments, //4
