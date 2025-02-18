@@ -32,7 +32,7 @@ public class MemberRepository : IMemberRepository
 
     //     return appUser;
     // }
-
+    
     public async Task<PagedList<Attendence>> GetAllAttendenceAsync(AttendenceParams attendenceParams, string targetCourseTitle, CancellationToken cancellationToken)
     {
         // PagedList<Attendence> attendences = _collectionAttendence.Find<Attendence>(doc

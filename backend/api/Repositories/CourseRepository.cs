@@ -66,7 +66,7 @@ public class CourseRepository : ICourseRepository
     }
      
     public async Task<bool> UpdateCourseAsync(
-        UpdateCourseDto updateCourseDto, ObjectId targetCourseId, 
+        UpdateCourseDto updateCourseDto, string targetCourseTitle, 
         CancellationToken cancellationToken)
     {
         int? calcDays = (int)Math.Ceiling(updateCourseDto.Hours / updateCourseDto.HoursPerClass);
@@ -87,7 +87,7 @@ public class CourseRepository : ICourseRepository
             .Set(c => c.IsStarted, updateCourseDto.IsStarted);
         
         UpdateResult updateResult = await _collectionCourse.UpdateOneAsync(
-            doc => doc.Id == targetCourseId, updatedCourse, null, cancellationToken
+            doc => doc.Title == targetCourseTitle.ToUpper(), updatedCourse, null, cancellationToken
         );
 
         return updateResult.ModifiedCount == 1;

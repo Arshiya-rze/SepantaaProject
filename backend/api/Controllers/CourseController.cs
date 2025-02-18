@@ -53,10 +53,10 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
         return showCourseDtos;
     }
 
-    [HttpPut("update/{targetCourseId}")]
-    public async Task<ActionResult> UpdateCourse(UpdateCourseDto updateCourseDto, ObjectId targetCourseId, CancellationToken cancellationToken)
+    [HttpPut("update/{targetCourseTitle}")]
+    public async Task<ActionResult> UpdateCourse(UpdateCourseDto updateCourseDto, string targetCourseTitle, CancellationToken cancellationToken)
     {
-        bool IsSuccess = await _courseRepository.UpdateCourseAsync(updateCourseDto, targetCourseId, cancellationToken);
+        bool IsSuccess = await _courseRepository.UpdateCourseAsync(updateCourseDto, targetCourseTitle, cancellationToken);
 
         return IsSuccess
             ? Ok(new { message = "Course has been updated successfully." })
