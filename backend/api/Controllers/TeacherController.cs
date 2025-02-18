@@ -68,21 +68,6 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
             : NotFound($"Attendence record for {targetUserName} not found");
     }
 
-    // [HttpGet("absent-students/{targetCourseTitle}")]
-    // public async Task<ActionResult<List<string>>> GetAbsentStudents(string targetCourseTitle, CancellationToken cancellationToken)
-    // {
-    //     // try
-    //     // {
-    //     //     var absentStudents = await _teacherRepository.GetAbsentStudentsAsync(targetCourseTitle, cancellationToken);
-    //     //     return Ok(absentStudents);  // برگشت لیست دانشجویان غایب
-    //     // }
-    //     // catch (Exception ex)
-    //     // {
-    //     //     return StatusCode(500, $"خطا در دریافت لیست غایبین: {ex.Message}");
-    //     // }
-
-    // }
-
     [AllowAnonymous]
     [HttpGet("get-student/{targetTitle}")]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll([FromQuery] PaginationParams paginationParams, string targetTitle, CancellationToken cancellationToken)
@@ -133,41 +118,5 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         }
 
         return memberDtos;
-
-
-        // string? userIdHashed = User.GetHashedUserId();
-
-        // if(userIdHashed is null)
-        //     return null;
-
-        // ObjectId? userId = await _tokenService.GetActualUserIdAsync(userIdHashed, cancellationToken);
-
-        // if (userId is null) return Unauthorized("You are unauthorized. Login again.");
-
-        // PagedList<AppUser> pagedAppUsers = await _teacherRepository.GetAllAsync(paginationParams, targetTitle, userIdHashed, cancellationToken);
-
-        // if (pagedAppUsers.Count == 0)
-        //     return NoContent();
-
-        // PaginationHeader paginationHeader = new(
-        //     CurrentPage: pagedAppUsers.CurrentPage,
-        //     ItemsPerPage: pagedAppUsers.PageSize,
-        //     TotalItems: pagedAppUsers.TotalItems,
-        //     TotalPages: pagedAppUsers.TotalPages
-        // );
-
-        // Response.AddPaginationHeader(paginationHeader);
-
-        // List<MemberDto> memberDtos = [];
-
-        // bool isAbsent;
-
-        // foreach (AppUser appUser in pagedAppUsers)
-        // {
-        //     isAbsent = await _teacherRepository.CheckIsAbsentAsync();
-        //     memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser, isAbsent));
-        // }
-
-        // return memberDtos;
     }
 }
