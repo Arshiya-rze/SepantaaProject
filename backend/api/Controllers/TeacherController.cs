@@ -119,14 +119,15 @@ public class TeacherController(ITeacherRepository _teacherRepository, ITokenServ
         if (courseId == null)
             return BadRequest("Course not found.");
 
+        Dictionary<ObjectId, bool> absences = await _teacherRepository.CheckIsAbsentAsync(studentIds, courseId.Value, cancellationToken);
 
-        // List<MemberDto> memberDtos = new List<MemberDto>();
         List<MemberDto> memberDtos = [];
         
         bool isAbsent;
         foreach (AppUser appUser in pagedAppUsers)
         {
-            isAbsent = await _teacherRepository.CheckIsAbsentAsync(studentIds, courseId.Value, cancellationToken);
+            isAbsent = absences.ContainsKey(appUser.Id) && absences[appUser.Id];
+            // isAbsent = await _teacherRepository.CheckIsAbsentAsync(studentIds, courseId.Value, cancellationToken);
 
             memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser, isAbsent));
         }

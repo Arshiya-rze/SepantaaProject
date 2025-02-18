@@ -191,18 +191,33 @@ public class TeacherRepository : ITeacherRepository
         return await PagedList<AppUser>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
     }
 
-    public async Task<bool> CheckIsAbsentAsync(List<ObjectId> studentIds, ObjectId courseId, CancellationToken cancellationToken)
+    // public async Task<bool> CheckIsAbsentAsync(List<ObjectId> studentIds, ObjectId courseId, CancellationToken cancellationToken)
+    // {
+    //     // تاریخ امروز (میلادی یا شمسی طبق نیاز شما)
+    //     DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow); // تاریخ امروز میلادی
+
+    //     // جستجو در کالکشن Attendence برای تمامی دانشجویان و تاریخ امروز
+    //     // bool attendence = await _collectionAttendence.AsQueryable()
+    //     //     .Where(a => studentIds.Contains(a.StudentId) && a.CourseId == courseId && a.Date == currentDate)
+    //     //     .FirstOrDefaultAsync(cancellationToken);
+
+    //     return await _collectionAttendence.Find<Attendence>(
+    //         a => studentIds.Contains(a.StudentId) && a.CourseId == courseId && a.Date == currentDate
+    //     ).AnyAsync(cancellationToken);
+    // }
+    public async Task<Dictionary<ObjectId, bool>> CheckIsAbsentAsync(List<ObjectId> studentIds, ObjectId courseId, CancellationToken cancellationToken)
     {
-        // تاریخ امروز (میلادی یا شمسی طبق نیاز شما)
-        DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow); // تاریخ امروز میلادی
+        DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow); // تاریخ امروز
 
-        // جستجو در کالکشن Attendence برای تمامی دانشجویان و تاریخ امروز
-        // bool attendence = await _collectionAttendence.AsQueryable()
-        //     .Where(a => studentIds.Contains(a.StudentId) && a.CourseId == courseId && a.Date == currentDate)
-        //     .FirstOrDefaultAsync(cancellationToken);
+        // دریافت لیست حضور و غیاب برای دانشجویان مشخص شده
+        var attendances = await _collectionAttendence
+            .Find(a => studentIds.Contains(a.StudentId) && a.CourseId == courseId && a.Date == currentDate)
+            .ToListAsync(cancellationToken);
 
-        return await _collectionAttendence.Find<Attendence>(
-            a => studentIds.Contains(a.StudentId) && a.CourseId == courseId && a.Date == currentDate
-        ).AnyAsync(cancellationToken);
+        // ایجاد یک دیکشنری که مشخص کند هر دانشجو غایب است یا نه
+        return studentIds.ToDictionary(
+            studentId => studentId,
+            studentId => attendances.Any(a => a.StudentId == studentId) // اگر در لیست باشد، یعنی غایب است
+        );
     }
 }
