@@ -18,7 +18,7 @@ public class ShowCourseDto
     public double HoursPerClass { get; init; }
     public int Days { get; init; }
     public DateTime Start { get; init; }
-    public bool IsStarted { get; init; }
+    public string IsStarted { get; init; } = string.Empty;
 };
 
 public class UpdateCourseDto
@@ -29,7 +29,7 @@ public class UpdateCourseDto
     public int Hours { get; init; }
     public double HoursPerClass { get; init; }
     public DateTime Start { get; init; }
-    public bool IsStarted { get; init; }
+    public string IsStarted { get; init; }
 };
 
 // public record UpdateCourseDto(

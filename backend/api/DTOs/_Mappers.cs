@@ -111,7 +111,7 @@ public static class Mappers
             HoursPerClass: managerInput.HoursPerClass,
             Days: daysCalc,
             Start: managerInput.Start,
-            IsStarted: true
+            IsStarted: "false"
         );
     }
 
