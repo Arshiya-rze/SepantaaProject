@@ -95,10 +95,31 @@ public class CourseRepository : ICourseRepository
 
     public async Task<ShowCourseDto?> GetCourseByTitleAsync(string courseTitle, CancellationToken cancellationToken)
     {
-        Course? course = await _collectionCourse.Find(c =>
-            c.Title == courseTitle.ToUpper()).FirstOrDefaultAsync(cancellationToken);
+        var course = await _collectionCourse
+            .Find(c => c.Title == courseTitle.ToUpper())
+            .FirstOrDefaultAsync(cancellationToken);
+
+        // if (course == null)
+        //     return null;
+
+        var professorIds = course.ProfessorsIds;
+        var professorNames = await _collectionAppUser
+            .Find(doc => professorIds.Contains(doc.Id))
+            .Project(doc => doc.Name) // فقط نام‌ها را نگه می‌داریم
+            .ToListAsync(cancellationToken);
         
-        return course is not null ? Mappers.ConvertCourseToShowCourseDto(course) : null;
+        // return course is not null ? Mappers.ConvertCourseToShowCourseDto(course, professorNames) : null;
+
+        return new ShowCourseDto
+        {
+            Title = course.Title,
+            Tuition = course.Tuition,
+            Hours = course.Hours,
+            HoursPerClass = course.HoursPerClass,
+            Start = course.Start,
+            IsStarted = course.IsStarted,
+            ProfessorsNames = professorNames
+        };
     }
 
 }
