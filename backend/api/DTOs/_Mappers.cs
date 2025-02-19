@@ -105,6 +105,7 @@ public static class Mappers
         return new Course(
             Title: managerInput.Title.ToUpper(),
             ProfessorsIds: [],
+            ProfessorsNames: [],
             Tuition: managerInput.Tuition,
             Hours: managerInput.Hours,
             HoursPerClass: managerInput.HoursPerClass,

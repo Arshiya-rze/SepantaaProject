@@ -23,17 +23,6 @@ public class CourseRepository : ICourseRepository
     }
     #endregion Vars and Constructor
 
-    // public async Task<ObjectId> GetObjectIdByLessonAsync(List<string> titles, CancellationToken cancellationToken)
-    // {
-    //     ObjectId teacherId = await _collectionAppUser.AsQueryable<AppUser>()
-    //         .Where(appUser => appUser.Titles == titles)
-    //         .Select(item => item.Id)
-    //         .SingleOrDefaultAsync(cancellationToken);
-
-    //     // return ValidationsExtensions.ValidateListObjectId(teacherId);
-    //     return teacherId;
-    // }
-    
     public async Task<ShowCourseDto> AddCourseAsync(AddCourseDto managerInput, CancellationToken cancellationToken)
     {
         // int daysCalc = managerInput.Hours / managerInput.HoursPerClass;
@@ -56,6 +45,47 @@ public class CourseRepository : ICourseRepository
 
         return null;
     }
+
+    // public async Task<PagedList<ShowCourseDto>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
+    // {
+    //     IMongoQueryable<Course> query = _collectionCourse.AsQueryable();
+
+    //     // دریافت لیست دوره‌ها با صفحه‌بندی
+    //     PagedList<Course> pagedCourses = await PagedList<Course>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+
+    //     // گرفتن تمامی شناسه‌های مدرسین از همه دوره‌ها
+    //     var allProfessorIds = pagedCourses.SelectMany(course => course.ProfessorsIds).Distinct().ToList();
+
+    //     // دریافت اطلاعات مدرسین از دیتابیس
+    //     var professors = await _collectionAppUser
+    //         .Find(user => allProfessorIds.Contains(user.Id))
+    //         .Project(user => new { user.Id, user.Username })
+    //         .ToListAsync(cancellationToken);
+
+    //     // ساخت دیکشنری برای نگاشت ID به Username
+    //     var professorDict = professors.ToDictionary(professor => professor.Id, professor => professor.Username);
+
+    //     // تبدیل دوره‌ها به ShowCourseDto و اضافه کردن نام مدرسین به جای ID
+    //     IMongoQueryable result = pagedCourses.Select(course => new ShowCourseDto
+    //     {
+    //         Id = course.Id.ToString(),
+    //         Title = course.Title,
+    //         ProfessorsNames = course.ProfessorsIds.Select(id => professorDict.ContainsKey(id) ? professorDict[id] : "نامشخص").ToList(),
+    //         Tuition = course.Tuition,
+    //         Hours = course.Hours,
+    //         HoursPerClass = course.HoursPerClass,
+    //         Days = course.Days,
+    //         Start = course.Start,
+    //         IsStarted = course.IsStarted
+    //     }).ToList();
+
+    //     return new PagedList<ShowCourseDto>(result, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    //     // return await PagedList<ShowCourseDto>(result, paginationParams.PageNumber,
+    //     //     paginationParams.PageSize, cancellationToken);
+
+    //     // استفاده از CreatePagedListAsync برای ایجاد لیست صفحه‌بندی شده از ShowCourseDto
+    //     return await PagedList<ShowCourseDto>.CreatePagedListAsync(result.AsQueryable(), paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    // }
 
     public async Task<PagedList<Course>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
     {
@@ -95,13 +125,17 @@ public class CourseRepository : ICourseRepository
     {
         int? calcDays = (int)Math.Ceiling(updateCourseDto.Hours / updateCourseDto.HoursPerClass);
 
-        ObjectId professorId = await _collectionAppUser.AsQueryable()
-            .Where(doc => doc.NormalizedUserName == updateCourseDto.ProfessorUserName.ToUpper())
-            .Select(doc => doc.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        AppUser targetProfessor = await _collectionAppUser.Find(
+            doc => doc.NormalizedUserName == updateCourseDto.ProfessorUserName.ToUpper() 
+        ).FirstOrDefaultAsync(cancellationToken);
+
+                // .Where(doc => doc.NormalizedUserName == updateCourseDto.ProfessorUserName.ToUpper())
+                // .Select(doc => doc.Id)
+                // .FirstOrDefaultAsync(cancellationToken);
 
         UpdateDefinition<Course> updatedCourse = Builders<Course>.Update
-            .AddToSet(c => c.ProfessorsIds, professorId)
+            .AddToSet(c => c.ProfessorsIds, targetProfessor.Id)
+            .Push(c => c.ProfessorsNames, targetProfessor.Name)
             .Set(c => c.Title, updateCourseDto.Title?.ToUpper())
             .Set(c => c.Tuition, updateCourseDto.Tuition)
             .Set(c => c.Hours, updateCourseDto.Hours)

@@ -7,6 +7,7 @@ public record Course(
     [Optional][property: BsonId, BsonRepresentation(BsonType.ObjectId)] ObjectId Id,
     string Title, // English
     List<ObjectId> ProfessorsIds, //132342344
+    List<string> ProfessorsNames,
     int Tuition, //6_000_000t
     int Hours, //128h
     Double HoursPerClass,

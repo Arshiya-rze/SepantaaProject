@@ -5,7 +5,8 @@ public class PagedList<T> : List<T> // Generic (Type Agnostic)
     public PagedList() { }
     
     // set props values
-    private PagedList(IEnumerable<T> items, int itemsCount, int pageNumber, int pageSize)
+    //inja az private taghri dadam be public
+    public PagedList(IEnumerable<T> items, int itemsCount, int pageNumber, int pageSize)
     {
         CurrentPage = pageNumber;
         TotalPages = (int)Math.Ceiling(itemsCount / (double)pageSize); // 10 items, 3 pageSize => 4 total pages
