@@ -92,4 +92,13 @@ public class CourseRepository : ICourseRepository
 
         return updateResult.ModifiedCount == 1;
     }
+
+    public async Task<ShowCourseDto?> GetCourseByTitleAsync(string courseTitle, CancellationToken cancellationToken)
+    {
+        Course? course = await _collectionCourse.Find(c =>
+            c.Title == courseTitle.ToUpper()).FirstOrDefaultAsync(cancellationToken);
+        
+        return course is not null ? Mappers.ConvertCourseToShowCourseDto(course) : null;
+    }
+
 }

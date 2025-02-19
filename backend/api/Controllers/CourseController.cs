@@ -62,4 +62,12 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
             ? Ok(new { message = "Course has been updated successfully." })
             : BadRequest("Update failed. Try again later.");            
     }
+
+    [HttpGet("get-targetCourse/{courseTitle}")]
+    public async Task<ActionResult<ShowCourseDto>> GetCourseByTitle(string courseTitle, CancellationToken cancellationToken)
+    {
+        ShowCourseDto? course = await _courseRepository.GetCourseByTitleAsync(courseTitle, cancellationToken);
+
+        return course is not null ? Ok(course) : NotFound("Course not found");
+    }
 }
