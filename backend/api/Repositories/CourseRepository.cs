@@ -64,6 +64,30 @@ public class CourseRepository : ICourseRepository
         return await PagedList<Course>.CreatePagedListAsync(query, paginationParams.PageNumber,
             paginationParams.PageSize, cancellationToken);
     }
+
+    // public async Task<PagedList<ShowCourseDto>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
+    // {
+    //     IMongoQueryable<Course> query = _collectionCourse.AsQueryable();
+
+    //     var dtoQuery = query.Select(course => new ShowCourseDto
+    //     {
+    //         Id = course.Id.ToString(),
+    //         Title = course.Title,
+    //         Tuition = course.Tuition,
+    //         Hours = course.Hours,
+    //         HoursPerClass = course.HoursPerClass,
+    //         Start = course.Start,
+    //         IsStarted = course.IsStarted,
+    //         ProfessorsNames = course.ProfessorsIds.Select(p => p.Name).ToList() // تبدیل لیست ID به UserName
+    //     });
+
+    //     return await PagedList<ShowCourseDto>.CreatePagedListAsync(
+    //         dtoQuery,  // حالا از نوع IMongoQueryable است
+    //         paginationParams.PageNumber,
+    //         paginationParams.PageSize,
+    //         cancellationToken
+    //     );
+    // }
      
     public async Task<bool> UpdateCourseAsync(
         UpdateCourseDto updateCourseDto, string targetCourseTitle, 

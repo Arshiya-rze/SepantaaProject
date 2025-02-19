@@ -53,6 +53,27 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
         return showCourseDtos;
     }
 
+    // [AllowAnonymous]
+    // [HttpGet]
+    // public async Task<ActionResult<IEnumerable<ShowCourseDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken) 
+    // {
+    //     PagedList<ShowCourseDto> pagedCourses = await _courseRepository.GetAllAsync(paginationParams, cancellationToken);
+
+    //     if (pagedCourses.Count == 0) 
+    //         return NoContent();
+
+    //     PaginationHeader paginationHeader = new(
+    //         CurrentPage: pagedCourses.CurrentPage,
+    //         ItemsPerPage: pagedCourses.PageSize,
+    //         TotalItems: pagedCourses.TotalItems,
+    //         TotalPages: pagedCourses.TotalPages
+    //     );
+
+    //     Response.AddPaginationHeader(paginationHeader);
+
+    //     return pagedCourses;
+    // }
+
     [HttpPut("update/{targetCourseTitle}")]
     public async Task<ActionResult> UpdateCourse(UpdateCourseDto updateCourseDto, string targetCourseTitle, CancellationToken cancellationToken)
     {
