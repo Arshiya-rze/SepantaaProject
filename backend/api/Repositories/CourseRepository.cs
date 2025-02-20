@@ -46,78 +46,29 @@ public class CourseRepository : ICourseRepository
         return null;
     }
 
-    // public async Task<PagedList<ShowCourseDto>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
+    // public async Task<PagedList<Course>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
     // {
     //     IMongoQueryable<Course> query = _collectionCourse.AsQueryable();
 
-    //     // دریافت لیست دوره‌ها با صفحه‌بندی
-    //     PagedList<Course> pagedCourses = await PagedList<Course>.CreatePagedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
-
-    //     // گرفتن تمامی شناسه‌های مدرسین از همه دوره‌ها
-    //     var allProfessorIds = pagedCourses.SelectMany(course => course.ProfessorsIds).Distinct().ToList();
-
-    //     // دریافت اطلاعات مدرسین از دیتابیس
-    //     var professors = await _collectionAppUser
-    //         .Find(user => allProfessorIds.Contains(user.Id))
-    //         .Project(user => new { user.Id, user.Username })
-    //         .ToListAsync(cancellationToken);
-
-    //     // ساخت دیکشنری برای نگاشت ID به Username
-    //     var professorDict = professors.ToDictionary(professor => professor.Id, professor => professor.Username);
-
-    //     // تبدیل دوره‌ها به ShowCourseDto و اضافه کردن نام مدرسین به جای ID
-    //     IMongoQueryable result = pagedCourses.Select(course => new ShowCourseDto
-    //     {
-    //         Id = course.Id.ToString(),
-    //         Title = course.Title,
-    //         ProfessorsNames = course.ProfessorsIds.Select(id => professorDict.ContainsKey(id) ? professorDict[id] : "نامشخص").ToList(),
-    //         Tuition = course.Tuition,
-    //         Hours = course.Hours,
-    //         HoursPerClass = course.HoursPerClass,
-    //         Days = course.Days,
-    //         Start = course.Start,
-    //         IsStarted = course.IsStarted
-    //     }).ToList();
-
-    //     return new PagedList<ShowCourseDto>(result, paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
-    //     // return await PagedList<ShowCourseDto>(result, paginationParams.PageNumber,
-    //     //     paginationParams.PageSize, cancellationToken);
-
-    //     // استفاده از CreatePagedListAsync برای ایجاد لیست صفحه‌بندی شده از ShowCourseDto
-    //     return await PagedList<ShowCourseDto>.CreatePagedListAsync(result.AsQueryable(), paginationParams.PageNumber, paginationParams.PageSize, cancellationToken);
+    //     return await PagedList<Course>.CreatePagedListAsync(query, paginationParams.PageNumber,
+    //         paginationParams.PageSize, cancellationToken);
     // }
 
     public async Task<PagedList<Course>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
     {
         IMongoQueryable<Course> query = _collectionCourse.AsQueryable();
-
         return await PagedList<Course>.CreatePagedListAsync(query, paginationParams.PageNumber,
             paginationParams.PageSize, cancellationToken);
     }
 
-    // public async Task<PagedList<ShowCourseDto>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
-    // {
-    //     IMongoQueryable<Course> query = _collectionCourse.AsQueryable();
+    public async Task<List<string>> GetProfessorNamesByIdsAsync(List<ObjectId> professorIds, CancellationToken cancellationToken)
+    {
+        List<AppUser> professorNames = await _collectionAppUser
+            .Find(professor => professorIds.Contains(professor.Id))
+            .ToListAsync(cancellationToken);
 
-    //     var dtoQuery = query.Select(course => new ShowCourseDto
-    //     {
-    //         Id = course.Id.ToString(),
-    //         Title = course.Title,
-    //         Tuition = course.Tuition,
-    //         Hours = course.Hours,
-    //         HoursPerClass = course.HoursPerClass,
-    //         Start = course.Start,
-    //         IsStarted = course.IsStarted,
-    //         ProfessorsNames = course.ProfessorsIds.Select(p => p.Name).ToList() // تبدیل لیست ID به UserName
-    //     });
-
-    //     return await PagedList<ShowCourseDto>.CreatePagedListAsync(
-    //         dtoQuery,  // حالا از نوع IMongoQueryable است
-    //         paginationParams.PageNumber,
-    //         paginationParams.PageSize,
-    //         cancellationToken
-    //     );
-    // }
+        return professorNames.Select(p => p.Name).ToList();
+    }
      
     public async Task<bool> UpdateCourseAsync(
         UpdateCourseDto updateCourseDto, string targetCourseTitle, 
