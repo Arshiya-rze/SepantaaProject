@@ -126,8 +126,11 @@ public class CourseRepository : ICourseRepository
         int? calcDays = (int)Math.Ceiling(updateCourseDto.Hours / updateCourseDto.HoursPerClass);
 
         AppUser targetProfessor = await _collectionAppUser.Find(
-            doc => doc.NormalizedUserName == updateCourseDto.ProfessorUserName.ToUpper() 
+            doc => doc.Id.ToString() == updateCourseDto.ProfessorId
         ).FirstOrDefaultAsync(cancellationToken);
+
+        if (targetProfessor is null)
+            return false;
 
                 // .Where(doc => doc.NormalizedUserName == updateCourseDto.ProfessorUserName.ToUpper())
                 // .Select(doc => doc.Id)
@@ -149,6 +152,31 @@ public class CourseRepository : ICourseRepository
         );
 
         return updateResult.ModifiedCount == 1;
+    }
+
+    public async Task<bool> AddProfessorToCourseAsync(string targetCourseTitle, string professorUserName, CancellationToken cancellationToken)
+    {
+        Course course = await _collectionCourse.Find(c =>
+            c.Title == targetCourseTitle.ToUpper()).FirstOrDefaultAsync(cancellationToken);
+        
+        if (course is null)
+            return false;
+        
+        AppUser professorAppUser = await _collectionAppUser.Find(a => 
+            a.NormalizedUserName == professorUserName.ToUpper()).FirstOrDefaultAsync(cancellationToken);;
+        
+        if (professorAppUser is null)
+            return false;
+
+        UpdateDefinition<Course> updateCourse = Builders<Course>.Update
+            .AddToSet(doc => doc.ProfessorsIds, professorAppUser.Id)
+            .Push(doc => doc.ProfessorsNames, professorAppUser.Name);
+
+        var result = await _collectionCourse.UpdateOneAsync(
+            doc => doc.Title == targetCourseTitle.ToUpper(), updateCourse
+        );
+
+        return result.ModifiedCount > 0;
     }
 
     public async Task<ShowCourseDto?> GetCourseByTitleAsync(string courseTitle, CancellationToken cancellationToken)

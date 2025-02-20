@@ -24,11 +24,11 @@ public class ShowCourseDto
 public class UpdateCourseDto
 {
     public string Title { get; init; }  = string.Empty;
-    public string ProfessorUserName { get; init;} = string.Empty;
+    public string ProfessorId { get; init; }
     public int Tuition { get; init; }
     public int Hours { get; init; }
     public double HoursPerClass { get; init; }
-    public DateTime Start { get; init; }
+    public DateTime Start { get; init; } 
     public string IsStarted { get; init; }
 };
 

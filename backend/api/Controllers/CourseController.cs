@@ -105,6 +105,17 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
             : BadRequest("Update failed. Try again later.");            
     }
 
+    [HttpPost("add-professor/{targetCourseTitle}/{professorUserName}")]
+    public async Task<IActionResult> AddProfessorToCourse(string targetCourseTitle, string professorUserName, CancellationToken cancellationToken)
+    {
+        bool isUpdated = await _courseRepository.AddProfessorToCourseAsync(targetCourseTitle, professorUserName, cancellationToken);
+
+        if (!isUpdated)
+            return NotFound("Course not found or professor already added.");
+
+        return Ok("Professor added successfully.");
+    }
+
     [HttpGet("get-targetCourse/{courseTitle}")]
     public async Task<ActionResult<ShowCourseDto>> GetCourseByTitle(string courseTitle, CancellationToken cancellationToken)
     {
