@@ -243,14 +243,14 @@ public class ManagerRepository : IManagerRepository
 
     public async Task<UpdateResult?> UpdateEnrolledCourseAsync
         (
-            UpdateEnrolledDto updateEnrolledDto, string appUserId,
-            string targetCourseId, CancellationToken cancellationToken
+            UpdateEnrolledDto updateEnrolledDto, string targetUserName,
+            string targetCourseTitle, CancellationToken cancellationToken
         )
     {
         EnrolledCourse? enrolledCourse = await _collectionAppUser.AsQueryable<AppUser>()
-            .Where(appUser => appUser.Id.ToString() == appUserId)
+            .Where(appUser => appUser.NormalizedUserName == targetUserName.ToUpper())
             .SelectMany(appUser => appUser.EnrolledCourses)
-            .Where(doc => doc.CourseId.ToString() == targetCourseId)
+            .Where(doc => doc.CourseTitle == targetCourseTitle.ToUpper())
             .FirstOrDefaultAsync(cancellationToken);
         
         if (enrolledCourse is null)
@@ -264,7 +264,7 @@ public class ManagerRepository : IManagerRepository
 
             Payment newPayment = new Payment(
                 Id: Guid.NewGuid(),
-                CourseId: new ObjectId(targetCourseId),
+                CourseTitle: targetCourseTitle.ToUpper(),
                 Amount: updateEnrolledDto.PaidAmount,
                 PaidOn: DateTime.UtcNow,
                 Method: updateEnrolledDto.Method.ToUpper()
@@ -286,18 +286,18 @@ public class ManagerRepository : IManagerRepository
             );
 
             // Create a filter to remove the old enrolled course
-            var filter = Builders<EnrolledCourse>.Filter.Eq(ec => ec.CourseId.ToString(), targetCourseId);
+            var filter = Builders<EnrolledCourse>.Filter.Eq(ec => ec.CourseTitle, targetCourseTitle.ToUpper());
             var update = Builders<AppUser>.Update.PullFilter(u => u.EnrolledCourses, filter);
                     
             // Remove the old enrolled course
             var result = await _collectionAppUser.UpdateOneAsync<AppUser>(
-                u => u.Id.ToString() == appUserId, update);
+                u => u.NormalizedUserName == targetUserName.ToUpper(), update);
 
             // Add the updated enrolled course
             if (result.ModifiedCount > 0)
             {
                 var pushUpdate = Builders<AppUser>.Update.Push(u => u.EnrolledCourses, newEnrolledCourse);
-                return await _collectionAppUser.UpdateOneAsync(u => u.Id.ToString() == appUserId, pushUpdate);
+                return await _collectionAppUser.UpdateOneAsync(u => u.NormalizedUserName == targetUserName.ToUpper(), pushUpdate);
             }
         }
 
@@ -309,7 +309,7 @@ public class ManagerRepository : IManagerRepository
 
             Payment newPayment = new Payment(
                 Id: Guid.NewGuid(),
-                CourseId: new ObjectId(targetCourseId),
+                CourseTitle: targetCourseTitle.ToUpper(),
                 Amount: updateEnrolledDto.PaidAmount,
                 PaidOn: DateTime.UtcNow,
                 Method: updateEnrolledDto.Method.ToUpper()
@@ -330,18 +330,18 @@ public class ManagerRepository : IManagerRepository
                 Payments: updatePayments 
             );
             // Create a filter to remove the old enrolled course
-            var filter = Builders<EnrolledCourse>.Filter.Eq(ec => ec.CourseId.ToString(), targetCourseId);
+            var filter = Builders<EnrolledCourse>.Filter.Eq(ec => ec.CourseTitle, targetCourseTitle.ToUpper());
             var update = Builders<AppUser>.Update.PullFilter(u => u.EnrolledCourses, filter);
                     
             // Remove the old enrolled course
             var result = await _collectionAppUser.UpdateOneAsync<AppUser>(
-                u => u.Id.ToString() == appUserId, update);
+                u => u.NormalizedUserName == targetUserName.ToUpper(), update);
 
             // Add the updated enrolled course
             if (result.ModifiedCount > 0)
             {
                 var pushUpdate = Builders<AppUser>.Update.Push(u => u.EnrolledCourses, newEnrolledCourse);
-                return await _collectionAppUser.UpdateOneAsync(u => u.Id.ToString() == appUserId, pushUpdate);
+                return await _collectionAppUser.UpdateOneAsync(u => u.NormalizedUserName == targetUserName.ToUpper(), pushUpdate);
             }
         }
 

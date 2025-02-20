@@ -122,10 +122,10 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         : Ok(new { message = "Delete member successfull" });
     }
 
-    [HttpPut("update-enrolledCourse/{appUserId}/{targetCourseId}")]
-    public async Task<ActionResult> UpdateEnrolledCourse(UpdateEnrolledDto updateEnrolledDto, string appUserId, string targetCourseId, CancellationToken cancellationToken)
+    [HttpPut("update-enrolledCourse/{targetUserName}/{targetCourseTitle}")]
+    public async Task<ActionResult> UpdateEnrolledCourse(UpdateEnrolledDto updateEnrolledDto, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken)
     {
-        UpdateResult? updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, appUserId, targetCourseId, cancellationToken);
+        UpdateResult? updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetUserName, targetCourseTitle, cancellationToken);
 
         return updateResult is null || !updateResult.IsModifiedCountAvailable
             ? BadRequest("Update failed. Try again later.")

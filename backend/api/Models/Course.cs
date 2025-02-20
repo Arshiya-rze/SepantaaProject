@@ -41,7 +41,7 @@ public record EnrolledCourse(
 
 public record Payment(
     Guid Id,
-    ObjectId CourseId,
+    string CourseTitle,
     int Amount,
     DateTime PaidOn,
     string Method //aberbank / naghdi
