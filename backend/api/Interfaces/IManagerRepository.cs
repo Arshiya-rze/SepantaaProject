@@ -12,4 +12,5 @@ public interface IManagerRepository
     public Task<EnrolledCourse> AddEnrolledCourseAsync(AddEnrolledCourseDto managerInput, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken);
     public Task<UpdateResult?> UpdateEnrolledCourseAsync(UpdateEnrolledDto updateEnrolledDto, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken);
     public Task<DeleteResult?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken);
+    public Task<List<AppUser>> GetAllTeachersAsync(CancellationToken cancellationToken);
 }

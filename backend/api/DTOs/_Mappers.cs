@@ -43,6 +43,17 @@ public static class Mappers
         );
     }
 
+    public static TeacherDto ConvertAppUserToTeacherDto(AppUser appUser)
+    {
+        return new TeacherDto(
+            UserName: appUser.NormalizedUserName!,
+            Name: appUser.Name,
+            LastName: appUser.LastName,
+            PhoneNum: appUser.PhoneNum,
+            Gender: appUser.Gender
+        );
+    }
+
     public static ProfileDto ConvertAppUserToProfileDto(AppUser appUser)
     {
         return new ProfileDto(

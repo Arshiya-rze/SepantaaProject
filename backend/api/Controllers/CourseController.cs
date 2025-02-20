@@ -20,7 +20,7 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
     }
     
     [AllowAnonymous]
-    [HttpGet]
+    [HttpGet("get-all-courses")]
     public async Task<ActionResult<IEnumerable<ShowCourseDto>>> GetAll([FromQuery] PaginationParams paginationParams, CancellationToken cancellationToken)
     {
         PagedList<Course> pagedCourses = await _courseRepository.GetAllAsync(paginationParams, cancellationToken);

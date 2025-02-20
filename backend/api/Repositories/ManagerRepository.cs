@@ -362,6 +362,13 @@ public class ManagerRepository : IManagerRepository
 
         return await _collectionAppUser.DeleteOneAsync<AppUser>(appUser => appUser.Id == userId, null, cancellationToken);
     }
+
+    public async Task<List<AppUser>> GetAllTeachersAsync(CancellationToken cancellationToken)
+    {
+        IList<AppUser> teachers = await _userManager.GetUsersInRoleAsync("teacher");
+
+        return teachers.ToList();
+    }
     // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
     // {
         

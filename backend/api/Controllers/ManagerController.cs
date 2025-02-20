@@ -131,4 +131,26 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
             ? BadRequest("Update failed. Try again later.")
             : Ok(new { message = "EnrolledCourse updated successfully" });
     }
+
+    [HttpGet("teachers")]
+    public async Task<ActionResult<IEnumerable<TeacherDto>>> GetAllTeachers(CancellationToken cancellationToken)
+    {
+        List<AppUser> appUserTeachers = await _managerRepository.GetAllTeachersAsync(cancellationToken);
+
+        if (appUserTeachers.Count == 0)
+            return NoContent();
+
+        // List<TeacherDto> teacherDto = Mappers.ConvertAppUserToTeacherDto(appUserTeachers);
+
+        List<TeacherDto> teacherDtos = appUserTeachers.Select(doc => new TeacherDto
+        {
+            UserName = doc.UserName,
+            Name = doc.Name,
+            LastName = doc.LastName,
+            PhoneNum = doc.PhoneNum,
+            Gender = doc.Gender
+        }).ToList();
+
+        return teacherDtos;
+    }
 }
