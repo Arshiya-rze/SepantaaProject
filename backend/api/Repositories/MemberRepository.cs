@@ -70,7 +70,7 @@ public class MemberRepository : IMemberRepository
         if (targetAppUser == null) return false;
 
         targetAppUser.Email = memberUpdateDto.Email;
-        targetAppUser.UserName = memberUpdateDto.UserName;
+        // targetAppUser.UserName = memberUpdateDto.UserName;
 
         if (!string.IsNullOrEmpty(memberUpdateDto.currentPassword) && 
             !string.IsNullOrEmpty(memberUpdateDto.Password) && 
@@ -86,7 +86,7 @@ public class MemberRepository : IMemberRepository
         }
 
         targetAppUser.NormalizedEmail = memberUpdateDto.Email.ToUpper();
-        targetAppUser.NormalizedUserName = memberUpdateDto.UserName.ToUpper();
+        // targetAppUser.NormalizedUserName = memberUpdateDto.UserName.ToUpper();
         
         //save changes in DataBase
         IdentityResult updateResult = await _userManager.UpdateAsync(targetAppUser);
