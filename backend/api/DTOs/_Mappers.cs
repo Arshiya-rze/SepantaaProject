@@ -105,7 +105,7 @@ public static class Mappers
         return new Course(
             Title: managerInput.Title.ToUpper(),
             ProfessorsIds: [],
-            ProfessorsNames: [],
+            // ProfessorsNames: [],
             Tuition: managerInput.Tuition,
             Hours: managerInput.Hours,
             HoursPerClass: managerInput.HoursPerClass,
@@ -123,7 +123,7 @@ public static class Mappers
         {
             Id = course.Id.ToString(),
             Title = course.Title,
-            ProfessorNames = course.ProfessorsNames,
+            // ProfessorNames = course.ProfessorsNames,
             Tuition = course.Tuition,
             Hours = course.Hours,
             HoursPerClass = course.HoursPerClass,

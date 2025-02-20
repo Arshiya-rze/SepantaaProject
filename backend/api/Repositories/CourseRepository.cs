@@ -158,15 +158,17 @@ public class CourseRepository : ICourseRepository
         if (course is null)
             return false;
         
-        AppUser professorAppUser = await _collectionAppUser.Find(a => 
-            a.NormalizedUserName == professorUserName.ToUpper()).FirstOrDefaultAsync(cancellationToken);;
-        
-        if (professorAppUser is null)
+        ObjectId professorId = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.NormalizedUserName == professorUserName.ToUpper())
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken); 
+
+        if (professorId.Equals(null))
             return false;
 
         UpdateDefinition<Course> updateCourse = Builders<Course>.Update
-            .AddToSet(doc => doc.ProfessorsIds, professorAppUser.Id)
-            .Push(doc => doc.ProfessorsNames, professorAppUser.Name);
+            .AddToSet(doc => doc.ProfessorsIds, professorId);
+            // .Push(doc => doc.ProfessorsNames, professorAppUser.Name);
 
         var result = await _collectionCourse.UpdateOneAsync(
             doc => doc.Title == targetCourseTitle.ToUpper(), updateCourse
@@ -182,16 +184,18 @@ public class CourseRepository : ICourseRepository
         
         if (course is null)
             return false;
+
+        ObjectId professorId = await _collectionAppUser.AsQueryable()
+            .Where(doc => doc.NormalizedUserName == professorName.ToUpper())
+            .Select(doc => doc.Id)
+            .FirstOrDefaultAsync(cancellationToken);
         
-        AppUser professorAppUser = await _collectionAppUser.Find(a => 
-            a.Name == professorName).FirstOrDefaultAsync(cancellationToken);;
-        
-        if (professorAppUser is null)
+        if (professorId.Equals(null))
             return false;
 
         UpdateDefinition<Course> deleteProfessor = Builders<Course>.Update
-            .Pull(doc => doc.ProfessorsIds, professorAppUser.Id)
-            .Pull(doc => doc.ProfessorsNames, professorAppUser.Name);
+            .Pull(doc => doc.ProfessorsIds, professorId);
+            // .Pull(doc => doc.ProfessorsNames, professorAppUser.Name);
 
         var result = await _collectionCourse.UpdateOneAsync(
             doc => doc.Title == targetCourseTitle.ToUpper(), deleteProfessor
