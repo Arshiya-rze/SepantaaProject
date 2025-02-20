@@ -96,13 +96,13 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         return !users.Any() ? NoContent() : Ok(users);
     }
 
-    [HttpPost("add-enrolledCourse/{targetUserName}/{targetCoursId}")]
-    public async Task<ActionResult<EnrolledCourse>> AddEnrolledCourse(AddEnrolledCourseDto managerInput, string targetUserName, ObjectId targetCoursId, CancellationToken cancellationToken)
+    [HttpPost("add-enrolledCourse/{targetUserName}/{targetCourseTitle}")]
+    public async Task<ActionResult<EnrolledCourse>> AddEnrolledCourse(AddEnrolledCourseDto managerInput, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken)
     {
         if (targetUserName is null)
             return BadRequest("userName is not foud!");
         
-        EnrolledCourse? enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, targetCoursId, cancellationToken);
+        EnrolledCourse? enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, targetCourseTitle, cancellationToken);
 
         return enrolledCourse is not null
             ? Ok(enrolledCourse)

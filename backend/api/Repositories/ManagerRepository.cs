@@ -183,7 +183,7 @@ public class ManagerRepository : IManagerRepository
         return usersWithRoles;
     }
 
-    public async Task<EnrolledCourse?> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, ObjectId targetCoursId, CancellationToken cancellationToken)
+    public async Task<EnrolledCourse?> AddEnrolledCourseAsync(AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken)
     {
         // appUser => a1
         AppUser? appUser = await _collectionAppUser.Find(doc =>
@@ -193,7 +193,7 @@ public class ManagerRepository : IManagerRepository
             return null;
         
         Course? course = await _collectionCourse.Find(doc =>
-            doc.Id == targetCoursId).FirstOrDefaultAsync(cancellationToken);
+            doc.Title == targetCourseTitle.ToUpper()).FirstOrDefaultAsync(cancellationToken);
 
         if (course is null)
             return null;
