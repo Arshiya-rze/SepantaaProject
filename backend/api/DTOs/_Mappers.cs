@@ -123,7 +123,7 @@ public static class Mappers
         {
             Id = course.Id.ToString(),
             Title = course.Title,
-            ProfessorsNames = course.ProfessorsNames,
+            ProfessorNames = course.ProfessorsNames,
             Tuition = course.Tuition,
             Hours = course.Hours,
             HoursPerClass = course.HoursPerClass,

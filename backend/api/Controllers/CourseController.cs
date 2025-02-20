@@ -116,6 +116,20 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
         return Ok("Professor added successfully.");
     }
 
+    [HttpPost("sss")]
+    public string RemoveProfessorFromCourse()
+    {
+        string name = "a";
+
+        return name;
+        // bool isDeleted = await _courseRepository.RemoveProfessorFromCourseAsync(targetCourseTitle, professorName, cancellationToken);
+
+        // if (!isDeleted)
+        //     return NotFound("Delete Professor failed");
+
+        // return Ok("Professor deleted successfully.");
+    }
+
     [HttpGet("get-targetCourse/{courseTitle}")]
     public async Task<ActionResult<ShowCourseDto>> GetCourseByTitle(string courseTitle, CancellationToken cancellationToken)
     {

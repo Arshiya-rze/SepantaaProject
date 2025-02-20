@@ -125,20 +125,16 @@ public class CourseRepository : ICourseRepository
     {
         int? calcDays = (int)Math.Ceiling(updateCourseDto.Hours / updateCourseDto.HoursPerClass);
 
-        AppUser targetProfessor = await _collectionAppUser.Find(
-            doc => doc.Id.ToString() == updateCourseDto.ProfessorId
-        ).FirstOrDefaultAsync(cancellationToken);
+        // AppUser targetProfessor = await _collectionAppUser.Find(
+        //     doc => doc.Id.ToString() == updateCourseDto.ProfessorId
+        // ).FirstOrDefaultAsync(cancellationToken);
 
-        if (targetProfessor is null)
-            return false;
-
-                // .Where(doc => doc.NormalizedUserName == updateCourseDto.ProfessorUserName.ToUpper())
-                // .Select(doc => doc.Id)
-                // .FirstOrDefaultAsync(cancellationToken);
+        // if (targetProfessor is null)
+        //     return false;
 
         UpdateDefinition<Course> updatedCourse = Builders<Course>.Update
-            .AddToSet(c => c.ProfessorsIds, targetProfessor.Id)
-            .Push(c => c.ProfessorsNames, targetProfessor.Name)
+            // .AddToSet(c => c.ProfessorsIds, targetProfessor.Id)
+            // .Push(c => c.ProfessorsNames, targetProfessor.Name)
             .Set(c => c.Title, updateCourseDto.Title?.ToUpper())
             .Set(c => c.Tuition, updateCourseDto.Tuition)
             .Set(c => c.Hours, updateCourseDto.Hours)
@@ -179,6 +175,31 @@ public class CourseRepository : ICourseRepository
         return result.ModifiedCount > 0;
     }
 
+    public async Task<bool> RemoveProfessorFromCourseAsync(string targetCourseTitle, string professorName, CancellationToken cancellationToken)
+    {
+        Course course = await _collectionCourse.Find(c =>
+            c.Title == targetCourseTitle.ToUpper()).FirstOrDefaultAsync(cancellationToken);
+        
+        if (course is null)
+            return false;
+        
+        AppUser professorAppUser = await _collectionAppUser.Find(a => 
+            a.Name == professorName).FirstOrDefaultAsync(cancellationToken);;
+        
+        if (professorAppUser is null)
+            return false;
+
+        UpdateDefinition<Course> deleteProfessor = Builders<Course>.Update
+            .Pull(doc => doc.ProfessorsIds, professorAppUser.Id)
+            .Pull(doc => doc.ProfessorsNames, professorAppUser.Name);
+
+        var result = await _collectionCourse.UpdateOneAsync(
+            doc => doc.Title == targetCourseTitle.ToUpper(), deleteProfessor
+        );
+
+        return result.ModifiedCount > 0;
+    }
+
     public async Task<ShowCourseDto?> GetCourseByTitleAsync(string courseTitle, CancellationToken cancellationToken)
     {
         var course = await _collectionCourse
@@ -204,8 +225,7 @@ public class CourseRepository : ICourseRepository
             HoursPerClass = course.HoursPerClass,
             Start = course.Start,
             IsStarted = course.IsStarted,
-            ProfessorsNames = professorNames
+            ProfessorNames = professorNames
         };
     }
-
 }
