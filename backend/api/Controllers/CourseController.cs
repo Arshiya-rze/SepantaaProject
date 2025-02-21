@@ -72,18 +72,18 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
     }
 
     [HttpPost("add-professor/{targetCourseTitle}/{professorUserName}")]
-    public async Task<IActionResult> AddProfessorToCourse(string targetCourseTitle, string professorUserName, CancellationToken cancellationToken)
+    public async Task<ActionResult> AddProfessorToCourse(string targetCourseTitle, string professorUserName, CancellationToken cancellationToken)
     {
         bool isUpdated = await _courseRepository.AddProfessorToCourseAsync(targetCourseTitle, professorUserName, cancellationToken);
 
         if (!isUpdated)
             return NotFound("Course not found or professor already added.");
 
-        return Ok("Professor added successfully.");
+        return Ok();
     }
 
     [HttpDelete("remove-professor/{targetCourseTitle}/{professorUserName}")]
-    public async Task<IActionResult> RemoveProfessorFromCourse(string targetCourseTitle, string professorUserName, CancellationToken cancellationToken)
+    public async Task<ActionResult> RemoveProfessorFromCourse(string targetCourseTitle, string professorUserName, CancellationToken cancellationToken)
     {
         bool isRemoved = await _courseRepository.RemoveProfessorFromCourseAsync(targetCourseTitle, professorUserName, cancellationToken);
 
@@ -92,7 +92,7 @@ public class CourseController(ICourseRepository _courseRepository) : BaseApiCont
             return NotFound("Course or professor not found.");
         }
 
-        return Ok("Professor removed successfully.");
+        return Ok();
     }
 
     [HttpGet("get-targetCourse/{courseTitle}")]
