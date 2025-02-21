@@ -140,16 +140,16 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         if (appUserTeachers.Count == 0)
             return NoContent();
 
-        // List<TeacherDto> teacherDto = Mappers.ConvertAppUserToTeacherDto(appUserTeachers);
+        List<TeacherDto> teacherDtos = appUserTeachers.Select(Mappers.ConvertAppUserToTeacherDto).ToList();
 
-        List<TeacherDto> teacherDtos = appUserTeachers.Select(doc => new TeacherDto
-        {
-            UserName = doc.UserName,
-            Name = doc.Name,
-            LastName = doc.LastName,
-            PhoneNum = doc.PhoneNum,
-            Gender = doc.Gender
-        }).ToList();
+        // List<TeacherDto> teacherDtos = appUserTeachers.Select(doc => new TeacherDto
+        // {
+        //     UserName = doc.UserName,
+        //     Name = doc.Name,
+        //     LastName = doc.LastName,
+        //     PhoneNum = doc.PhoneNum,
+        //     Gender = doc.Gender
+        // }).ToList();
 
         return teacherDtos;
     }
