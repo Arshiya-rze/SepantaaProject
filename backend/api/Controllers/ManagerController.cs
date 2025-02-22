@@ -153,4 +153,18 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
 
         return teacherDtos;
     }
+
+    [HttpPut("update-member/{targetMemberUserName}")]
+    public async Task<ActionResult> UpdateMember(string targetMemberUserName, ManagerUpdateMemberDto updatedMember, CancellationToken cancellationToken)
+    {
+        if (updatedMember == null)
+            return BadRequest("Invalid user data.");
+
+        bool isUpdated = await _managerRepository.UpdateMemberAsync(targetMemberUserName, updatedMember, cancellationToken);
+
+        if (!isUpdated)
+            return NotFound("User not found or no changes were made.");
+
+        return Ok("User updated successfully.");
+    }
 }

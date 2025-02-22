@@ -369,6 +369,32 @@ public class ManagerRepository : IManagerRepository
 
         return teachers.ToList();
     }
+
+    public async Task<bool> UpdateMemberAsync(string targetMemberUserName, ManagerUpdateMemberDto updatedMember, CancellationToken cancellationToken)
+    {
+        // AppUser? targetAppUser = await _collectionAppUser.Find<AppUser>(doc => 
+        //     doc.NormalizedUserName == targetMemberUserName.ToUpper()).FirstOrDefaultAsync(cancellationToken); 
+
+        // ObjectId targetAppUserId = await _collectionAppUser.AsQueryable()
+        //     .Where(doc => doc.NormalizedUserName == targetMemberUserName.ToUpper())
+        //     .Select(doc => doc.Id)
+        //     .FirstOrDefaultAsync(cancellationToken);
+
+        // if (targetAppUser is null)
+        //     return false;
+        var filter = Builders<AppUser>.Filter.Eq(u => u.NormalizedUserName, targetMemberUserName.ToUpper());
+
+        UpdateDefinition<AppUser> updateTargetAppUser = Builders<AppUser>.Update
+            .Set(u => u.Name, updatedMember.Name)
+            .Set(u => u.LastName, updatedMember.LastName)
+            .Set(u => u.PhoneNum, updatedMember.PhoneNum)
+            .Set(u => u.Gender, updatedMember.Gender)
+            .Set(u => u.DateOfBirth, updatedMember.DateOfBirth);
+
+        var result = await _collectionAppUser.UpdateOneAsync(filter, updateTargetAppUser, cancellationToken: cancellationToken);
+
+        return result.ModifiedCount > 0;
+    }
     // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
     // {
         
