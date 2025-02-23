@@ -61,6 +61,9 @@ public class MemberController
     [HttpPut]
     public async Task<ActionResult> UpdateMember(MemberUpdateDto memberUpdateDto, CancellationToken cancellationToken)
     {
+        if (memberUpdateDto is null)
+            return null;
+            
         bool? updateResult = await _memberRepository.UpdateMemberAsync(memberUpdateDto, User.GetHashedUserId(), cancellationToken);
 
         return updateResult is false 

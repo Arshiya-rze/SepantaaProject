@@ -370,31 +370,42 @@ public class ManagerRepository : IManagerRepository
         return teachers.ToList();
     }
 
-    public async Task<bool> UpdateMemberAsync(string targetMemberUserName, ManagerUpdateMemberDto updatedMember, CancellationToken cancellationToken)
+    public async Task<bool> UpdateMemberAsync(string targetMemberEmail, ManagerUpdateMemberDto updatedMember, CancellationToken cancellationToken)
     {
-        // AppUser? targetAppUser = await _collectionAppUser.Find<AppUser>(doc => 
-        //     doc.NormalizedUserName == targetMemberUserName.ToUpper()).FirstOrDefaultAsync(cancellationToken); 
+        AppUser? targetAppUser = await _userManager.FindByEmailAsync(targetMemberEmail);
+        if (targetAppUser == null) return false;
 
-        // ObjectId targetAppUserId = await _collectionAppUser.AsQueryable()
-        //     .Where(doc => doc.NormalizedUserName == targetMemberUserName.ToUpper())
-        //     .Select(doc => doc.Id)
-        //     .FirstOrDefaultAsync(cancellationToken);
+        bool emailChanged = !string.Equals(targetAppUser.Email, updatedMember.Email, StringComparison.OrdinalIgnoreCase);
+        bool userNameChanged = !string.Equals(targetAppUser.UserName, updatedMember.UserName, StringComparison.OrdinalIgnoreCase);
 
-        // if (targetAppUser is null)
-        //     return false;
-        var filter = Builders<AppUser>.Filter.Eq(u => u.NormalizedUserName, targetMemberUserName.ToUpper());
+        if (emailChanged)
+        {
+            targetAppUser.Email = updatedMember.Email;
+            targetAppUser.NormalizedEmail = updatedMember.Email.ToUpper();
+        }
 
-        UpdateDefinition<AppUser> updateTargetAppUser = Builders<AppUser>.Update
+        if (userNameChanged)
+        {
+            targetAppUser.UserName = updatedMember.UserName;
+            targetAppUser.NormalizedUserName = updatedMember.UserName.ToUpper();
+        }
+
+        IdentityResult result = await _userManager.UpdateAsync(targetAppUser);
+        if (!result.Succeeded) return false;
+
+        FilterDefinition<AppUser> filter = Builders<AppUser>.Filter.Eq(u => u.Id, targetAppUser.Id);
+        UpdateDefinition<AppUser> update = Builders<AppUser>.Update
             .Set(u => u.Name, updatedMember.Name)
             .Set(u => u.LastName, updatedMember.LastName)
             .Set(u => u.PhoneNum, updatedMember.PhoneNum)
             .Set(u => u.Gender, updatedMember.Gender)
             .Set(u => u.DateOfBirth, updatedMember.DateOfBirth);
 
-        var result = await _collectionAppUser.UpdateOneAsync(filter, updateTargetAppUser, cancellationToken: cancellationToken);
+        var updateResult = await _collectionAppUser.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
 
-        return result.ModifiedCount > 0;
+        return updateResult.ModifiedCount > 0;
     }
+
     // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
     // {
         
