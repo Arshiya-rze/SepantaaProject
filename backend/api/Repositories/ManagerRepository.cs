@@ -370,6 +370,15 @@ public class ManagerRepository : IManagerRepository
         return teachers.ToList();
     }
 
+    public async Task<MemberDto?> GetMemberByEmailAsync(string targetMemberEmail, CancellationToken cancellationToken)
+    {
+        AppUser? appUser = await _userManager.FindByEmailAsync(targetMemberEmail);
+
+        MemberDto memberDto = Mappers.ConvertAppUserToMemberDto(appUser, isAbsent: false);
+        
+        return memberDto;
+    }
+
     public async Task<bool> UpdateMemberAsync(string targetMemberEmail, ManagerUpdateMemberDto updatedMember, CancellationToken cancellationToken)
     {
         AppUser? targetAppUser = await _userManager.FindByEmailAsync(targetMemberEmail);

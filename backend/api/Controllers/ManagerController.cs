@@ -154,6 +154,31 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         return teacherDtos;
     }
 
+    // [HttpGet("get-targetMember/{targetMemberEmail}")]
+    // public async Task<ActionResult<ShowCourseDto>> GetCourseByTitle(string courseTitle, CancellationToken cancellationToken)
+    // {
+    //     ShowCourseDto? course = await _courseRepository.GetCourseByTitleAsync(courseTitle, cancellationToken);
+
+    //     return course is not null ? Ok(course) : NotFound("Course not found");
+    // }
+    [HttpGet("get-target-member/{targetMemberEmail}")]
+    public async Task<ActionResult<MemberDto>> GetMemberByEmail(string targetMemberEmail, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(targetMemberEmail))
+        {
+            return BadRequest("Email is required.");
+        }
+
+        MemberDto? memberDto = await _managerRepository.GetMemberByEmailAsync(targetMemberEmail, cancellationToken);
+
+        if (memberDto == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        return Ok(memberDto);
+    }
+
     [HttpPut("update-member/{targetMemberEmail}")]
     public async Task<ActionResult> UpdateMember(string targetMemberEmail, ManagerUpdateMemberDto updatedMember, CancellationToken cancellationToken)
     {
@@ -165,6 +190,6 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         if (!isUpdated)
             return NotFound("User not found or no changes were made.");
 
-        return Ok("User updated successfully.");
+        return Ok();
     }
 }
