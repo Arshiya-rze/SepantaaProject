@@ -5,11 +5,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>13</LangVersion>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="6.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="MongoDB.Driver" Version="2.30.0" />
     <PackageReference Include="PersianDateTime" Version="1.1.5082.36395" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\image-processing\image-processing.csproj" />
   </ItemGroup>
 </Project>

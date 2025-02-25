@@ -1,12 +1,32 @@
 {
   "Version": 1,
-  "Hash": "A9PKRZfZUTDhj1QRyCFFkEHzqJ04Y7sk6OEkYYD+as4=",
+  "Hash": "FnCtrAq2ko+E0PyR5yZfe/i62lqcBeoLlcCCijwanss=",
   "Source": "api",
   "BasePath": "_content/api",
   "Mode": "Default",
   "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "/home/arshia/Documents/Projects/SepantaProject/backend/image-processing/image-processing.csproj",
+      "Version": 2,
+      "Source": "image-processing",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
+  "DiscoveryPatterns": [
+    {
+      "Name": "api/wwwroot",
+      "Source": "api",
+      "ContentRoot": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/",
+      "BasePath": "_content/api",
+      "Pattern": "**"
+    }
+  ],
   "Assets": [],
   "Endpoints": []
 }
