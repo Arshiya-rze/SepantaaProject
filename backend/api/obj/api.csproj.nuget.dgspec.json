@@ -58,7 +58,7 @@
             },
             "MongoDB.Driver": {
               "target": "Package",
-              "version": "[2.28.0, )"
+              "version": "[2.30.0, )"
             },
             "PersianDateTime": {
               "target": "Package",
