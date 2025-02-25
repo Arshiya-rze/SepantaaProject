@@ -49,21 +49,12 @@ public record Payment(
     Photo? Photo
 );
 
-
-// PaiedTuition = 2_000_000 => update => paiedNumber +1, numberOfPau - paeidNum = paiedRemin 3, 2_000_000 - CourseTotalTuition = tuitionReminder  
-
-
-
-// public class CourseRepo()
-// {
-//     Course course = new(
-//         courseId: Guid.NewGuid(),
-//         lesson: CourseType.PROGRAMMING,
-//         NumberOfPayments: 4,
-//         paiedNumber: 1,
-//         PaidRemainder: 3,
-//         totalTuition: 8_000_000,
-//         tuitionPerMonth: 2_000_000,
-//         TuitionRemainder: 3
-//     );
-// }
+// public class Payment(
+//     // Guid Id,
+//     [Optional][property: BsonId, BsonRepresentation(BsonType.ObjectId)] ObjectId Id,
+//     string CourseTitle,
+//     int Amount,
+//     DateTime PaidOn,
+//     string Method, //aberbank / naghdi
+//     Photo? Photo
+// );

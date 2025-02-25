@@ -164,39 +164,13 @@ public static class Mappers
         );
     }
 
-    // public static EnrolledCourse ConvertEnrolledCourseToShowEnrolledDto
-    //     (
-    //         UpdateEnrolledDto updateEnrolledDto, EnrolledCourse targetEnrolledCourse,
-    //         int num1, int num2, int num3
-    //     ) 
-    // {
-    //     return new List<EnrolledCourse>(
-    //         CourseId: targetEnrolledCourse.CourseId, 
-    //         CourseTuition: targetEnrolledCourse.CourseTuition, 
-    //         Title: targetEnrolledCourse.Title,
-    //         NumberOfPayments: targetEnrolledCourse.NumberOfPayments,
-    //         PaidNumber: num1, 
-    //         NumberOfPaymentsLeft: num2, 
-    //         PaymentPerMonth: targetEnrolledCourse.PaymentPerMonth,
-    //         PaidAmount: updateEnrolledDto.paidAmount, 
-    //         TuitionRemainder: num3, 
-    //         Payments: []
-    //     );
-    // }
-
-
-    // public static Lesson ConvertLessonDtoToLesson(AddLessonDto addLessonDto)
-    // {
-    //     return new Lesson(
-    //         // Email: appUser.Email,
-    //         // UserName: appUser.UserName,
-    //         // Name: appUser.Name,
-    //         // LastName: appUser.LastName,
-    //         // PhoneNum: appUser.PhoneNum,
-    //         // Gender: appUser.Gender,
-    //         MemberLesson: addLessonDto.Lesson
-    //         // Age:  CustomDateTimeExtensions.CalculateAge(appUser.DateOfBirth),
-    //         // corses: appUser.addCorses
-    //     );
-    // }
+    public static Photo ConvertPhotoUrlsToPhoto(string[] photoUrls, bool isMain)
+    {
+        return new Photo(
+            Url_165: photoUrls[0],
+            Url_256: photoUrls[1],
+            Url_enlarged: photoUrls[2],
+            IsMain: isMain
+        );
+    }
 }
