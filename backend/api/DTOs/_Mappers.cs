@@ -157,7 +157,7 @@ public static class Mappers
             NumberOfPayments: managerInput.NumberOfPayments, //4
             PaidNumber: 0, // TODO: calculate paiedNumber in backend 
             NumberOfPaymentsLeft: managerInput.NumberOfPayments, // 4 =>methodi ke sakhte mishe dar repo
-            // PaymentPerMonth: paymentPerMonthCalc, //2_000_000
+            PaymentPerMonth: paymentPerMonthCalc, //2_000_000
             PaidAmount: managerInput.PaidAmount, //0
             TuitionRemainder: tuitionReminderCalc, //6_000_000
             Payments: []

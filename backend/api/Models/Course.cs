@@ -33,7 +33,7 @@ public record EnrolledCourse(
     int NumberOfPayments, //4
     int PaidNumber, //1
     int NumberOfPaymentsLeft, //3
-    // int PaymentPerMonth, //2_000_000
+    int PaymentPerMonth, //2_000_000
     int PaidAmount, //2_000_000
     int TuitionRemainder, //6_000_000
     List<Payment> Payments

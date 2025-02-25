@@ -150,6 +150,24 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
     //         : Ok(new { message = "EnrolledCourse updated successfully" });
     // }
 
+    [HttpPut("update-enrolledCourse/{targetUserName}/{targetCourseTitle}")]
+    public async Task<IActionResult> UpdateEnrolledCourse(
+        [FromBody] UpdateEnrolledDto updateEnrolledDto, string targetUserName, string targetCourseTitle, 
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(targetUserName))
+            return BadRequest("Username is required.");
+
+        if (string.IsNullOrWhiteSpace(targetCourseTitle))
+            return BadRequest("Course title is required.");
+
+        var updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetUserName, targetCourseTitle, cancellationToken);
+
+        return updateResult?.ModifiedCount > 0 
+            ? Ok(new { message = "EnrolledCourse updated successfully" }) 
+            : BadRequest("Update failed. Try again later.");
+    }
+
     [HttpGet("teachers")]
     public async Task<ActionResult<IEnumerable<TeacherDto>>> GetAllTeachers(CancellationToken cancellationToken)
     {

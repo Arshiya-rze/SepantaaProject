@@ -264,7 +264,7 @@ public class ManagerRepository : IManagerRepository
             return null;
 
         int tuitionReminderCalc = course.Tuition - addEnrolledCourseDto.PaidAmount; // 1200
-        int paymentPerMonthCalc = tuitionReminderCalc / addEnrolledCourseDto.NumberOfPayments; // => numberOfPayments = 4 / payment PerMonth = 300
+        int paymentPerMonthCalc = course.Tuition / addEnrolledCourseDto.NumberOfPayments; // => numberOfPayments = 4 / payment PerMonth = 300
         
         EnrolledCourse enrolledCourse = Mappers.ConvertAddEnrolledCourseDtoToEnrolledCourse(
             addEnrolledCourseDto, course, paymentPerMonthCalc, tuitionReminderCalc);
@@ -386,6 +386,54 @@ public class ManagerRepository : IManagerRepository
 
     //     return null;
     // }
+
+    public async Task<UpdateResult?> UpdateEnrolledCourseAsync(
+        UpdateEnrolledDto updateEnrolledDto, string targetUserName, string targetCourseTitle, 
+        CancellationToken cancellationToken)
+    {
+        AppUser? appUser = await _collectionAppUser
+            .Find(doc => doc.NormalizedUserName == targetUserName.ToUpper())
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (appUser is null)
+            return null;
+
+        EnrolledCourse? enrolledCourse = appUser.EnrolledCourses
+            .FirstOrDefault(ec => ec.CourseTitle.ToUpper() == targetCourseTitle.ToUpper());
+
+        if (enrolledCourse is null)
+            return null;
+
+        int newTotalPaidAmount = enrolledCourse.PaidAmount + updateEnrolledDto.PaidAmount;
+        int tuitionReminder = enrolledCourse.CourseTuition - newTotalPaidAmount;
+
+        // PaidNumber
+        int newPaidNumber = newTotalPaidAmount / enrolledCourse.PaymentPerMonth;
+        int numberOfPaymentsLeft = enrolledCourse.NumberOfPayments - newPaidNumber;
+
+        // ایجاد پرداخت جدید
+        Payment newPayment = new Payment(
+            Id: Guid.NewGuid(),
+            CourseTitle: targetCourseTitle.ToUpper(),
+            Amount: updateEnrolledDto.PaidAmount,
+            PaidOn: DateTime.UtcNow,
+            Method: updateEnrolledDto.Method.ToUpper()
+        );
+
+        FilterDefinition<AppUser> filter = Builders<AppUser>.Filter.And(
+            Builders<AppUser>.Filter.Eq(u => u.Id, appUser.Id),
+            Builders<AppUser>.Filter.ElemMatch(u => u.EnrolledCourses, ec => ec.CourseTitle.ToUpper() == targetCourseTitle.ToUpper())
+        );
+
+        UpdateDefinition<AppUser> update = Builders<AppUser>.Update
+            .Set("EnrolledCourses.$.PaidAmount", newTotalPaidAmount)
+            .Set("EnrolledCourses.$.TuitionRemainder", tuitionReminder)
+            .Set("EnrolledCourses.$.PaidNumber", newPaidNumber)
+            .Set("EnrolledCourses.$.NumberOfPaymentsLeft", numberOfPaymentsLeft)
+            .Push("EnrolledCourses.$.Payments", newPayment);
+
+        return await _collectionAppUser.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
+    }
 
     public async Task<DeleteResult?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken)
     {
