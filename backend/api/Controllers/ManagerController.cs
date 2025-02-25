@@ -200,7 +200,6 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         return Ok();
     }
 
-    // [Authorize(Policy = "RequiredAdminRole")]
     [HttpPost("add-photo/{targetPaymentId}")]
     public async Task<ActionResult<Photo>> AddPhoto(
             [AllowedFileExtensions, FileSize(500 * 500, 2000 * 2000)]
@@ -213,5 +212,20 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         Photo? photo = await _managerRepository.AddPhotoAsync(file, targetPaymentId, cancellationToken);
 
         return photo is null ? NotFound("No product with this ID found") : photo;
-    }   
+    }
+
+    [HttpPut("delete-photo/{targetPaymentId}")]
+    public async Task<ActionResult> DeletePhoto(ObjectId targetPaymentId, CancellationToken cancellationToken)
+    {
+        string? hashedUserId = User.GetHashedUserId();
+
+        if (string.IsNullOrEmpty(hashedUserId)) 
+            return Unauthorized("The user is not logged in");
+
+        UpdateResult? updateResult = await _managerRepository.DeletePhotoAsync(targetPaymentId, cancellationToken);
+
+        return updateResult is null || !updateResult.IsModifiedCountAvailable
+            ? BadRequest("Photo deletion failed. Try again later.")
+            : Ok(new { message = "Photo deleted successfully." });
+    }    
 }

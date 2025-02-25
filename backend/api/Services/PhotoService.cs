@@ -96,4 +96,51 @@ public class PhotoService(
 
         return true;
     }
+
+    // public async Task<bool> DeletePhotoFromDisk(Photo photo)
+    // {
+    //     if (photo is null)
+    //     {
+    //         _logger.LogError("Photo object is null.");
+    //         return false;
+    //     }
+
+    //     // بررسی و ذخیره مسیرهای عکس
+    //     List<string> photoPaths = new List<string>
+    //     {
+    //         photo.Url_165,
+    //         photo.Url_256,
+    //         photo.Url_enlarged
+    //     };
+
+    //     bool allDeleted = true; // بررسی وضعیت حذف همه فایل‌ها
+
+    //     foreach (string? photoPath in photoPaths)
+    //     {
+    //         if (string.IsNullOrEmpty(photoPath))
+    //             continue;
+
+    //         string fullPath = Path.Combine(wwwRootUrl, photoPath.TrimStart('/')); // مسیر مطلق ایجاد می‌شود
+
+    //         if (File.Exists(fullPath))
+    //         {
+    //             try
+    //             {
+    //                 File.Delete(fullPath);
+    //                 _logger.LogInformation("Deleted file: {0}", fullPath);
+    //             }
+    //             catch (Exception ex)
+    //             {
+    //                 _logger.LogError("Error deleting file {0}: {1}", fullPath, ex.Message);
+    //                 allDeleted = false; // اگر یک فایل حذف نشود، مقدار false برمی‌گردد
+    //             }
+    //         }
+    //         else
+    //         {
+    //             _logger.LogWarning("File not found: {0}", fullPath);
+    //         }
+    //     }
+
+    //     return allDeleted;
+    // }
 }

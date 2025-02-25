@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "FnCtrAq2ko+E0PyR5yZfe/i62lqcBeoLlcCCijwanss=",
+  "Hash": "6wPuztlbjJyWkBtnR5gcKLvobDAnr7yzVPJQMUsK62s=",
   "Source": "api",
   "BasePath": "_content/api",
   "Mode": "Default",
@@ -27,6 +27,626 @@
       "Pattern": "**"
     }
   ],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": [
+    {
+      "Identity": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/original/0589a416-0f90-407f-8ec2-fd322219b331_homeImage4NoB.webp",
+      "SourceId": "api",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/",
+      "BasePath": "_content/api",
+      "RelativePath": "storage/photos/67bde0efe02fb48515190473/original/0589a416-0f90-407f-8ec2-fd322219b331_homeImage4NoB#[.{fingerprint}]?.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "hyrgp0dn45",
+      "Integrity": "iTpwoCoa/tQq27dwmczPcdslv5MQoyg7GOr5qeSA2dQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/storage/photos/67bde0efe02fb48515190473/original/0589a416-0f90-407f-8ec2-fd322219b331_homeImage4NoB.webp"
+    },
+    {
+      "Identity": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/original/b841e44d-2c42-47e8-86e8-989386a842cc_homeImage4NoB.webp",
+      "SourceId": "api",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/",
+      "BasePath": "_content/api",
+      "RelativePath": "storage/photos/67bde0efe02fb48515190473/original/b841e44d-2c42-47e8-86e8-989386a842cc_homeImage4NoB#[.{fingerprint}]?.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "hyrgp0dn45",
+      "Integrity": "iTpwoCoa/tQq27dwmczPcdslv5MQoyg7GOr5qeSA2dQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/storage/photos/67bde0efe02fb48515190473/original/b841e44d-2c42-47e8-86e8-989386a842cc_homeImage4NoB.webp"
+    },
+    {
+      "Identity": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/374eabd3-2dbf-4561-94b0-55e7bb1a39c5_homeImage4NoB.webp",
+      "SourceId": "api",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/",
+      "BasePath": "_content/api",
+      "RelativePath": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/374eabd3-2dbf-4561-94b0-55e7bb1a39c5_homeImage4NoB#[.{fingerprint}]?.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2w5dgw8wu6",
+      "Integrity": "7pDBVTMqCZSI3lKBzKHep7YgX/GW19kxHX48/jUNNqA=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/374eabd3-2dbf-4561-94b0-55e7bb1a39c5_homeImage4NoB.webp"
+    },
+    {
+      "Identity": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/3e11aeaf-bc63-4c5f-a990-3cb6e809e96c_homeImage4NoB.webp",
+      "SourceId": "api",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/",
+      "BasePath": "_content/api",
+      "RelativePath": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/3e11aeaf-bc63-4c5f-a990-3cb6e809e96c_homeImage4NoB#[.{fingerprint}]?.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2w5dgw8wu6",
+      "Integrity": "7pDBVTMqCZSI3lKBzKHep7YgX/GW19kxHX48/jUNNqA=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/3e11aeaf-bc63-4c5f-a990-3cb6e809e96c_homeImage4NoB.webp"
+    },
+    {
+      "Identity": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/1136b0a0-7e16-4b5a-95dd-34f1875911b9_homeImage4NoB.webp",
+      "SourceId": "api",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/",
+      "BasePath": "_content/api",
+      "RelativePath": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/1136b0a0-7e16-4b5a-95dd-34f1875911b9_homeImage4NoB#[.{fingerprint}]?.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "c0ipqwwiqa",
+      "Integrity": "bIF1C4Da/49GX+Cn8CeNu773EZT5tKnmSd+NqNFziUM=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/1136b0a0-7e16-4b5a-95dd-34f1875911b9_homeImage4NoB.webp"
+    },
+    {
+      "Identity": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/a9092fbf-7613-4927-91ac-9f151a48a76c_homeImage4NoB.webp",
+      "SourceId": "api",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/",
+      "BasePath": "_content/api",
+      "RelativePath": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/a9092fbf-7613-4927-91ac-9f151a48a76c_homeImage4NoB#[.{fingerprint}]?.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "c0ipqwwiqa",
+      "Integrity": "bIF1C4Da/49GX+Cn8CeNu773EZT5tKnmSd+NqNFziUM=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/a9092fbf-7613-4927-91ac-9f151a48a76c_homeImage4NoB.webp"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/original/0589a416-0f90-407f-8ec2-fd322219b331_homeImage4NoB.hyrgp0dn45.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/original/0589a416-0f90-407f-8ec2-fd322219b331_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "258918"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"iTpwoCoa/tQq27dwmczPcdslv5MQoyg7GOr5qeSA2dQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "hyrgp0dn45"
+        },
+        {
+          "Name": "label",
+          "Value": "storage/photos/67bde0efe02fb48515190473/original/0589a416-0f90-407f-8ec2-fd322219b331_homeImage4NoB.webp"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-iTpwoCoa/tQq27dwmczPcdslv5MQoyg7GOr5qeSA2dQ="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/original/0589a416-0f90-407f-8ec2-fd322219b331_homeImage4NoB.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/original/0589a416-0f90-407f-8ec2-fd322219b331_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "258918"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"iTpwoCoa/tQq27dwmczPcdslv5MQoyg7GOr5qeSA2dQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-iTpwoCoa/tQq27dwmczPcdslv5MQoyg7GOr5qeSA2dQ="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/original/b841e44d-2c42-47e8-86e8-989386a842cc_homeImage4NoB.hyrgp0dn45.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/original/b841e44d-2c42-47e8-86e8-989386a842cc_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "258918"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"iTpwoCoa/tQq27dwmczPcdslv5MQoyg7GOr5qeSA2dQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:32 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "hyrgp0dn45"
+        },
+        {
+          "Name": "label",
+          "Value": "storage/photos/67bde0efe02fb48515190473/original/b841e44d-2c42-47e8-86e8-989386a842cc_homeImage4NoB.webp"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-iTpwoCoa/tQq27dwmczPcdslv5MQoyg7GOr5qeSA2dQ="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/original/b841e44d-2c42-47e8-86e8-989386a842cc_homeImage4NoB.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/original/b841e44d-2c42-47e8-86e8-989386a842cc_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "258918"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"iTpwoCoa/tQq27dwmczPcdslv5MQoyg7GOr5qeSA2dQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:32 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-iTpwoCoa/tQq27dwmczPcdslv5MQoyg7GOr5qeSA2dQ="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/374eabd3-2dbf-4561-94b0-55e7bb1a39c5_homeImage4NoB.2w5dgw8wu6.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/374eabd3-2dbf-4561-94b0-55e7bb1a39c5_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9168"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"7pDBVTMqCZSI3lKBzKHep7YgX/GW19kxHX48/jUNNqA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2w5dgw8wu6"
+        },
+        {
+          "Name": "label",
+          "Value": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/374eabd3-2dbf-4561-94b0-55e7bb1a39c5_homeImage4NoB.webp"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-7pDBVTMqCZSI3lKBzKHep7YgX/GW19kxHX48/jUNNqA="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/374eabd3-2dbf-4561-94b0-55e7bb1a39c5_homeImage4NoB.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/374eabd3-2dbf-4561-94b0-55e7bb1a39c5_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9168"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"7pDBVTMqCZSI3lKBzKHep7YgX/GW19kxHX48/jUNNqA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-7pDBVTMqCZSI3lKBzKHep7YgX/GW19kxHX48/jUNNqA="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/3e11aeaf-bc63-4c5f-a990-3cb6e809e96c_homeImage4NoB.2w5dgw8wu6.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/3e11aeaf-bc63-4c5f-a990-3cb6e809e96c_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9168"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"7pDBVTMqCZSI3lKBzKHep7YgX/GW19kxHX48/jUNNqA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:32 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2w5dgw8wu6"
+        },
+        {
+          "Name": "label",
+          "Value": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/3e11aeaf-bc63-4c5f-a990-3cb6e809e96c_homeImage4NoB.webp"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-7pDBVTMqCZSI3lKBzKHep7YgX/GW19kxHX48/jUNNqA="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/3e11aeaf-bc63-4c5f-a990-3cb6e809e96c_homeImage4NoB.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/165x165/3e11aeaf-bc63-4c5f-a990-3cb6e809e96c_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9168"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"7pDBVTMqCZSI3lKBzKHep7YgX/GW19kxHX48/jUNNqA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:32 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-7pDBVTMqCZSI3lKBzKHep7YgX/GW19kxHX48/jUNNqA="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/1136b0a0-7e16-4b5a-95dd-34f1875911b9_homeImage4NoB.c0ipqwwiqa.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/1136b0a0-7e16-4b5a-95dd-34f1875911b9_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16980"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"bIF1C4Da/49GX+Cn8CeNu773EZT5tKnmSd+NqNFziUM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:32 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "c0ipqwwiqa"
+        },
+        {
+          "Name": "label",
+          "Value": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/1136b0a0-7e16-4b5a-95dd-34f1875911b9_homeImage4NoB.webp"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-bIF1C4Da/49GX+Cn8CeNu773EZT5tKnmSd+NqNFziUM="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/1136b0a0-7e16-4b5a-95dd-34f1875911b9_homeImage4NoB.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/1136b0a0-7e16-4b5a-95dd-34f1875911b9_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16980"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"bIF1C4Da/49GX+Cn8CeNu773EZT5tKnmSd+NqNFziUM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:32 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-bIF1C4Da/49GX+Cn8CeNu773EZT5tKnmSd+NqNFziUM="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/a9092fbf-7613-4927-91ac-9f151a48a76c_homeImage4NoB.c0ipqwwiqa.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/a9092fbf-7613-4927-91ac-9f151a48a76c_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16980"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"bIF1C4Da/49GX+Cn8CeNu773EZT5tKnmSd+NqNFziUM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "c0ipqwwiqa"
+        },
+        {
+          "Name": "label",
+          "Value": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/a9092fbf-7613-4927-91ac-9f151a48a76c_homeImage4NoB.webp"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-bIF1C4Da/49GX+Cn8CeNu773EZT5tKnmSd+NqNFziUM="
+        }
+      ]
+    },
+    {
+      "Route": "storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/a9092fbf-7613-4927-91ac-9f151a48a76c_homeImage4NoB.webp",
+      "AssetFile": "/home/arshia/Documents/Projects/SepantaProject/backend/api/wwwroot/storage/photos/67bde0efe02fb48515190473/resize-pixel-square/256x256/a9092fbf-7613-4927-91ac-9f151a48a76c_homeImage4NoB.webp",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16980"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/webp"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"bIF1C4Da/49GX+Cn8CeNu773EZT5tKnmSd+NqNFziUM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 25 Feb 2025 16:52:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-bIF1C4Da/49GX+Cn8CeNu773EZT5tKnmSd+NqNFziUM="
+        }
+      ]
+    }
+  ]
 }
