@@ -96,17 +96,35 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         return !users.Any() ? NoContent() : Ok(users);
     }
 
-    [HttpPost("add-enrolledCourse/{targetUserName}/{targetCourseTitle}")]
-    public async Task<ActionResult<EnrolledCourse>> AddEnrolledCourse(AddEnrolledCourseDto managerInput, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken)
-    {
-        if (targetUserName is null)
-            return BadRequest("userName is not foud!");
+    // [HttpPost("add-enrolledCourse/{targetUserName}/{targetCourseTitle}")]
+    // public async Task<ActionResult<EnrolledCourse>> AddEnrolledCourse(AddEnrolledCourseDto managerInput, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken)
+    // {
+    //     if (targetUserName is null)
+    //         return BadRequest("userName is not foud!");
         
-        EnrolledCourse? enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, targetCourseTitle, cancellationToken);
+    //     EnrolledCourse? enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, targetCourseTitle, cancellationToken);
 
-        return enrolledCourse is not null
-            ? Ok(enrolledCourse)
-            : BadRequest("add enrolledCourse failed");
+    //     return enrolledCourse is not null
+    //         ? Ok(enrolledCourse)
+    //         : BadRequest("add enrolledCourse failed");
+    // }
+
+    [HttpPost("add-enrolledCourse/{targetUserName}/{targetCourseTitle}")]
+    public async Task<IActionResult> AddEnrolledCourse(
+        [FromBody] AddEnrolledCourseDto managerInput, string targetUserName, string targetCourseTitle, 
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(targetUserName))
+            return BadRequest("Username is required.");
+        
+        if (string.IsNullOrWhiteSpace(targetCourseTitle))
+            return BadRequest("Course title is required.");
+        
+        var enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, targetCourseTitle, cancellationToken);
+
+        return enrolledCourse is not null 
+            ? Ok(enrolledCourse) 
+            : BadRequest("Failed to enroll user in course.");
     }
 
     [HttpPut("delete-member/{targetMemberUserName}")] 
@@ -122,15 +140,15 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         : Ok(new { message = "Delete member successfull" });
     }
 
-    [HttpPut("update-enrolledCourse/{targetUserName}/{targetCourseTitle}")]
-    public async Task<ActionResult> UpdateEnrolledCourse(UpdateEnrolledDto updateEnrolledDto, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken)
-    {
-        UpdateResult? updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetUserName, targetCourseTitle, cancellationToken);
+    // [HttpPut("update-enrolledCourse/{targetUserName}/{targetCourseTitle}")]
+    // public async Task<ActionResult> UpdateEnrolledCourse(UpdateEnrolledDto updateEnrolledDto, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken)
+    // {
+    //     UpdateResult? updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetUserName, targetCourseTitle, cancellationToken);
 
-        return updateResult is null || !updateResult.IsModifiedCountAvailable
-            ? BadRequest("Update failed. Try again later.")
-            : Ok(new { message = "EnrolledCourse updated successfully" });
-    }
+    //     return updateResult is null || !updateResult.IsModifiedCountAvailable
+    //         ? BadRequest("Update failed. Try again later.")
+    //         : Ok(new { message = "EnrolledCourse updated successfully" });
+    // }
 
     [HttpGet("teachers")]
     public async Task<ActionResult<IEnumerable<TeacherDto>>> GetAllTeachers(CancellationToken cancellationToken)
@@ -154,13 +172,6 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         return teacherDtos;
     }
 
-    // [HttpGet("get-targetMember/{targetMemberEmail}")]
-    // public async Task<ActionResult<ShowCourseDto>> GetCourseByTitle(string courseTitle, CancellationToken cancellationToken)
-    // {
-    //     ShowCourseDto? course = await _courseRepository.GetCourseByTitleAsync(courseTitle, cancellationToken);
-
-    //     return course is not null ? Ok(course) : NotFound("Course not found");
-    // }
     [HttpGet("get-target-member/{targetMemberEmail}")]
     public async Task<ActionResult<MemberDto>> GetMemberByEmail(string targetMemberEmail, CancellationToken cancellationToken)
     {
