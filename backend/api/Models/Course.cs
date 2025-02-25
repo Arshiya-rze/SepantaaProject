@@ -40,11 +40,13 @@ public record EnrolledCourse(
 );
 
 public record Payment(
-    Guid Id,
+    // Guid Id,
+    [Optional][property: BsonId, BsonRepresentation(BsonType.ObjectId)] ObjectId Id,
     string CourseTitle,
     int Amount,
     DateTime PaidOn,
-    string Method //aberbank / naghdi
+    string Method, //aberbank / naghdi
+    Photo? Photo
 );
 
 

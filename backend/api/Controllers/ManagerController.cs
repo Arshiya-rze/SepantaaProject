@@ -1,4 +1,5 @@
 using api.Models.Helpers;
+using api.Validations;
 
 namespace api.Controllers;
 
@@ -198,4 +199,19 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
 
         return Ok();
     }
+
+    // [Authorize(Policy = "RequiredAdminRole")]
+    // [HttpPost("add-photo/{targetProductName}")]
+    // public async Task<ActionResult<Photo>> AddPhoto(
+    //         [AllowedFileExtensions, FileSize(500 * 500, 2000 * 2000)]
+    //         IFormFile file, string targetProductName, CancellationToken cancellationToken
+    //     )
+    // { 
+    //     if (file is null) 
+    //     return BadRequest("No file is selected with this request.");
+
+    //     Photo? photo = await _managerRepository.AddPhotoAsync(file, targetProductName, cancellationToken);
+
+    //     return photo is null ? NotFound("No product with this ID found") : photo;
+    // }
 }

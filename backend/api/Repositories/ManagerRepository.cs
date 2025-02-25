@@ -248,11 +248,12 @@ public class ManagerRepository : IManagerRepository
 
         // ایجاد پرداخت جدید
         Payment newPayment = new Payment(
-            Id: Guid.NewGuid(),
+            Id: ObjectId.GenerateNewId(),
             CourseTitle: targetCourseTitle.ToUpper(),
             Amount: updateEnrolledDto.PaidAmount,
             PaidOn: DateTime.UtcNow,
-            Method: updateEnrolledDto.Method.ToUpper()
+            Method: updateEnrolledDto.Method.ToUpper(),
+            Photo: null
         );
 
         FilterDefinition<AppUser> filter = Builders<AppUser>.Filter.And(
@@ -336,6 +337,44 @@ public class ManagerRepository : IManagerRepository
 
         return updateResult.ModifiedCount > 0;
     }
+
+    // public async Task<Photo?> AddPhotoAsync(IFormFile file, string targetProductName, CancellationToken cancellationToken)
+    // {
+    //     ObjectId productId = await _collectionAppUser.AsQueryable()
+    //         .Where(doc => doc.Name == targetProductName)
+    //         .Select(doc => doc.Id)
+    //         .FirstOrDefaultAsync();
+            
+    //     IEnumerable<string> productUrls = await _photoService.AddPhotoToDiskAsync(file, productId)
+    //         ?? throw new ArgumentNullException("Saving photo has failed. Error from PhotoService.");
+
+    //     Product? product = await GetByIdAsync(productId, cancellationToken);
+    //     if (product is null)
+    //         return null;
+
+    //     string[] ? imageUrls = await _photoService.AddPhotoToDiskAsync(file, productId);
+
+    //     if (imageUrls is not null)
+    //     {
+    //         Photo photo;
+
+    //         photo = product.Photos.Count == 0
+    //             ? Mappers.ConvertPhotoUrlsToPhoto(imageUrls, isMain: true)
+    //             : Mappers.ConvertPhotoUrlsToPhoto(imageUrls, isMain: false);
+
+    //         //save to DB
+    //         product.Photos.Add(photo);
+
+    //         var updatedproduct = Builders<Product>.Update
+    //             .Set(doc => doc.Photos, product.Photos);
+
+    //         UpdateResult result = await _collectionProduct.UpdateOneAsync<Product>(doc => doc.Id == productId, updatedproduct, null, cancellationToken);
+
+    //         return result.ModifiedCount == 1 ? photo : null;
+    //     }
+        
+    //     return null;
+    // }
 
     // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
     // {
