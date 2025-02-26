@@ -59,10 +59,6 @@ public class PhotoService(
                 filePath_165_sq.Split(wwwRootUrl)[1], // 0
                 filePath_256_sq.Split(wwwRootUrl)[1], // 1
                 filePath_enlarged.Split(wwwRootUrl)[1] // 2
-
-                // string name = "amirRshaghaghi";
-                // string[] names = name.Split("R"); // ["amir", "shaghaghi"];
-                // names[0] // "amir"
             ];
             #endregion
         }
@@ -75,72 +71,66 @@ public class PhotoService(
     /// </summary>
     /// <param name="photo"></param>
     /// <returns>bool</returns>
+    // public async Task<bool> DeletePhotoFromDisk(Photo photo)
+    // {
+    //     List<string> photoPaths = [];
+
+    //     photoPaths.Add(photo.Url_165);
+    //     photoPaths.Add(photo.Url_256);
+    //     photoPaths.Add(photo.Url_enlarged);
+
+    //     foreach (string photoPath in photoPaths)
+    //     {
+    //         if (File.Exists(wwwRootUrl + photoPath))
+    //         {
+    //             // Delete the file on a background thread and await the task
+    //             await Task.Run(() => File.Delete(wwwRootUrl + photoPath));
+    //         }
+    //         else
+    //             return false;
+    //     }
+
+    //     return true;
+    // }
+
     public async Task<bool> DeletePhotoFromDisk(Photo photo)
     {
-        List<string> photoPaths = [];
-
-        photoPaths.Add(photo.Url_165);
-        photoPaths.Add(photo.Url_256);
-        photoPaths.Add(photo.Url_enlarged);
+        // لیستی از مسیرهای عکس‌ها
+        List<string> photoPaths = new List<string>
+        {
+            photo.Url_165,  // سایز کوچک
+            photo.Url_256,  // سایز متوسط
+            photo.Url_enlarged  // سایز بزرگ
+        };
 
         foreach (string photoPath in photoPaths)
         {
-            if (File.Exists(wwwRootUrl + photoPath))
+            // بررسی اینکه فایل وجود دارد
+            string fullPath = Path.Combine(wwwRootUrl, photoPath);
+            
+            if (File.Exists(fullPath))
             {
-                // Delete the file on a background thread and await the task
-                await Task.Run(() => File.Delete(wwwRootUrl + photoPath));
+                try
+                {
+                    // حذف فایل از دیسک
+                    await Task.Run(() => File.Delete(fullPath));
+                }
+                catch (Exception ex)
+                {
+                    // در صورت بروز خطا در حذف، ثبت خطا
+                    _logger.LogError($"Error deleting photo file: {photoPath}. Exception: {ex.Message}");
+                    return false;
+                }
             }
             else
+            {
+                // در صورتی که فایل پیدا نشد
+                _logger.LogWarning($"File not found for deletion: {photoPath}");
                 return false;
+            }
         }
 
+        // در صورتی که همه فایل‌ها حذف شدند
         return true;
     }
-
-    // public async Task<bool> DeletePhotoFromDisk(Photo photo)
-    // {
-    //     if (photo is null)
-    //     {
-    //         _logger.LogError("Photo object is null.");
-    //         return false;
-    //     }
-
-    //     // بررسی و ذخیره مسیرهای عکس
-    //     List<string> photoPaths = new List<string>
-    //     {
-    //         photo.Url_165,
-    //         photo.Url_256,
-    //         photo.Url_enlarged
-    //     };
-
-    //     bool allDeleted = true; // بررسی وضعیت حذف همه فایل‌ها
-
-    //     foreach (string? photoPath in photoPaths)
-    //     {
-    //         if (string.IsNullOrEmpty(photoPath))
-    //             continue;
-
-    //         string fullPath = Path.Combine(wwwRootUrl, photoPath.TrimStart('/')); // مسیر مطلق ایجاد می‌شود
-
-    //         if (File.Exists(fullPath))
-    //         {
-    //             try
-    //             {
-    //                 File.Delete(fullPath);
-    //                 _logger.LogInformation("Deleted file: {0}", fullPath);
-    //             }
-    //             catch (Exception ex)
-    //             {
-    //                 _logger.LogError("Error deleting file {0}: {1}", fullPath, ex.Message);
-    //                 allDeleted = false; // اگر یک فایل حذف نشود، مقدار false برمی‌گردد
-    //             }
-    //         }
-    //         else
-    //         {
-    //             _logger.LogWarning("File not found: {0}", fullPath);
-    //         }
-    //     }
-
-    //     return allDeleted;
-    // }
 }

@@ -214,18 +214,22 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         return photo is null ? NotFound("No product with this ID found") : photo;
     }
 
-    [HttpPut("delete-photo/{targetPaymentId}")]
+    [HttpDelete("delete-photo/{targetPaymentId}")]
     public async Task<ActionResult> DeletePhoto(ObjectId targetPaymentId, CancellationToken cancellationToken)
     {
         string? hashedUserId = User.GetHashedUserId();
+        if (string.IsNullOrEmpty(hashedUserId))
+        {
+            return Unauthorized("The user is not logged in.");
+        }
 
-        if (string.IsNullOrEmpty(hashedUserId)) 
-            return Unauthorized("The user is not logged in");
+        bool isDeleted = await _managerRepository.DeletePhotoAsync(targetPaymentId, cancellationToken);
 
-        UpdateResult? updateResult = await _managerRepository.DeletePhotoAsync(targetPaymentId, cancellationToken);
+        if (!isDeleted)
+        {
+            return BadRequest("Photo deletion failed. Try again later.");
+        }
 
-        return updateResult is null || !updateResult.IsModifiedCountAvailable
-            ? BadRequest("Photo deletion failed. Try again later.")
-            : Ok(new { message = "Photo deleted successfully." });
-    }    
+        return Ok(new { message = "Photo deleted successfully." });
+    }
 }

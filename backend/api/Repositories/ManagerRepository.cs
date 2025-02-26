@@ -395,50 +395,58 @@ public class ManagerRepository : IManagerRepository
         return result.ModifiedCount > 0 ? photo : null;
     }
 
-    public async Task<UpdateResult?> DeletePhotoAsync(ObjectId targetPaymentId, CancellationToken cancellationToken)
+    public async Task<bool> DeletePhotoAsync(ObjectId targetPaymentId, CancellationToken cancellationToken)
     {
         // یافتن کاربری که این پرداخت در آن قرار دارد
         AppUser? appUser = await _collectionAppUser
             .Find(u => u.EnrolledCourses.Any(ec => ec.Payments.Any(p => p.Id == targetPaymentId)))
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (appUser is null) return null;
+        if (appUser is null) return false;
 
         // یافتن دوره‌ای که شامل این پرداخت است
         EnrolledCourse? enrolledCourse = appUser.EnrolledCourses
             .FirstOrDefault(ec => ec.Payments.Any(p => p.Id == targetPaymentId));
 
-        if (enrolledCourse is null) return null;
+        if (enrolledCourse is null) return false;
 
         // یافتن پرداخت مورد نظر
         Payment? payment = enrolledCourse.Payments.FirstOrDefault(p => p.Id == targetPaymentId);
-        
-        if (payment is null || payment.Photo is null) return null;
+
+        if (payment is null || payment.Photo is null) return false;
 
         // حذف عکس از دیسک
         bool isDeleteSuccess = await _photoService.DeletePhotoFromDisk(payment.Photo);
         if (!isDeleteSuccess)
         {
-            // _logger.LogError("Delete from disk failed.");
-            return null;
+            return false;
         }
 
-        // حذف Photo از Payment در دیتابیس
-        FilterDefinition<AppUser> filter = Builders<AppUser>.Filter.And(
-            Builders<AppUser>.Filter.Eq(u => u.Id, appUser.Id),
-            Builders<AppUser>.Filter.ElemMatch(u => u.EnrolledCourses, ec => ec.Payments.Any(p => p.Id == targetPaymentId))
-        );
+        // حذف عکس از فیلد Payment در دیتابیس
+        payment = payment with { Photo = null };
 
-        UpdateDefinition<AppUser> update = Builders<AppUser>.Update
-            .Unset("EnrolledCourses.$[ec].Payments.$[p].Photo"); // حذف کامل Photo
+        // بروزرسانی Payment در دیتابیس
+         var filter = Builders<AppUser>.Filter.Eq(u => u.Id, appUser.Id);
+        var update = Builders<AppUser>.Update
+            .Set("EnrolledCourses.$[ec].Payments.$[p]", payment);
 
-        ArrayFilterDefinition[] arrayFilters = new[]
+        var arrayFilters = new List<ArrayFilterDefinition>
         {
-            new BsonDocumentArrayFilterDefinition<BsonDocument>(new BsonDocument("ec.Payments.Id", targetPaymentId)),
-            new BsonDocumentArrayFilterDefinition<BsonDocument>(new BsonDocument("p.Id", targetPaymentId))
+            new BsonDocumentArrayFilterDefinition<BsonDocument>(
+                new BsonDocument("ec.CourseTitle", enrolledCourse.CourseTitle)
+            ),
+            new BsonDocumentArrayFilterDefinition<BsonDocument>(
+                new BsonDocument("p._id", payment.Id)
+            )
         };
 
-        return await _collectionAppUser.UpdateOneAsync(filter, update, new UpdateOptions { ArrayFilters = arrayFilters }, cancellationToken);
+        UpdateResult result = await _collectionAppUser.UpdateOneAsync(
+            filter,
+            update,
+            new UpdateOptions { ArrayFilters = arrayFilters },
+            cancellationToken);
+
+        return result.ModifiedCount > 0;
     }
 
     // public async Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)

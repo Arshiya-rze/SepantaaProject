@@ -16,5 +16,5 @@ public interface IManagerRepository
     public Task<MemberDto?> GetMemberByEmailAsync(string targetMemberEmail, CancellationToken cancellationToken);
     public Task<bool> UpdateMemberAsync(string targetMemberEmail, ManagerUpdateMemberDto updatedMember, CancellationToken cancellationToken);
     public Task<Photo?> AddPhotoAsync(IFormFile file, ObjectId targetPaymentId, CancellationToken cancellationToken);
-    public Task<UpdateResult?> DeletePhotoAsync(ObjectId targetPaymentId, CancellationToken cancellationToken);
+    public Task<bool> DeletePhotoAsync(ObjectId targetPaymentId, CancellationToken cancellationToken);
 }
