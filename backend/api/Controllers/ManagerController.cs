@@ -128,18 +128,18 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         : Ok(new { message = "Delete member successfull" });
     }
 
-    [HttpPut("update-enrolledCourse/{targetUserName}/{targetCourseTitle}")]
+    [HttpPut("update-enrolledCourse/{targetUserName}")]
     public async Task<IActionResult> UpdateEnrolledCourse(
-        [FromBody] UpdateEnrolledDto updateEnrolledDto, string targetUserName, string targetCourseTitle, 
+        [FromBody] UpdateEnrolledDto updateEnrolledDto, string targetUserName, 
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(targetUserName))
             return BadRequest("Username is required.");
 
-        if (string.IsNullOrWhiteSpace(targetCourseTitle))
+        if (string.IsNullOrWhiteSpace(updateEnrolledDto.TitleCourse))
             return BadRequest("Course title is required.");
 
-        var updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetUserName, targetCourseTitle, cancellationToken);
+        var updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetUserName, cancellationToken);
 
         return updateResult?.ModifiedCount > 0 
             ? Ok(new { message = "EnrolledCourse updated successfully" }) 

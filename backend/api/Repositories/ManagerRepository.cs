@@ -228,7 +228,7 @@ public class ManagerRepository : IManagerRepository
     }
 
     public async Task<UpdateResult?> UpdateEnrolledCourseAsync(
-        UpdateEnrolledDto updateEnrolledDto, string targetUserName, string targetCourseTitle, 
+        UpdateEnrolledDto updateEnrolledDto, string targetUserName, 
         CancellationToken cancellationToken)
     {
         AppUser? appUser = await _collectionAppUser
@@ -239,7 +239,7 @@ public class ManagerRepository : IManagerRepository
             return null;
 
         EnrolledCourse? enrolledCourse = appUser.EnrolledCourses
-            .FirstOrDefault(ec => ec.CourseTitle.ToUpper() == targetCourseTitle.ToUpper());
+            .FirstOrDefault(ec => ec.CourseTitle.ToUpper() == updateEnrolledDto.TitleCourse.ToUpper());
 
         if (enrolledCourse is null)
             return null;
@@ -254,7 +254,7 @@ public class ManagerRepository : IManagerRepository
         // ایجاد پرداخت جدید
         Payment newPayment = new Payment(
             Id: ObjectId.GenerateNewId(),
-            CourseTitle: targetCourseTitle.ToUpper(),
+            CourseTitle: updateEnrolledDto.TitleCourse.ToUpper(),
             Amount: updateEnrolledDto.PaidAmount,
             PaidOn: DateTime.UtcNow,
             Method: updateEnrolledDto.Method.ToUpper(),
@@ -263,7 +263,7 @@ public class ManagerRepository : IManagerRepository
 
         FilterDefinition<AppUser> filter = Builders<AppUser>.Filter.And(
             Builders<AppUser>.Filter.Eq(u => u.Id, appUser.Id),
-            Builders<AppUser>.Filter.ElemMatch(u => u.EnrolledCourses, ec => ec.CourseTitle.ToUpper() == targetCourseTitle.ToUpper())
+            Builders<AppUser>.Filter.ElemMatch(u => u.EnrolledCourses, ec => ec.CourseTitle.ToUpper() == updateEnrolledDto.TitleCourse.ToUpper())
         );
 
         UpdateDefinition<AppUser> update = Builders<AppUser>.Update
