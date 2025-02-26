@@ -95,12 +95,11 @@ public class PhotoService(
 
     public async Task<bool> DeletePhotoFromDisk(Photo photo)
     {
-        // لیستی از مسیرهای عکس‌ها
         List<string> photoPaths = new List<string>
         {
-            photo.Url_165,  // سایز کوچک
-            photo.Url_256,  // سایز متوسط
-            photo.Url_enlarged  // سایز بزرگ
+            photo.Url_165,
+            photo.Url_256,
+            photo.Url_enlarged
         };
 
         foreach (string photoPath in photoPaths)
@@ -117,20 +116,17 @@ public class PhotoService(
                 }
                 catch (Exception ex)
                 {
-                    // در صورت بروز خطا در حذف، ثبت خطا
                     _logger.LogError($"Error deleting photo file: {photoPath}. Exception: {ex.Message}");
                     return false;
                 }
             }
             else
             {
-                // در صورتی که فایل پیدا نشد
                 _logger.LogWarning($"File not found for deletion: {photoPath}");
                 return false;
             }
         }
 
-        // در صورتی که همه فایل‌ها حذف شدند
         return true;
     }
 }

@@ -189,7 +189,7 @@ public class ManagerRepository : IManagerRepository
     }
 
     public async Task<EnrolledCourse?> AddEnrolledCourseAsync(
-        AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, string targetCourseTitle, 
+        AddEnrolledCourseDto addEnrolledCourseDto, string targetUserName, 
         CancellationToken cancellationToken)
     {
         AppUser appUser = await _collectionAppUser
@@ -200,7 +200,7 @@ public class ManagerRepository : IManagerRepository
             return null;
 
         Course course = await _collectionCourse
-            .Find(doc => doc.Title == targetCourseTitle.ToUpper())
+            .Find(doc => doc.Title == addEnrolledCourseDto.TitleCourse.ToUpper())
             .FirstOrDefaultAsync(cancellationToken);
 
         if (course is null)
@@ -397,35 +397,29 @@ public class ManagerRepository : IManagerRepository
 
     public async Task<bool> DeletePhotoAsync(ObjectId targetPaymentId, CancellationToken cancellationToken)
     {
-        // یافتن کاربری که این پرداخت در آن قرار دارد
         AppUser? appUser = await _collectionAppUser
             .Find(u => u.EnrolledCourses.Any(ec => ec.Payments.Any(p => p.Id == targetPaymentId)))
             .FirstOrDefaultAsync(cancellationToken);
 
         if (appUser is null) return false;
 
-        // یافتن دوره‌ای که شامل این پرداخت است
         EnrolledCourse? enrolledCourse = appUser.EnrolledCourses
             .FirstOrDefault(ec => ec.Payments.Any(p => p.Id == targetPaymentId));
 
         if (enrolledCourse is null) return false;
 
-        // یافتن پرداخت مورد نظر
         Payment? payment = enrolledCourse.Payments.FirstOrDefault(p => p.Id == targetPaymentId);
 
         if (payment is null || payment.Photo is null) return false;
 
-        // حذف عکس از دیسک
         bool isDeleteSuccess = await _photoService.DeletePhotoFromDisk(payment.Photo);
         if (!isDeleteSuccess)
         {
             return false;
         }
 
-        // حذف عکس از فیلد Payment در دیتابیس
         payment = payment with { Photo = null };
 
-        // بروزرسانی Payment در دیتابیس
          var filter = Builders<AppUser>.Filter.Eq(u => u.Id, appUser.Id);
         var update = Builders<AppUser>.Update
             .Set("EnrolledCourses.$[ec].Payments.$[p]", payment);

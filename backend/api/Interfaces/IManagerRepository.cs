@@ -9,7 +9,7 @@ public interface IManagerRepository
     public Task<LoggedInDto?> CreateTeacherAsync(RegisterDto managerInput, CancellationToken cancellationToken);
     public Task<PagedList<AppUser>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken);
     public Task<IEnumerable<UserWithRoleDto>> GetUsersWithRolesAsync();
-    public Task<EnrolledCourse> AddEnrolledCourseAsync(AddEnrolledCourseDto managerInput, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken);
+    public Task<EnrolledCourse> AddEnrolledCourseAsync(AddEnrolledCourseDto managerInput, string targetUserName, CancellationToken cancellationToken);
     public Task<UpdateResult?> UpdateEnrolledCourseAsync(UpdateEnrolledDto updateEnrolledDto, string targetUserName, string targetCourseTitle, CancellationToken cancellationToken);
     public Task<DeleteResult?> DeleteAsync(string targetMemberUserName, CancellationToken cancellationToken);
     public Task<List<AppUser>> GetAllTeachersAsync(CancellationToken cancellationToken);

@@ -97,18 +97,18 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         return !users.Any() ? NoContent() : Ok(users);
     }
 
-    [HttpPost("add-enrolledCourse/{targetUserName}/{targetCourseTitle}")]
+    [HttpPost("add-enrolledCourse/{targetUserName}")]
     public async Task<IActionResult> AddEnrolledCourse(
-        [FromBody] AddEnrolledCourseDto managerInput, string targetUserName, string targetCourseTitle, 
+        [FromBody] AddEnrolledCourseDto managerInput, string targetUserName, 
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(targetUserName))
             return BadRequest("Username is required.");
         
-        if (string.IsNullOrWhiteSpace(targetCourseTitle))
+        if (string.IsNullOrWhiteSpace(managerInput.TitleCourse))
             return BadRequest("Course title is required.");
         
-        var enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, targetCourseTitle, cancellationToken);
+        var enrolledCourse = await _managerRepository.AddEnrolledCourseAsync(managerInput, targetUserName, cancellationToken);
 
         return enrolledCourse is not null 
             ? Ok(enrolledCourse) 
