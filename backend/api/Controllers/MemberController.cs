@@ -99,44 +99,39 @@ public class MemberController
     }
     
     [HttpGet("get-enrolled-course/{courseTitle}")]
-    public async Task<IActionResult> GetEnrolledCourse(string courseTitle, CancellationToken cancellationToken)
+    public async Task<ActionResult<EnrolledCourse>> GetEnrolledCourse(string courseTitle, CancellationToken cancellationToken)
     {
-        string? token = null; 
-        bool isTokenValid = HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
-
-        if (isTokenValid)
-            token = authHeader.ToString().Split(' ').Last();
-
-        if (string.IsNullOrEmpty(token))
-            return Unauthorized("Token is expired or invalid. Login again.");
-
         string? hashedUserId = User.GetHashedUserId();
-        if (string.IsNullOrEmpty(hashedUserId))
-            return BadRequest("No user was found with this user Id.");
 
-        EnrolledCourse enrolledCourse = await _memberRepository.GetEnrolledCourseByUserIdAndCourseTitle(hashedUserId, courseTitle, cancellationToken);
+        if (string.IsNullOrEmpty(hashedUserId))
+            return Unauthorized("The user is not logged in");
+
+        EnrolledCourse? enrolledCourse = await _memberRepository.GetEnrolledCourseByUserIdAndCourseTitle(hashedUserId, courseTitle, cancellationToken);
 
         if (enrolledCourse == null)
             return NotFound("دوره مورد نظر یافت نشد");
 
-        var result = new
-        {
-            CourseTitle = enrolledCourse.CourseTitle,
-            CourseTuition = enrolledCourse.CourseTuition,
-            NumberOfPayments = enrolledCourse.Payments.Count,
-            NumberOfPaymentsLeft = enrolledCourse.NumberOfPaymentsLeft,
-            PaidNumber = enrolledCourse.PaidNumber,
-            TuitionRemainder = enrolledCourse.TuitionRemainder,
-            Payments = enrolledCourse.Payments.Select(p => new
-            {
-                p.Id,
-                p.Amount,
-                p.PaidOn,
-                p.Method,
-                Photo = p.Photo != null ? new { p.Photo.Url_165, p.Photo.Url_256, p.Photo.Url_enlarged } : null
-            })
-        };
+        // var result = new
+        // {
+        //     CourseTitle = enrolledCourse.CourseTitle,
+        //     CourseTuition = enrolledCourse.CourseTuition,
+        //     NumberOfPayments = enrolledCourse.Payments.Count,
+        //     NumberOfPaymentsLeft = enrolledCourse.NumberOfPaymentsLeft,
+        //     PaidNumber = enrolledCourse.PaidNumber,
+        //     TuitionRemainder = enrolledCourse.TuitionRemainder,
+        //     Payments = enrolledCourse.Payments.Select(p => new
+        //     {
+        //         p.Id,
+        //         p.Amount,
+        //         p.PaidOn,
+        //         p.Method,
+        //         Photo = p.Photo != null ? new { p.Photo.Url_165, p.Photo.Url_256, p.Photo.Url_enlarged } : null
+        //     })
+        // };
+        // EnrolledCourse enrolledCourse = new {
 
-        return Ok(result);
+        // }
+
+        return enrolledCourse;
     }
 }

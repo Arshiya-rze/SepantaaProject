@@ -180,14 +180,17 @@ public class MemberRepository : IMemberRepository
 
     public async Task<EnrolledCourse?> GetEnrolledCourseByUserIdAndCourseTitle(string hashedUserId, string courseTitle, CancellationToken cancellationToken)
     {
-        AppUser user = await _collectionAppUser
-            .Find(u => u.IdentifierHash == hashedUserId)
+        ObjectId? userId = await _tokenService.GetActualUserIdAsync(hashedUserId, cancellationToken);
+
+        if (userId is null) return null;
+        AppUser appUser = await _collectionAppUser
+            .Find(u => u.Id == userId)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (user == null)
+        if (appUser == null)
             return null;
 
-        EnrolledCourse? enrolledCourse = user.EnrolledCourses
+        EnrolledCourse? enrolledCourse = appUser.EnrolledCourses
             .FirstOrDefault(ec => ec.CourseTitle == courseTitle.ToUpper());
         if (enrolledCourse is null)
             return null; 
