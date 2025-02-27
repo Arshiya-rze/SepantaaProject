@@ -98,36 +98,45 @@ public class MemberController
         return Ok(courses);
     }
     
-    // [HttpGet("get-classmate/{targetCourseTitle}")]
-    // public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllClassmate(string targetCourseTitle, CancellationToken cancellationToken)
-    // {
-    //     string? userIdHashed = User.GetHashedUserId();
+    [HttpGet("get-enrolled-course/{courseTitle}")]
+    public async Task<IActionResult> GetEnrolledCourse(string courseTitle, CancellationToken cancellationToken)
+    {
+        string? token = null; 
+        bool isTokenValid = HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
 
-    //     if (userIdHashed is null) return Unauthorized("Login again.");
-        
-    //     List<AppUser> pagedAppUsers = await _memberRepository.GetAllClassmateAsync(targetCourseTitle, userIdHashed, cancellationToken);
+        if (isTokenValid)
+            token = authHeader.ToString().Split(' ').Last();
 
-    //     if (pagedAppUsers.Count == 0)
-    //         return NoContent();
+        if (string.IsNullOrEmpty(token))
+            return Unauthorized("Token is expired or invalid. Login again.");
 
-    //     List<MemberDto> memberDtos = [];
+        string? hashedUserId = User.GetHashedUserId();
+        if (string.IsNullOrEmpty(hashedUserId))
+            return BadRequest("No user was found with this user Id.");
 
-    //     foreach (AppUser appUser in pagedAppUsers)
-    //     {
-    //         memberDtos.Add(Mappers.ConvertAppUserToMemberDto(appUser));
-    //     }
+        EnrolledCourse enrolledCourse = await _memberRepository.GetEnrolledCourseByUserIdAndCourseTitle(hashedUserId, courseTitle, cancellationToken);
 
-    //     return memberDtos;
-    // }
-    
-    // [HttpGet("get-by-userName/{memberUserName}")]
-    // public async Task<ActionResult<MemberDto>> GetByUserName(string memberUserName, CancellationToken cancellationToken)
-    // {
-    //     MemberDto? memberDto = await _memberRepository.GetByUserNameAsync(memberUserName, cancellationToken);
+        if (enrolledCourse == null)
+            return NotFound("دوره مورد نظر یافت نشد");
 
-    //     if (memberDto is null)
-    //         return NotFound("No user with this userName address");
+        var result = new
+        {
+            CourseTitle = enrolledCourse.CourseTitle,
+            CourseTuition = enrolledCourse.CourseTuition,
+            NumberOfPayments = enrolledCourse.Payments.Count,
+            NumberOfPaymentsLeft = enrolledCourse.NumberOfPaymentsLeft,
+            PaidNumber = enrolledCourse.PaidNumber,
+            TuitionRemainder = enrolledCourse.TuitionRemainder,
+            Payments = enrolledCourse.Payments.Select(p => new
+            {
+                p.Id,
+                p.Amount,
+                p.PaidOn,
+                p.Method,
+                Photo = p.Photo != null ? new { p.Photo.Url_165, p.Photo.Url_256, p.Photo.Url_enlarged } : null
+            })
+        };
 
-    //     return memberDto;
-    // }
+        return Ok(result);
+    }
 }
