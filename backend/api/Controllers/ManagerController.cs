@@ -130,7 +130,8 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
 
     [HttpPut("update-enrolledCourse/{targetUserName}")]
     public async Task<IActionResult> UpdateEnrolledCourse(
-        [FromBody] UpdateEnrolledDto updateEnrolledDto, string targetUserName, 
+        [FromBody] UpdateEnrolledDto updateEnrolledDto, string targetUserName,
+        IFormFile? file, 
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(targetUserName))
@@ -139,7 +140,7 @@ public class ManagerController(IManagerRepository _managerRepository, ITokenServ
         if (string.IsNullOrWhiteSpace(updateEnrolledDto.TitleCourse))
             return BadRequest("Course title is required.");
 
-        var updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetUserName, cancellationToken);
+        var updateResult = await _managerRepository.UpdateEnrolledCourseAsync(updateEnrolledDto, targetUserName, file, cancellationToken);
 
         return updateResult?.ModifiedCount > 0 
             ? Ok(new { message = "EnrolledCourse updated successfully" }) 

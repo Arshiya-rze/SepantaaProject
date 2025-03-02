@@ -229,7 +229,7 @@ public class ManagerRepository : IManagerRepository
 
     public async Task<UpdateResult?> UpdateEnrolledCourseAsync(
         UpdateEnrolledDto updateEnrolledDto, string targetUserName, 
-        CancellationToken cancellationToken)
+        IFormFile file, CancellationToken cancellationToken)
     {
         AppUser? appUser = await _collectionAppUser
             .Find(doc => doc.NormalizedUserName == targetUserName.ToUpper())
@@ -260,6 +260,10 @@ public class ManagerRepository : IManagerRepository
             Method: updateEnrolledDto.Method.ToUpper(),
             Photo: null
         );
+
+        if (file is not null) {
+            IEnumerable<>
+        }
 
         FilterDefinition<AppUser> filter = Builders<AppUser>.Filter.And(
             Builders<AppUser>.Filter.Eq(u => u.Id, appUser.Id),
